@@ -1,0 +1,22 @@
+{
+  "name": "restfulpy-client",
+  "version": "0.1.0",
+  "description": "A javascript client for https://github.com/pylover/restfulpy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Carrene/restfulpy-client.js.git"
+  },
+  "author": "Armin Ayari <armin@carrene.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Carrene/restfulpy-client.js/issues"
+  },
+  "homepage": "https://github.com/Carrene/restfulpy-client.js#readme",
+  "dependencies": {
+    "jQuery": "^1.7.4"
+  }
+}

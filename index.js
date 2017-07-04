@@ -1,4 +1,27 @@
 
+export const httpHeaders = {}
+
+class ResponseMetadata {
+  constructor (xhr) {
+    this.xhr = xhr
+  }
+  get totalCount () {
+    return parseInt(this.xhr.getResponseHeader('X-Pagination-Count'))
+  }
+
+  get pageSize () {
+    return parseInt(this.xhr.getResponseHeader('X-Pagination-Take'))
+  }
+
+  get pageIndex () {
+    return Math.floor(parseInt(this.xhr.getResponseHeader('X-Pagination-Skip')) / this.pageSize)
+  }
+
+  get totalPages () {
+    return Math.ceil(this.totalCount / this.pageSize)
+  }
+}
+
 export default class APIClient {
   constructor (vm, version, entity) {
     this.url = `${version}/${entity}`

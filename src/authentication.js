@@ -1,4 +1,6 @@
-const jwtDecode = require('jwt-decode')
+
+import jwtDecode from 'jwt-decode'
+import { AuthenticationRequiredError } from './exceptions'
 
 export default class Authenticator {
   constructor (tokenRequestHeaderKey = 'Authorization', tokenLocalStorageKey = 'token',
@@ -30,6 +32,9 @@ export default class Authenticator {
   }
 
   addAuthenticationHeaders (request) {
+    if (!this.authenticated) {
+      throw new AuthenticationRequiredError()
+    }
     request.headers[this.tokenRequestHeaderKey] = `Bearer ${this.token}`
   }
 
@@ -42,7 +47,7 @@ export default class Authenticator {
     window.localStorage.removeItem(this.tokenLocalStorageKey)
   }
 
-  checkResponse(response) {
+  checkResponse (response) {
     let token = response.headers[this.tokenResponseHeaderKey]
     if (token) {
       this.token = token

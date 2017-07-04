@@ -2,8 +2,9 @@
 import { AuthenticationRequiredError } from './exceptions'
 
 export default class Request {
-  constructor (context) {
+  constructor (context, payload) {
     this.context = context
+    this.payload = payload || {}
   }
 
   addAuthenticationHeaders (force = false) {
@@ -17,6 +18,10 @@ export default class Request {
 
   removeAuthenticationHeaders () {
     this.context.authenticator.removeAuthenticationHeaders(this)
+  }
+
+  addParameters (parameters) {
+    Object.assign(this.payload, parameters)
   }
 
 }

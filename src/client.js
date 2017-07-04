@@ -59,4 +59,8 @@ export default class RestfulpyClient {
         })
     })
   }
+
+  logout () {
+    this.authenticator.deleteToken()
+  }
 }

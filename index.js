@@ -1,5 +1,5 @@
 
-export const httpHeaders = {}
+module.exports = httpHeaders = {}
 
 class ResponseMetadata {
   constructor (xhr) {
@@ -22,7 +22,7 @@ class ResponseMetadata {
   }
 }
 
-export default class APIClient {
+module.exports = class APIClient {
   constructor (vm, version, entity, baseurl) {
     this.url = `${baseurl}/${version}/${entity}`
     this.vm = vm
@@ -61,7 +61,7 @@ export default class APIClient {
       }
     })
 
-    jQuery.ajax(`${BASE_URL}/${this.url}${!options.path ? '' : options.path}`, options)
+    jQuery.ajax(`${this.url}${!options.path ? '' : options.path}`, options)
   }
   get (data, options) {
     this.request('get', data, options)

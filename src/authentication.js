@@ -1,9 +1,11 @@
 const jwtDecode = require('jwt-decode')
 
 export default class Authenticator {
-  constructor (tokenRequestHeaderKey = 'Authorization', tokenLocalStorageKey = 'token') {
+  constructor (tokenRequestHeaderKey = 'Authorization', tokenLocalStorageKey = 'token',
+               tokenResponseHeaderKey = 'X-New-JWT-Token') {
     this.tokenRequestHeaderKey = tokenRequestHeaderKey
     this.tokenLocalStorageKey = tokenLocalStorageKey
+    this.tokenResponseHeaderKey = tokenResponseHeaderKey
     this.member = null
   }
 
@@ -23,6 +25,10 @@ export default class Authenticator {
     }
   }
 
+  get authenticated () {
+    return this.member !== null
+  }
+
   setupRequest (request) {
     request.headers[this.tokenRequestHeaderKey] = `Bearer ${this.token}`
   }
@@ -30,5 +36,12 @@ export default class Authenticator {
   deleteToken () {
     this.member = null
     window.localStorage.removeItem(this.tokenLocalStorageKey)
+  }
+
+  checkResponse(response) {
+    let token = response.headers[this.tokenResponseHeaderKey]
+    if (token) {
+      this.token = token
+    }
   }
 }

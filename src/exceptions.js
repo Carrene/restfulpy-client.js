@@ -1,15 +1,21 @@
 
 export class BaseException extends Error {
-  constructor (message, fileName, lineNumber) {
+  constructor (message, fileName, lineNumber, defaultMessage = undefined) {
+    if (!message && defaultMessage) {
+      message = defaultMessage
+    }
     super(message, fileName, lineNumber)
   }
 }
 
 export class NotImplementedYetButShouldBeImplementedSoon extends BaseException {
-  constructor (message, fileName, lineNumber) {
-    if (!message) {
-      message = 'Not Implemented Yet But Should Be Implemented Soon'
-    }
-    super(message, fileName, lineNumber)
+  constructor (...args) {
+    super(...args, 'Not Implemented Yet But Should Be Implemented Soon')
+  }
+}
+
+export class AlreadyAuthenticatedError extends BaseException {
+  constructor (...args) {
+    super(...args, 'Already authenticated.')
   }
 }

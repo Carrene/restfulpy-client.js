@@ -1,6 +1,4 @@
 
-module.exports = httpHeaders = {}
-
 class ResponseMetadata {
   constructor (xhr) {
     this.xhr = xhr

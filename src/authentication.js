@@ -29,8 +29,12 @@ export default class Authenticator {
     return this.member !== null
   }
 
-  setupRequest (request) {
+  addAuthenticationHeaders (request) {
     request.headers[this.tokenRequestHeaderKey] = `Bearer ${this.token}`
+  }
+
+  removeAuthenticationHeaders (request) {
+    delete request.headers[this.tokenRequestHeaderKey]
   }
 
   deleteToken () {

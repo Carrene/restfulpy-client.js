@@ -1,12 +1,15 @@
 
-import { AlreadyAuthenticatedError } from './exceptions.js'
-import Authenticator from './authentication.js'
-import Request from './request.js'
+import { AlreadyAuthenticatedError, BadCredentialsError } from './exceptions'
+import Authenticator from './authentication'
+import Request from './request'
+
 
 export default class RestfulpyClient {
-  constructor (baseUrl, tokenHeaderKey = 'token', tokenLocalStorageKey = 'token', authenticator) {
+  constructor (baseUrl, tokenHeaderKey = 'token', tokenLocalStorageKey = 'token',
+               tokenResponseKey = 'token', authenticator) {
     this.url = baseUrl
     this.tokenHeaderKey = tokenHeaderKey
+    this.tokenResponseKey = tokenResponseKey
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this._authenticator = authenticator
   }
@@ -23,18 +26,37 @@ export default class RestfulpyClient {
     return this._authenticator
   }
 
+  createRequest () {
+    return new Request(this)
+  }
+
   request () {
-    let request = new Request(this)
-    if (this.authenticator.authenticated) {
-      this.authenticator.setupRequest(request)
+    return this.createRequest().addAuthenticationHeaders(false)
+  }
+
+  validateCredentials (credentials) {
+    if (credentials === null || credentials === undefined) {
+      throw new BadCredentialsError()
     }
-    return request
+    return credentials
   }
 
   login (credentials) {
     if (this.authenticator.authenticated) {
       throw AlreadyAuthenticatedError()
     }
-    let token = this.request()
+    return new Promise((resolve, reject) => {
+      this.request()
+        .addParameters(this.validateCredentials(credentials))
+        .done()  // Returns a promise
+        .then((resp) => {
+          this.authenticator.token = resp['token']
+          resolve(resp)
+        })
+        .catch((resp) => {
+          this.authenticator.deleteToken()
+          reject(resp)
+        })
+    })
   }
 }

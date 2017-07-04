@@ -23,8 +23,8 @@ class ResponseMetadata {
 }
 
 export default class APIClient {
-  constructor (vm, version, entity) {
-    this.url = `${version}/${entity}`
+  constructor (vm, version, entity, baseurl) {
+    this.url = `${baseurl}/${version}/${entity}`
     this.vm = vm
     this.status = ''
     this.message = ''

@@ -1,4 +1,4 @@
 
-import RestfulpyClient from './client'
-
-export default RestfulpyClient
+// import RestfulpyClient from './client.js'
+//
+// export default RestfulpyClient

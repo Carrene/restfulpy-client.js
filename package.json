@@ -6,7 +6,8 @@
   "scripts": {
     "test": "karma start karma.conf.js",
     "build": "webpack webpack --progress --colors --config config/webpack.conf.js",
-    "dev": "webpack --watch --config config/webpack.conf.js"
+    "dev": "webpack --watch --config config/webpack.conf.js",
+    "lint": "eslint --ext .js src"
   },
   "repository": {
     "type": "git",

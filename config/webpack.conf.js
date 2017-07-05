@@ -31,9 +31,18 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.json', '.jsx'],
-    modules: [path.resolve(__dirname, '../node_modules')],
-    alias: {
-      'src': path.resolve(__dirname, '../src')
-    }
+    modules: [
+      path.join(__dirname, '../node_modules')
+    ]
+    // descriptionFiles: [path.resolve(__dirname, '../package.json')]
+  },
+  resolveLoader: {
+    modules: [path.join(__dirname, '../node_modules')],
+    extensions: ['.js', '.json']
+  },
+  node: {
+    ws: 'empty',
+    fs: 'empty',
+    tls: 'empty'
   }
 }

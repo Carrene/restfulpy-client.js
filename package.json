@@ -4,7 +4,7 @@
   "description": "A javascript client for https://github.com/pylover/restfulpy",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "jasmine-core": "^2.6.4",
     "karma": "^1.7.0",
+    "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0"
   }

@@ -1,4 +1,4 @@
 
-export default {
-  'nice': 'nice'
-}
+import RestfulpyClient from './client'
+
+export default RestfulpyClient

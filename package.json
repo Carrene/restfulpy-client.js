@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "karma start karma.conf.js",
-    "build": "webpack config/webpack.conf.js"
+    "build": "webpack webpack --progress --colors --config config/webpack.conf.js",
+    "dev": "webpack --watch --config config/webpack.conf.js"
   },
   "repository": {
     "type": "git",

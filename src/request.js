@@ -37,6 +37,29 @@ export default class Request {
     } else {
       this.queryString.push([key, value])
     }
+    return this
   }
+
+  filter (field, expression) {
+    this.addQueryStringParameter(field, expression, true)
+    return this
+  }
+
+  take (take) {
+    this.addQueryStringParameter('take', take)
+    return this
+  }
+
+  skip (skip) {
+    this.addQueryStringParameter('skip', skip)
+    return this
+  }
+
+  sort (sort) {
+    this.addAuthenticationHeaders('sort', sort)
+    return this
+  }
+
+
 
 }

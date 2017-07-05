@@ -1,0 +1,45 @@
+{
+  "name": "restfulpy-client",
+  "version": "0.1.0",
+  "description": "A javascript client for https://github.com/pylover/restfulpy",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start karma.conf.js",
+    "build": "webpack config/webpack.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Carrene/restfulpy-client.js.git"
+  },
+  "author": "Armin Ayari <armin@carrene.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Carrene/restfulpy-client.js/issues"
+  },
+  "homepage": "https://github.com/Carrene/restfulpy-client.js#readme",
+  "dependencies": {
+    "jwt-decode": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "eslint": "^4.1.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-loader": "^1.8.0",
+    "eslint-plugin-html": "^3.0.0",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jasmine-core": "^2.6.4",
+    "karma": "^1.7.0",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.0",
+    "path": "^0.12.7",
+    "transform-runtime": "0.0.0",
+    "webpack": "^3.0.0"
+  }
+}

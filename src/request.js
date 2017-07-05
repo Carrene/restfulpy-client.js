@@ -1,11 +1,19 @@
 
+import jQuery from 'jquery'
 import { AuthenticationRequiredError } from './exceptions'
 
 export default class Request {
-  constructor (context, payload) {
+  constructor (context, verb = 'get', payload = {}, headers = {}, queryString = []) {
     this.context = context
-    this.payload = payload || {}
-    this.queryString = []
+    this.verb = verb
+    this.payload = payload
+    this.headers = headers
+    this.queryString = queryString
+  }
+
+  setVerb (verb) {
+    this.verb = verb
+    return this
   }
 
   addAuthenticationHeaders (force = false) {
@@ -56,10 +64,13 @@ export default class Request {
   }
 
   sort (sort) {
-    this.addAuthenticationHeaders('sort', sort)
+    this.addQueryStringParameter('sort', sort)
     return this
   }
 
-
-
+  done () {
+    return new Promise((resolve, reject) => {
+      // FIXME: Use xhr directly
+    })
+  }
 }

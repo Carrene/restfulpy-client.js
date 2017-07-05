@@ -23,5 +23,9 @@ export default class Response {
   get json () {
     return JSON.parse(this.body)
   }
+
+  get error () {
+    return (this.status === 200) ? '' : this.xhr.responseText
+  }
 }
 

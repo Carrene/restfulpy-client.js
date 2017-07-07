@@ -5,11 +5,11 @@
  * @return {object} An object with name (string) and id (integer) properties,
  *    defaulting to "default" and 0, or null if the JSON is null or invalid.
  */
-function normalizeData(jsonIn) {
-    data = JSON.parse(jsonIn);
-    return {
-        name: data.Name,
-        id: data.PersonalIdentifier
-    };
+export function normalizeData (jsonIn) {
+  let data = JSON.parse(jsonIn)
+  return {
+    name: data.Name,
+    id: data.PersonalIdentifier
+  }
 }
 

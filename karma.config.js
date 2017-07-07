@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Sat Jul 08 2017 00:12:18 GMT+0430 (IRDT)
+var path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -13,8 +14,8 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/*.js',
-      'tests/*.js'
+      // 'src/**/*.js',
+      'tests/**/*.js'
     ],
 
     // list of files to exclude
@@ -22,7 +23,47 @@ module.exports = function (config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {},
+    preprocessors: {
+      'src/**/*.js': ['webpack'],
+      'tests/**/*.js': ['webpack']
+    },
+    babelPreprocessor: {
+      options: {
+        presets: ['es2015'],
+        sourceMap: 'inline'
+      },
+      filename: function (file) {
+        return file.originalPath.replace(/\.js$/, '.es5.js')
+      },
+      sourceFileName: function (file) {
+        return file.originalPath
+      }
+    },
+    webpack: {
+      // karma watches the test entry points
+      // (you don't need to specify the entry option)
+      // webpack watches dependencies
+
+      // webpack configuration
+      // resolve: {
+      //   extensions: ['.js', '.json'],
+      //   modules: [path.resolve(__dirname, 'node_modules')],
+      //   alias: {
+      //     'src': path.resolve(__dirname, 'src')
+      //   }
+      // }
+      // resolveLoader: {
+      //   modules: [path.join(__dirname, 'node_modules')],
+      //   extensions: ['.js', '.json'],
+      //   mainFields: ['loader', 'main']
+      // }
+    },
+
+    webpackMiddleware: {
+      // webpack-dev-middleware configuration
+      // i. e.
+      stats: 'errors-only'
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'

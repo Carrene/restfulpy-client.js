@@ -8,6 +8,13 @@ Javascript client for restfulpy
 npm install
 ```
 
+```bash
+v.activate
+mkvirtualenv --python=$(which python3) restfulpy-client.js
+
+pip install restfulpy
+```
+
 ## Running tests
 
 ```bash

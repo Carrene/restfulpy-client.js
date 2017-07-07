@@ -4,7 +4,9 @@
   "description": "A javascript client for restfulpy",
   "main": "src/index.js",
   "scripts": {
-    "test": "karma config/karma.conf.js"
+    "test": "karma config/karma.conf.js",
+    "dev": "webpack --config webpack.config.js",
+    "build": "webpack -p --config webpack.config.js"
   },
   "repository": {
     "type": "git",

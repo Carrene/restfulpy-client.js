@@ -1,7 +1,7 @@
 
 from os.path import abspath, dirname
 
-from nanohttp import html, json, quickstart
+from nanohttp import text, json, quickstart
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -13,20 +13,6 @@ __version__ = '0.1.0'
 
 class MockupAuthenticator(StatefulAuthenticator):
     pass
-
-
-class Root(RootController):
-
-    @html
-    @authorize
-    def index(self):
-        return 'Index'
-
-    @json
-    def version(self):
-        return {
-            'version': __version__
-        }
 
 
 class MockupApplication(Application):
@@ -49,5 +35,25 @@ class MockupApplication(Application):
         pass
 
 
+class Root(RootController):
+
+    @text
+    def index(self):
+        return 'Index'
+
+    @text
+    @authorize
+    def protected(self):
+        return 'Protected'
+
+    @json
+    def version(self):
+        return {
+            'version': __version__
+        }
+
+
 if __name__ == '__main__':
-    quickstart(application=MockupApplication())
+    app = MockupApplication()
+    app.configure()
+    quickstart(application=app)

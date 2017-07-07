@@ -1,7 +1,7 @@
-
-var path = require('path');
-var libraryName = 'restfulpy-client';
-var outputFile = libraryName + '.js';
+var path = require('path')
+var libraryName = 'restfulpy-client'
+var outputFile = libraryName + '.js'
+var src = path.resolve(__dirname, 'src')
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -14,5 +14,15 @@ module.exports = {
     library: libraryName,
     libraryTarget: 'umd',
     umdNamedDefine: true
+  },
+  module: {
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'eslint-loader',
+        exclude: /(node_modules)/,
+      }
+    ]
   }
 }

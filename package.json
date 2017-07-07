@@ -6,7 +6,7 @@
   "module": "src/index.js",
   "scripts": {
     "test": "karma config/karma.conf.js",
-    "dev": "webpack",
+    "dev": "webpack --watch",
     "build": "webpack -p"
   },
   "repository": {

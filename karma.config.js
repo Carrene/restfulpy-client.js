@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Sat Jul 08 2017 00:12:18 GMT+0430 (IRDT)
+const path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -44,6 +45,12 @@ module.exports = function (config) {
       // webpack watches dependencies
 
       // webpack configuration
+      resolve: {
+        alias: {
+          'restfulpy': path.resolve(__dirname, 'src')
+        }
+      }
+
       // resolve: {
       //   extensions: ['.js', '.json'],
       //   modules: [path.resolve(__dirname, 'node_modules')],

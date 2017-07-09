@@ -1,12 +1,12 @@
 var path = require('path')
-var libraryName = 'restfulpy-client'
+var libraryName = 'restfulpy'
 var outputFile = libraryName + '.js'
 var src = path.resolve(__dirname, 'src')
 
 module.exports = {
-  context: path.resolve(__dirname, 'src'),
+  context: src,
   entry: {
-    'restfulpy-client': './index.js'
+    'restfulpy': './index.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -14,6 +14,11 @@ module.exports = {
     library: libraryName,
     libraryTarget: 'umd',
     umdNamedDefine: true
+  },
+  resolve: {
+    alias: {
+      'restfulpy': path.resolve(__dirname, 'src')
+    }
   },
   module: {
     rules: [

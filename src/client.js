@@ -4,15 +4,13 @@ import Authenticator from './authentication'
 import Request from './request'
 
 export default class RestfulpyClient {
-  constructor (baseUrl, tokenHeaderKey = 'token', tokenLocalStorageKey = 'token', tokenResponseKey = 'token', authenticator) {
+  constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator) {
     this.url = baseUrl
-    this.tokenHeaderKey = tokenHeaderKey
-    this.tokenResponseKey = tokenResponseKey
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this._authenticator = authenticator
   }
 
-  createAuthenticator () {
+  static createAuthenticator () {
     return new Authenticator()
   }
 
@@ -32,7 +30,7 @@ export default class RestfulpyClient {
     return this.createRequest().addAuthenticationHeaders(false)
   }
 
-  validateCredentials (credentials) {
+  static validateCredentials (credentials) {
     if (credentials === null || credentials === undefined) {
       throw new BadCredentialsError()
     }

@@ -1,12 +1,13 @@
 {
-  "name": "restfulpy-client",
+  "name": "restfulpy",
   "version": "0.1.0",
   "description": "A javascript client for restfulpy",
   "main": "dist/restfulpy-client.js",
   "module": "src/index.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start karma.config.js --single-run",
-    "dev": "./node_modules/karma/bin/karma start karma.config.js",
+    "watch": "./node_modules/karma/bin/karma start karma.config.js",
+    "dev": "webpack",
     "build": "webpack -p"
   },
   "repository": {

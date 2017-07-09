@@ -20,7 +20,7 @@ export class AuthenticationRequiredError extends BaseException {
   }
 }
 
-export class BadCredentialsError extends BadCredentialsError {
+export class BadCredentialsError extends BaseException {
   constructor (...args) {
     super(...args, 'Invalid or Bad Credentials.')
   }

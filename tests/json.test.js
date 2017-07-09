@@ -1,7 +1,7 @@
 /**
  * Created by vahid on 7/9/17.
  */
-import { Client } from 'restfulpy'
+import Client from 'restfulpy'
 
 describe('client', function () {
 

@@ -9,10 +9,9 @@ describe('client', function () {
     let c = new MockupClient()
     let requestPayload = {item1: 'value1'}
     c.request('echo').addParameters(requestPayload).done().then((resp) => {
-      console.log(resp)
       expect(resp.status, 200)
+      expect(resp.json, requestPayload)
       done()
-      // expect(resp.json, requestPayload)
     })
   })
 })

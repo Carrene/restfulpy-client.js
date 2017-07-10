@@ -16,7 +16,7 @@ export default class Response {
     return this.xhr.getResponseHeader('X-Identity')
   }
 
-  get authenticated() {
+  get authenticated () {
     return this.identity !== null
   }
 

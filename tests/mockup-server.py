@@ -7,7 +7,7 @@ from os.path import abspath, dirname, join
 from subprocess import run
 from wsgiref.simple_server import make_server
 
-from nanohttp import text, json
+from nanohttp import text, json, context
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -27,6 +27,7 @@ class MockupAuthenticator(StatefulAuthenticator):
 class MockupApplication(Application):
     __authenticator__ = MockupAuthenticator()
     builtin_configuration = '''
+    debug: true
     '''
 
     def __init__(self):
@@ -49,6 +50,10 @@ class Root(RootController):
     @text
     def index(self):
         return 'Index'
+
+    @json
+    def echo(self):
+        return context.form
 
     @text
     @authorize
@@ -73,7 +78,7 @@ def main():
     try:
         server_thread.start()
         time.sleep(1)
-        run('%s --single-run --server-url=%s' % (KARMA_EXECUTABLE, server_url), shell=True)
+        run('%s --server-url=%s' % (KARMA_EXECUTABLE, server_url), shell=True)
         return 0
     except KeyboardInterrupt:
         print('CTRL+X is pressed.')

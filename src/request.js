@@ -1,9 +1,12 @@
+import urljoin from 'url-join'
 
 import { AuthenticationRequiredError } from './exceptions'
+import Response from './response'
 
 export default class Request {
-  constructor (context, verb = 'get', payload = {}, headers = {}, queryString = []) {
-    this.context = context
+  constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = []) {
+    this.resource = resource
+    this.client = client
     this.verb = verb
     this.payload = payload
     this.headers = headers
@@ -16,8 +19,8 @@ export default class Request {
   }
 
   addAuthenticationHeaders (force = false) {
-    if (this.context.authenticator.authenticated) {
-      this.context.authenticator.addAuthenticationHeaders(this)
+    if (this.client.authenticator.authenticated) {
+      this.client.authenticator.addAuthenticationHeaders(this)
     } else if (force) {
       throw new AuthenticationRequiredError()
     }
@@ -25,7 +28,7 @@ export default class Request {
   }
 
   removeAuthenticationHeaders () {
-    this.context.authenticator.removeAuthenticationHeaders(this)
+    this.client.authenticator.removeAuthenticationHeaders(this)
     return this
   }
 
@@ -67,9 +70,21 @@ export default class Request {
     return this
   }
 
+  get url () {
+    return urljoin(this.client.baseUrl, this.resource)
+  }
+
   done () {
     return new Promise((resolve, reject) => {
-      // FIXME: Use xhr directly
+      let xhr = new window.XMLHttpRequest()
+      xhr.onload = () => {
+        resolve(new Response(xhr))
+      }
+      xhr.onerror = () => {
+        reject(new Response(xhr))
+      }
+      xhr.open(this.verb.toUpperCase(), this.url)
+      xhr.send()
     })
   }
 }

@@ -4,14 +4,16 @@
 
 import { MockupClient } from './helpers'
 
-// const MOCKUP_SERVER_ADDRESS = ''
 describe('client', function () {
-
-  it('json echo', function () {
-    let requestPayload = {item1: 'value1'}
-    expect(requestPayload, {item1: 'value1'})
+  it('json echo', function (done) {
     let c = new MockupClient()
-    console.log(c)
+    let requestPayload = {item1: 'value1'}
+    c.request('echo').addParameters(requestPayload).done().then((resp) => {
+      console.log(resp)
+      expect(resp.status, 200)
+      done()
+      // expect(resp.json, requestPayload)
+    })
   })
 })
 

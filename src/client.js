@@ -4,7 +4,7 @@ import Request from './request'
 
 export default class RestfulpyClient {
   constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator) {
-    this.url = baseUrl
+    this.baseUrl = baseUrl
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this._authenticator = authenticator
   }
@@ -16,17 +16,18 @@ export default class RestfulpyClient {
   get authenticator () {
     /* Singleton and Lazy-Initialization of the Authenticator object */
     if (this._authenticator === undefined) {
-      this._authenticator = this.createAuthenticator()
+      console.log(this)
+      this._authenticator = this.constructor.createAuthenticator()
     }
     return this._authenticator
   }
 
-  createRequest () {
-    return new Request(this)
+  createRequest (...kwargs) {
+    return new Request(this, ...kwargs)
   }
 
-  request () {
-    return this.createRequest().addAuthenticationHeaders(false)
+  request (...kwargs) {
+    return this.createRequest(...kwargs).addAuthenticationHeaders(false)
   }
 
   static validateCredentials (credentials) {
@@ -42,7 +43,7 @@ export default class RestfulpyClient {
     }
     return new Promise((resolve, reject) => {
       this.request()
-        .addParameters(this.validateCredentials(credentials))
+        .addParameters(this.constructor.validateCredentials(credentials))
         .done() // Returns a promise
         .then((resp) => {
           this.authenticator.token = resp['token']

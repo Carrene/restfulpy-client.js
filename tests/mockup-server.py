@@ -3,9 +3,7 @@
 import sys
 import time
 import threading
-from tempfile import gettempdir
 from os.path import abspath, dirname, join
-from os import remove
 from subprocess import run
 from wsgiref.simple_server import make_server
 
@@ -64,7 +62,7 @@ class Root(RootController):
         }
 
 
-if __name__ == '__main__':
+def main():
     app = MockupApplication()
     app.configure()
     httpd = make_server('localhost', 0, app)
@@ -73,13 +71,17 @@ if __name__ == '__main__':
     print('Serving %s' % server_url)
     server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     try:
-        # with open(temp_file, mode='w', encoding='utf8') as address_file:
-        #     address_file.write(server_url)
         server_thread.start()
         time.sleep(1)
-        run([KARMA_EXECUTABLE], shell=True)
-        server_thread.join()
+        run([KARMA_EXECUTABLE, '--mockup-server-url=%s' % server_url], shell=True)
+        return 0
     except KeyboardInterrupt:
+        print('CTRL+X is pressed.')
+        return 1
+    finally:
         httpd.shutdown()
-        httpd.server_close()
+        server_thread.join()
 
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -1,9 +1,12 @@
 #! /usr/bin/env python3
 
-from os.path import abspath, dirname
+import threading
+from tempfile import gettempdir
+from os.path import abspath, dirname, join
+from os import remove
 from wsgiref.simple_server import make_server
 
-from nanohttp import text, json, quickstart
+from nanohttp import text, json
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -58,4 +61,20 @@ class Root(RootController):
 if __name__ == '__main__':
     app = MockupApplication()
     app.configure()
-    quickstart(application=app)
+    httpd = make_server('localhost', 0, app)
+
+    server_url = 'http://%s:%d' % httpd.server_address
+    print('Serving %s' % server_url)
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    temp_file = join(gettempdir(), 'restfulpy-client-js-mockup-server-address')
+    try:
+        with open(temp_file, mode='w', encoding='utf8') as address_file:
+            address_file.write(server_url)
+        server_thread.start()
+        server_thread.join()
+    except KeyboardInterrupt:
+        httpd.shutdown()
+        httpd.server_close()
+    finally:
+        remove(temp_file)
+

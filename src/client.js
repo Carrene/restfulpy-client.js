@@ -4,7 +4,7 @@ import Authenticator from './authentication'
 import Request from './request'
 
 export default class RestfulpyClient {
-  constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator) {
+    constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator) {
     this.url = baseUrl
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this._authenticator = authenticator

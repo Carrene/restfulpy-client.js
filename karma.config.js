@@ -45,12 +45,16 @@ module.exports = function (config) {
       // webpack watches dependencies
 
       // webpack configuration
+      target: 'node',
       resolve: {
         alias: {
           'restfulpy': path.resolve(__dirname, 'src')
         }
       }
-
+      // ,
+      // node: {
+      //   'fs': 'empty'
+      // }
       // resolve: {
       //   extensions: ['.js', '.json'],
       //   modules: [path.resolve(__dirname, 'node_modules')],

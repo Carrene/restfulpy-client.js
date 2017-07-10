@@ -16,7 +16,6 @@ export default class RestfulpyClient {
   get authenticator () {
     /* Singleton and Lazy-Initialization of the Authenticator object */
     if (this._authenticator === undefined) {
-      console.log(this)
       this._authenticator = this.constructor.createAuthenticator()
     }
     return this._authenticator

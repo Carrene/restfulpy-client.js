@@ -45,6 +45,7 @@
     "karma": "^1.7.0",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-requirejs": "^1.1.0",
     "karma-webpack": "^2.0.4",

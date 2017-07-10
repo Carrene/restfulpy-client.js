@@ -4,13 +4,14 @@ import { AuthenticationRequiredError } from './exceptions'
 import Response from './response'
 
 export default class Request {
-  constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = []) {
+  constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = [], encoding = 'json') {
     this.resource = resource
     this.client = client
     this.verb = verb
     this.payload = payload
     this.headers = headers
     this.queryString = queryString
+    this.encoding = encoding
   }
 
   setVerb (verb) {
@@ -77,6 +78,8 @@ export default class Request {
   done () {
     return new Promise((resolve, reject) => {
       let xhr = new window.XMLHttpRequest()
+      let requestBody = ''
+
       xhr.onload = () => {
         resolve(new Response(xhr))
       }
@@ -84,7 +87,14 @@ export default class Request {
         reject(new Response(xhr))
       }
       xhr.open(this.verb.toUpperCase(), this.url)
-      xhr.send()
+
+      if (this.encoding === 'json') {
+        requestBody = JSON.stringify(this.payload)
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      } else {
+        throw new Error(`encoding: ${this.encoding} is not supported.`)
+      }
+      xhr.send(requestBody)
     })
   }
 }

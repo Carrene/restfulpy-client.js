@@ -5,8 +5,7 @@
   "main": "dist/restfulpy-client.js",
   "module": "src/index.js",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start karma.config.js --single-run",
-    "watch": "./node_modules/karma/bin/karma start karma.config.js",
+    "test": "./tests/mockup-server.py",
     "dev": "webpack",
     "build": "webpack -p"
   },
@@ -48,7 +47,6 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",
     "karma-requirejs": "^1.1.0",
-    "karma-script-launcher": "^1.0.0",
     "karma-webpack": "^2.0.4",
     "markdown-loader": "^0.1.7",
     "node-sass": "^4.5.3",

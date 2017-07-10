@@ -17,12 +17,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'restfulpy': path.resolve(__dirname, 'src'),
-      'fs': 'empty'
+      'restfulpy': path.resolve(__dirname, 'src')
     }
-  },
-  node: {
-    'fs': 'empty'
   },
   module: {
     rules: [

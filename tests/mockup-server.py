@@ -17,7 +17,7 @@ from restfulpy.controllers import RootController
 __version__ = '0.1.0'
 
 HERE = abspath(dirname(__file__))
-KARMA_EXECUTABLE = '%s start karma.config.js --single-run' % join(HERE, '../node_modules/karma/bin/karma')
+KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, '../node_modules/karma/bin/karma')
 
 
 class MockupAuthenticator(StatefulAuthenticator):
@@ -73,7 +73,7 @@ def main():
     try:
         server_thread.start()
         time.sleep(1)
-        run([KARMA_EXECUTABLE, '--mockup-server-url=%s' % server_url], shell=True)
+        run('%s --single-run --server-url=%s' % (KARMA_EXECUTABLE, server_url), shell=True)
         return 0
     except KeyboardInterrupt:
         print('CTRL+X is pressed.')

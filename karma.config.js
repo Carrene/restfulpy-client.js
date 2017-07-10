@@ -39,6 +39,9 @@ module.exports = function (config) {
         return file.originalPath
       }
     },
+    client: {
+      serverUrl: config.serverUrl
+    },
     webpack: {
       // karma watches the test entry points
       // (you don't need to specify the entry option)

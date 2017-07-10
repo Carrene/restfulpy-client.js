@@ -11,8 +11,8 @@ describe('client', function () {
     c.request('echo', 'post').addParameters(requestPayload).done().then((resp) => {
       expect(resp.status).toEqual(200)
       expect(resp.json).toEqual(requestPayload)
+      expect(resp.getHeader('Content-Type')).toEqual('application/json; charset=utf-8')
       done()
     })
   })
 })
-

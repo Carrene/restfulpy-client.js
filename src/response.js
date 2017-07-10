@@ -8,6 +8,10 @@ export default class Response {
     return this.xhr.status
   }
 
+  getHeader(key) {
+    return this.xhr.getResponseHeader(key)
+  }
+
   get body () {
     return (this.status !== 200) ? '' : this.xhr.responseText
   }

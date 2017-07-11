@@ -22,18 +22,6 @@
   "dependencies": {
     "jwt-decode": "^2.2.0"
   },
-  "nyc": {
-    "require": [
-      "babel-register"
-    ],
-    "check-coverage": true,
-    "per-file": true,
-    "include": ["src/**/*.js"],
-    "all": true,
-    "extension": [
-      ".js", ".js6", ".es6"
-    ]
-  },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
@@ -60,7 +48,6 @@
     "karma": "^1.7.0",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-requirejs": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",

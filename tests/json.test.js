@@ -4,9 +4,9 @@
 
 import { MockupClient } from './helpers'
 
-describe('client', function () {
+describe('Client', function () {
   /* Testing json payload in both request & response */
-  it('json echo', function (done) {
+  it('Json echo', function (done) {
     let c = new MockupClient()
     let requestPayload = {item1: 'value1'}
     c.request('echo', 'post').addParameters(requestPayload).done().then((resp) => {

@@ -57,6 +57,7 @@ export default class Request {
   }
 
   filter (field, expression) {
+    // TODO: Accept dict as first argument
     this.addQueryString(field, expression, true)
     return this
   }

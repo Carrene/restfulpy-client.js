@@ -7,17 +7,28 @@ from os.path import abspath, dirname, join
 from subprocess import run
 from wsgiref.simple_server import make_server
 
+from sqlalchemy import Integer, Unicode
 from nanohttp import text, json, context
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
-from restfulpy.controllers import RootController
+from restfulpy.controllers import RootController, ModelRestController
+from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, FilteringMixin, Field, DBSession, \
+    setup_schema
 
 
 __version__ = '0.1.0'
 
+
 HERE = abspath(dirname(__file__))
 KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, '../node_modules/karma/bin/karma')
+
+
+class Resource(OrderingMixin, PaginationMixin, FilteringMixin, DeclarativeBase):
+    __tablename__ = 'resource'
+
+    id = Field(Integer, primary_key=True)
+    title = Field(Unicode, )
 
 
 class MockupAuthenticator(StatefulAuthenticator):
@@ -42,10 +53,22 @@ class MockupApplication(Application):
         pass
 
     def insert_mockup(self):
-        pass
+        for i in range(50):
+            # noinspection PyArgumentList
+            DBSession.add(Resource(title='resource%1'))
+        DBSession.commit()
+
+
+class ResourceController(ModelRestController):
+
+    @json
+    @Resource.expose
+    def get(self):
+        return Resource.query
 
 
 class Root(RootController):
+    resources = ResourceController()
 
     @text
     def index(self):
@@ -70,6 +93,9 @@ class Root(RootController):
 def main():
     app = MockupApplication()
     app.configure()
+    app.initialize_models()
+    setup_schema(DBSession)
+    app.insert_mockup()
     httpd = make_server('localhost', 0, app)
 
     server_url = 'http://%s:%d' % httpd.server_address

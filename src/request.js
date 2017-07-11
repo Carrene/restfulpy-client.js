@@ -2,6 +2,7 @@ import urljoin from 'url-join'
 
 import { AuthenticationRequiredError } from './exceptions'
 import Response from './response'
+import { encodeQueryString } from './helpers'
 
 export default class Request {
   constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = [], encoding = 'json') {
@@ -38,41 +39,53 @@ export default class Request {
     return this
   }
 
-  addQueryStringParameter (key, value, allowDuplicatedKeys = false) {
+  addQueryString (key, value, allowDuplicatedKeys = false) {
+    let found = false
     if (!allowDuplicatedKeys) {
       for (let i of this.queryString) {
         if (key === i[0]) {
           i[1] = value
+          found = true
+          break
         }
       }
-    } else {
+    }
+    if (!found) {
       this.queryString.push([key, value])
     }
     return this
   }
 
   filter (field, expression) {
-    this.addQueryStringParameter(field, expression, true)
+    this.addQueryString(field, expression, true)
     return this
   }
 
   take (take) {
-    this.addQueryStringParameter('take', take)
+    this.addQueryString('take', take)
     return this
   }
 
   skip (skip) {
-    this.addQueryStringParameter('skip', skip)
+    this.addQueryString('skip', skip)
     return this
   }
 
   sort (sort) {
-    this.addQueryStringParameter('sort', sort)
+    this.addQueryString('sort', sort)
     return this
   }
 
   get url () {
     return urljoin(this.client.baseUrl, this.resource)
+  }
+
+  composeUrl () {
+    let url = this.url
+    if (this.queryString.length) {
+      url += `?${encodeQueryString(this.queryString)}`
+    }
+    return url
   }
 
   done () {
@@ -86,7 +99,7 @@ export default class Request {
       xhr.onerror = () => {
         reject(new Response(xhr))
       }
-      xhr.open(this.verb.toUpperCase(), this.url)
+      xhr.open(this.verb.toUpperCase(), this.composeUrl())
 
       if (this.encoding === 'json') {
         requestBody = JSON.stringify(this.payload)

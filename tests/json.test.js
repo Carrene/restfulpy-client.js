@@ -5,6 +5,7 @@
 import { MockupClient } from './helpers'
 
 describe('client', function () {
+  /* Testing json payload in both request & response */
   it('json echo', function (done) {
     let c = new MockupClient()
     let requestPayload = {item1: 'value1'}
@@ -15,4 +16,14 @@ describe('client', function () {
       done()
     })
   })
+
+  /* Query String */
+  it('Query String echo', function (done) {
+    let c = new MockupClient()
+    c.request('echo').addQueryString('item1', 'value1').done().then((resp) => {
+      expect(resp.json).toEqual({item1: 'value1'})
+      done()
+    })
+  })
+
 })

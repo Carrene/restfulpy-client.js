@@ -53,7 +53,7 @@ class Root(RootController):
 
     @json
     def echo(self):
-        return context.form
+        return {k: v for i in (context.form, context.query_string) for k, v in i.items()}
 
     @text
     @authorize

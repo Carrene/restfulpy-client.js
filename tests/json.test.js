@@ -26,4 +26,11 @@ describe('client', function () {
     })
   })
 
+  it('Query String and payload echo', function (done) {
+    let c = new MockupClient()
+    c.request('echo', 'post').addParameters({item1: 'value1'}).addQueryString('item2', 'value2').done().then((resp) => {
+      expect(resp.json).toEqual({item1: 'value1', item2: 'value2'})
+      done()
+    })
+  })
 })

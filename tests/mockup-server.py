@@ -17,7 +17,8 @@ from restfulpy.controllers import RootController
 __version__ = '0.1.0'
 
 HERE = abspath(dirname(__file__))
-KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, '../node_modules/karma/bin/karma')
+KARMA_EXECUTABLE = 'cross-env NODE_ENV=test ./node_modules/nyc/bin/nyc.js --reporter=lcov --reporter=text %s ' \
+                   'start karma.config.js' % join(HERE, '../node_modules/karma/bin/karma')
 
 
 class MockupAuthenticator(StatefulAuthenticator):

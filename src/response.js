@@ -8,7 +8,7 @@ export default class Response {
     return this.xhr.status
   }
 
-  getHeader(key) {
+  getHeader (key) {
     return this.xhr.getResponseHeader(key)
   }
 

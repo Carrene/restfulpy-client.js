@@ -42,4 +42,11 @@ describe('Filtering', function () {
       done()
     })
   })
+  it('ILIKE filter', function (done) {
+    let c = new MockupClient()
+    c.request('resources').filter('title', '%~Resource').done().then((resp) => {
+      expect(resp.json.length).toEqual(10)
+      done()
+    })
+  })
 })

@@ -8,8 +8,17 @@ describe('Sorting', function () {
     let c = new MockupClient()
     c.request('resources').sort('id').done().then((resp) => {
       expect(resp.json.length).toEqual(10)
-      expect(resp.json[0]).toEqual({id: 1, title: 'resource1'})
-      expect(resp.json[9]).toEqual({id: 10, title: 'resource10'})
+      expect(resp.json[0]['id']).toEqual(1)
+      expect(resp.json[9]['id']).toEqual(10)
+      done()
+    })
+  })
+  it('Descending', function (done) {
+    let c = new MockupClient()
+    c.request('resources').sort('-id').done().then((resp) => {
+      expect(resp.json.length).toEqual(10)
+      expect(resp.json[0]['id']).toEqual(10)
+      expect(resp.json[9]['id']).toEqual(1)
       done()
     })
   })

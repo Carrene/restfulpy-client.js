@@ -57,11 +57,8 @@ export default class Request {
   }
 
   filter (field, expression) {
-    // TODO: Accept dict as first argument
-    console.log('************** Field', typeof field, field)
     if (typeof field === 'object') {
       for (let i in field) {
-        console.log('##### Field', i, field[i])
         this.addQueryString(i, field[i], true)
       }
     } else {

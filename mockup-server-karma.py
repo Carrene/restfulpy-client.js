@@ -111,7 +111,7 @@ def main():
     try:
         server_thread.start()
         time.sleep(2)
-        run('%s --server-url=%s' % (KARMA_EXECUTABLE, server_url), shell=True)
+        run('%s %s --server-url=%s' % (KARMA_EXECUTABLE, ' '.join(sys.argv[1:]), server_url), shell=True)
         return 0
     except KeyboardInterrupt:
         print('CTRL+X is pressed.')

@@ -49,4 +49,11 @@ describe('Filtering', function () {
       done()
     })
   })
+  it('BETWEEN filter', function (done) {
+    let c = new MockupClient()
+    c.request('resources').filter('id', '~2,9').done().then((resp) => {
+      expect(resp.json.length).toEqual(8)
+      done()
+    })
+  })
 })

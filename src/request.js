@@ -98,7 +98,9 @@ export default class Request {
         resolve(new Response(xhr))
       }
       xhr.onerror = () => {
-        reject(new Response(xhr))
+        let resp = new Response(xhr)
+        console.log(resp.error)
+        reject(resp)
       }
       xhr.open(this.verb.toUpperCase(), this.composeUrl())
 

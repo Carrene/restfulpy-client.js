@@ -5,7 +5,6 @@
 import { MockupClient } from './helpers'
 
 describe('Filtering', function () {
-  /* Testing single criterion */
   it('Simple filter', function (done) {
     let c = new MockupClient()
     c.request('resources').filter('id', 1).done().then((resp) => {
@@ -14,7 +13,6 @@ describe('Filtering', function () {
       done()
     })
   })
-  /* Testing multiple criteria */
   it('Multiple filter', function (done) {
     let c = new MockupClient()
     c.request('resources').filter('id', 1).filter('title', 'resource1').done().then((resp) => {
@@ -23,12 +21,17 @@ describe('Filtering', function () {
       done()
     })
   })
-
-  /* Testing multiple criteria */
-  it('Greater than filter', function (done) {
+  it('Smaller than filter', function (done) {
     let c = new MockupClient()
     c.request('resources').filter('id', '<5').done().then((resp) => {
       expect(resp.json.length).toEqual(4)
+      done()
+    })
+  })
+  it('Smaller than equal filter', function (done) {
+    let c = new MockupClient()
+    c.request('resources').filter('id', '<=5').done().then((resp) => {
+      expect(resp.json.length).toEqual(5)
       done()
     })
   })

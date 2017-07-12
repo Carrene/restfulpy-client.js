@@ -35,4 +35,11 @@ describe('Filtering', function () {
       done()
     })
   })
+  it('LIKE filter', function (done) {
+    let c = new MockupClient()
+    c.request('resources').filter('title', '%resource').done().then((resp) => {
+      expect(resp.json.length).toEqual(10)
+      done()
+    })
+  })
 })

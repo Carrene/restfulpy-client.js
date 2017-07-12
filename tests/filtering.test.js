@@ -23,4 +23,13 @@ describe('Filtering', function () {
       done()
     })
   })
+
+  /* Testing multiple criteria */
+  it('Greater than filter', function (done) {
+    let c = new MockupClient()
+    c.request('resources').filter('id', '<5').done().then((resp) => {
+      expect(resp.json.length).toEqual(4)
+      done()
+    })
+  })
 })

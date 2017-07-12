@@ -15,7 +15,7 @@ describe('Filtering', function () {
   })
   it('Multiple filter', function (done) {
     let c = new MockupClient()
-    c.request('resources').filter('id', 1).filter('title', 'resource1').done().then((resp) => {
+    c.request('resources').filter({id: 1, title: 'resource1'}).done().then((resp) => {
       expect(resp.json.length).toEqual(1)
       expect(resp.json[0]).toEqual({id: 1, title: 'resource1'})
       done()

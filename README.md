@@ -11,7 +11,7 @@ npm install
 ```bash
 v.activate
 mkvirtualenv --python=$(which python3) restfulpy-client.js
-pip install restfulpy
+pip install -r requirements.txt
 echo "export CHROME_BIN=$(which chromium-browser)" >> $VIRTUAL_ENV/bin/postactivate
 # OR
 echo "export CHROME_BIN=$(which chromium-browser)" >> ~/.bashrc

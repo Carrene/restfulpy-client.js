@@ -5,7 +5,7 @@
   "main": "dist/restfulpy-client.js",
   "module": "src/index.js",
   "scripts": {
-    "test": "./tests/mockup-server.py",
+    "test": "./mockup-server-karma.py",
     "dev": "webpack",
     "build": "webpack -p"
   },

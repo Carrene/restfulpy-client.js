@@ -22,8 +22,8 @@ __version__ = '0.1.0'
 
 
 HERE = abspath(dirname(__file__))
-KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, '../node_modules/karma/bin/karma')
-SQLITE_DB = join(HERE, 'data', 'mockup.sqlite')
+KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, 'node_modules/karma/bin/karma')
+SQLITE_DB = join(HERE, 'tests', 'data', 'mockup.sqlite')
 if exists(SQLITE_DB):
     os.remove(SQLITE_DB)
 

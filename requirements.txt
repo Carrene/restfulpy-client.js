@@ -1,1 +1,1 @@
-restfulpy >= 0.19.9
+restfulpy >= 0.19.10

@@ -4,17 +4,22 @@
 import { MockupClient } from './helpers'
 
 describe('Authentication', function () {
+  let c = new MockupClient()
+
   it('Login', function (done) {
-    let c = new MockupClient()
     c.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {
-      console.log(resp.json)
       expect(resp.json.token).not.toBe(null)
+      expect(c.authenticator.authenticated).toBe(true)
       done()
     }).catch(resp => {
-      console.log('resp.error', resp)
       expect(resp.error).toBeNull()
       done()
     })
+  })
+
+  it('Logout', function () {
+    c.logout()
+    expect(c.authenticator.authenticated).toBe(false)
   })
 })
 

@@ -19,7 +19,7 @@ export default class Authenticator {
       return this.deleteToken()
     }
     try {
-      this.member = Object.assign(this.member, jwtDecode(token))
+      this.member = jwtDecode(token)
       window.localStorage.setItem(this.tokenLocalStorageKey, token)
     } catch (ex) {
       this.deleteToken()

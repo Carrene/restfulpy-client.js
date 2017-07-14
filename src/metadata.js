@@ -13,10 +13,10 @@ export default class Metadata {
     for (let entity in this.entities) {
       promises.push(new Promise((resolve, reject) => {
         client.request(this.entities[entity], 'METADATA').done().then(resp => {
-          this.models[entity] = resp.json()
+          this.models[entity] = resp.json
           resolve(this.models[entity])
         }).catch(resp => {
-          resolve(resp)
+          reject(resp)
         })
       }))
     }

@@ -32,7 +32,8 @@ class Resource(OrderingMixin, PaginationMixin, FilteringMixin, DeclarativeBase):
     __tablename__ = 'resource'
 
     id = Field(Integer, primary_key=True)
-    title = Field(Unicode, )
+    title = Field(Unicode(30), watermark='title here', icon='default', label='Title', pattern='[a-zA-Z0-9]{3,}',
+                  min_length=3)
 
 
 class MockupAuthenticator(StatefulAuthenticator):
@@ -66,6 +67,7 @@ class MockupApplication(Application):
 
 
 class ResourceController(ModelRestController):
+    __model__ = Resource
 
     @json
     @Resource.expose

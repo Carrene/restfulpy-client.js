@@ -2,6 +2,7 @@
 export default class Response {
   constructor (xhr) {
     this.xhr = xhr
+    this._json = null
   }
 
   get status () {
@@ -25,7 +26,10 @@ export default class Response {
   }
 
   get json () {
-    return JSON.parse(this.body)
+    if (this._json === null) {
+      this._json = JSON.parse(this.body)
+    }
+    return this._json
   }
 
   get error () {

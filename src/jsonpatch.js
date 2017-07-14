@@ -9,7 +9,8 @@ export default class JsonPatchRequest extends Request {
     super(client, resource, 'PATCH', [], headers, queryString, 'json')
   }
 
-  addRequest (resource, verb, payload) {
-    this.payload.push({path: resource, op: verb, data: payload})
+  addRequest (resource, verb, payload = null) {
+    this.payload.push({path: resource, op: verb, value: payload})
+    return this
   }
 }

@@ -13,7 +13,7 @@ from nanohttp import text, json, context, RestController, HttpBadRequest
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
-from restfulpy.controllers import RootController, ModelRestController
+from restfulpy.controllers import RootController, ModelRestController, JsonPatchControllerMixin
 from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, FilteringMixin, Field, setup_schema, \
     DBSession
 from restfulpy.principal import JwtPrincipal, JwtRefreshToken
@@ -112,7 +112,7 @@ class AuthController(RestController):
         return {}
 
 
-class ResourceController(ModelRestController):
+class ResourceController(JsonPatchControllerMixin, ModelRestController):
     __model__ = Resource
 
     @json

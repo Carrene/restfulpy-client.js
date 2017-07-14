@@ -100,11 +100,12 @@ export default class Request {
       let requestBody = ''
 
       xhr.onload = () => {
+        console.log('HTTP OK', this.resource, this.verb, xhr.status)
         resolve(new Response(xhr))
       }
       xhr.onerror = () => {
+        console.log('HTTP ERROR', this.resource, this.verb, xhr.status)
         let resp = new Response(xhr)
-        console.log(resp.error)
         reject(resp)
       }
       xhr.open(this.verb.toUpperCase(), this.composeUrl())

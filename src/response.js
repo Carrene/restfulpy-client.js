@@ -13,7 +13,7 @@ export default class Response {
   }
 
   get body () {
-    return (this.status !== 200) ? '' : this.xhr.responseText
+    return (this.status !== 200) ? null : this.xhr.responseText
   }
 
   get identity () {
@@ -29,7 +29,7 @@ export default class Response {
   }
 
   get error () {
-    return (this.status === 200) ? '' : this.xhr.responseText
+    return (this.status === 200) ? null : this.xhr.responseText
   }
 }
 

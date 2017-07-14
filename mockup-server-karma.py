@@ -9,13 +9,14 @@ from subprocess import run
 from wsgiref.simple_server import make_server
 
 from sqlalchemy import Integer, Unicode
-from nanohttp import text, json, context
+from nanohttp import text, json, context, RestController, HttpBadRequest
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
 from restfulpy.controllers import RootController, ModelRestController
 from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, FilteringMixin, Field, setup_schema, \
     DBSession
+from restfulpy.principal import JwtPrincipal, JwtRefreshToken
 
 
 __version__ = '0.1.0'
@@ -28,6 +29,11 @@ if exists(SQLITE_DB):
     os.remove(SQLITE_DB)
 
 
+class MockupMember:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
 class Resource(OrderingMixin, PaginationMixin, FilteringMixin, DeclarativeBase):
     __tablename__ = 'resource'
 
@@ -37,7 +43,18 @@ class Resource(OrderingMixin, PaginationMixin, FilteringMixin, DeclarativeBase):
 
 
 class MockupAuthenticator(StatefulAuthenticator):
-    pass
+    def validate_credentials(self, credentials):
+        email, password = credentials
+        if email == 'user1@example.com' and password == '123456':
+            return MockupMember(id=1, email=email, roles=['user'])
+
+    def create_refresh_principal(self, member_id=None):
+        return JwtRefreshToken(dict(
+            id=member_id
+        ))
+
+    def create_principal(self, member_id=None, session_id=None):
+        return JwtPrincipal(dict(id=1, email='user1@example.com', roles=['user'], sessionId='1'))
 
 
 class MockupApplication(Application):
@@ -66,6 +83,30 @@ class MockupApplication(Application):
         DBSession.commit()
 
 
+class AuthController(RestController):
+
+    @json
+    def post(self):
+        email = context.form.get('email')
+        password = context.form.get('password')
+
+        def bad():
+            raise HttpBadRequest('Invalid email or password')
+
+        if not (email and password):
+            bad()
+
+        principal = context.application.__authenticator__.login((email, password))
+        if principal is None:
+            bad()
+
+        return dict(token=principal.dump())
+
+    @json
+    def delete(self):
+        return {}
+
+
 class ResourceController(ModelRestController):
     __model__ = Resource
 
@@ -77,6 +118,7 @@ class ResourceController(ModelRestController):
 
 class Root(RootController):
     resources = ResourceController()
+    sessions = AuthController()
 
     @text
     def index(self):

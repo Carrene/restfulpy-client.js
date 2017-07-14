@@ -1,1 +1,3 @@
 restfulpy >= 0.19.10
+nanohttp
+sqlalchemy

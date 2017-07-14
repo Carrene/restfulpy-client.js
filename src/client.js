@@ -1,6 +1,7 @@
 import { AlreadyAuthenticatedError, BadCredentialsError } from './exceptions'
 import Authenticator from './authentication'
 import Request from './request'
+import Metadata from './metadata'
 
 export default class RestfulpyClient {
   constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator) {
@@ -57,5 +58,14 @@ export default class RestfulpyClient {
 
   logout () {
     this.authenticator.deleteToken()
+  }
+
+  loadMetadata (entities) {
+    window.__restfulpy_metadata__ = new Metadata(entities)
+    return window.__restfulpy_metadata__.load(this)
+  }
+
+  get metadata () {
+    return window.__restfulpy_metadata__
   }
 }

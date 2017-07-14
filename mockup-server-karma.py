@@ -62,7 +62,12 @@ class MockupApplication(Application):
     builtin_configuration = '''
     debug: true
     db:
-      uri: sqlite:///%s      
+      uri: sqlite:///%s    
+    jwt:
+      max_age: 20
+      refresh_token:
+        max_age: 60
+        secure: false
     ''' % SQLITE_DB
 
     def __init__(self):

@@ -20,6 +20,11 @@ export default class Request {
     return this
   }
 
+  setEncoding (encoding) {
+    this.encoding = encoding
+    return this
+  }
+
   addAuthenticationHeaders (force = false) {
     if (this.client.authenticator.authenticated) {
       this.client.authenticator.addAuthenticationHeaders(this)
@@ -113,6 +118,9 @@ export default class Request {
       if (this.encoding === 'json') {
         requestBody = JSON.stringify(this.payload)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      } else if (this.encoding === 'urlencoded') {
+        requestBody = encodeQueryString(this.payload)
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)
       }

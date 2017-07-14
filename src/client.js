@@ -1,6 +1,7 @@
 import { AlreadyAuthenticatedError, BadCredentialsError } from './exceptions'
 import Authenticator from './authentication'
 import Request from './request'
+import JsonPatchRequest from './jsonpatch'
 import Metadata from './metadata'
 
 export default class RestfulpyClient {
@@ -22,12 +23,12 @@ export default class RestfulpyClient {
     return this._authenticator
   }
 
-  createRequest (...kwargs) {
-    return new Request(this, ...kwargs)
+  request (...kwargs) {
+    return new Request(this, ...kwargs).addAuthenticationHeaders(false)
   }
 
-  request (...kwargs) {
-    return this.createRequest(...kwargs).addAuthenticationHeaders(false)
+  jsonPatchRequest (...kwargs) {
+    return new JsonPatchRequest(this, ...kwargs).addAuthenticationHeaders(false)
   }
 
   static validateCredentials (credentials) {

@@ -114,13 +114,24 @@ export default class Request {
         reject(resp)
       }
       xhr.open(this.verb.toUpperCase(), this.composeUrl())
-
       if (this.encoding === 'json') {
         requestBody = JSON.stringify(this.payload)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       } else if (this.encoding === 'urlencoded') {
         requestBody = encodeQueryString(this.payload)
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      } else if (this.encoding === 'multipart') {
+        requestBody = new window.FormData()
+        for (let paramName in this.payload) {
+          let value = this.payload[paramName]
+          if (value instanceof window.File) {
+            requestBody.append(paramName, value, value.name)
+          } else {
+            requestBody.append(paramName, value)
+          }
+        }
+        // Do not setting the content type for mutipart
+        // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)
       }

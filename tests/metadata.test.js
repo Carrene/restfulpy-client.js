@@ -8,7 +8,7 @@ describe('Metadata', function () {
   it('Loading metadata', function (done) {
     let c = new MockupClient()
     c.loadMetadata({'Resource': 'resources'}).then((resps) => {
-      expect(c.metadata.models.Resource.title).toEqual({
+      expect(c.metadata.info.Resource.title).toEqual({
         message: 'Invalid Value',
         label: 'Title',
         watermark: 'title here',

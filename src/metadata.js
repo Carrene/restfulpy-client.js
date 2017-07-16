@@ -5,7 +5,7 @@
 export default class Metadata {
   constructor (entities) {
     this.entities = entities
-    this.models = {}
+    this.info = {}
   }
 
   load (client) {
@@ -13,8 +13,8 @@ export default class Metadata {
     for (let entity in this.entities) {
       promises.push(new Promise((resolve, reject) => {
         client.request(this.entities[entity], 'METADATA').done().then(resp => {
-          this.models[entity] = resp.json
-          resolve(this.models[entity])
+          this.info[entity] = resp.json
+          resolve(this.info[entity])
         }).catch(resp => {
           reject(resp)
         })

@@ -12,7 +12,7 @@ export default class Model {
 
   set name (v) {
     this.data['firstName'] = v
-    this.dirty = True
+    this.dirty = true
   }
 
   put () {

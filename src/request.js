@@ -130,7 +130,7 @@ export default class Request {
             requestBody.append(paramName, value)
           }
         }
-        // Do not setting the content type for mutipart
+        // Do not setting the content type for multipart
         // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)

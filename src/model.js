@@ -2,23 +2,24 @@
  * Created by vahid on 7/15/17.
  */
 
-export default class Model {
-  constructor (data) {
-    this.dirty = false
-    this.data = data
+export default class ModelDescriptor {
+  /* This is a proxy for a specific model.
+   */
+
+  constructor (metadata) {
+    this.fields = metadata
   }
 
-  get name () { return this.data['firstName']}
-
-  set name (v) {
-    this.data['firstName'] = v
-    this.dirty = true
+  construct (target, argumentsList, newTarget) {
+    let data = argumentsList[0]
+    return new Proxy(data, this)
   }
 
-  put () {
-    if (!this.dirty) {
-      throw new Error('Object is not changed.')
-    }
+  get (target, name) {
+    return target[name]
   }
 
+  set (target, name, value) {
+    target[name] = value
+  }
 }

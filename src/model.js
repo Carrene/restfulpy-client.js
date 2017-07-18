@@ -2,24 +2,29 @@
  * Created by vahid on 7/15/17.
  */
 
-export default class ModelDescriptor {
-  /* This is a proxy for a specific model.
-   */
+class InstanceProxyHandler {
 
-  constructor (metadata) {
-    this.fields = metadata
-  }
-
-  construct (target, argumentsList, newTarget) {
-    let data = argumentsList[0]
-    return new Proxy(data, this)
+  constructor (typeProxy) {
+    this.typeProxy = typeProxy
   }
 
   get (target, name) {
+    if (name === 'constructor') {
+      return this.typeProxy
+    }
     return target[name]
   }
+}
 
-  set (target, name, value) {
-    target[name] = value
+const typeProxyHandler = {
+
+  construct (target, argumentsList, newTarget) {
+    let data = argumentsList[0]
+    return new Proxy(data, new InstanceProxyHandler(newTarget))
   }
+
+}
+
+export default function createModel (fields) {
+  return new Proxy(fields, typeProxyHandler)
 }

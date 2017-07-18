@@ -2,6 +2,8 @@
  * Created by vahid on 7/14/17.
  */
 
+import createModel from './model'
+
 export default class Metadata {
   constructor (entities) {
     this.entities = entities
@@ -13,7 +15,7 @@ export default class Metadata {
     for (let entity in this.entities) {
       promises.push(new Promise((resolve, reject) => {
         client.request(this.entities[entity], 'METADATA').done().then(resp => {
-          this.info[entity] = resp.json
+          this.info[entity] = createModel(resp.json)
           resolve(this.info[entity])
         }).catch(resp => {
           reject(resp)

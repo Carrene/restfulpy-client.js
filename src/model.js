@@ -2,10 +2,20 @@
  * Created by vahid on 7/15/17.
  */
 
+
+class BaseType {
+
+  constructor (fields) {
+    this.fields = fields
+  }
+
+}
+
 class InstanceProxyHandler {
 
   constructor (typeProxy) {
     this.typeProxy = typeProxy
+    this.dirty = false
   }
 
   get (target, name) {

@@ -34,7 +34,6 @@ export default function createModelClass (name, fields) {
   }
 
   Reflect.defineProperty(Model, 'name', {value: name})
-  // Model.name = name
   Model.fields = {}
   for (let k in fields) {
     Model.fields[k] = new Field(fields[k])

@@ -67,15 +67,6 @@
     }
   }
 
-//  class MetaClass {
-//    constructor (metadata) {
-//      this.metadata = metadata
-//      for (let k in metadata) {
-//        this[k] = new Field(metadata[k])
-//      }
-//    }
-//  }
-
   let instanceHandler = {
     get (target, name) {
       if (name === 'constructor') {
@@ -99,18 +90,22 @@
     }
   }
 
-//  let metaPrototye = new MetaClass(testMetadata)
+  function createModelClass (name, fields) {
+    function Model (data) {
+      this.dirty = false
+      this.data = data
+      return new Proxy(this, instanceHandler)
+    }
+    Model.name = name
+    Model.fields = {}
+    for (let k in fields) {
+      let field = new Field(fields[k])
+      Model.fields[k] = field
+    }
+    return Model
+  }
 
-  function Member (data) {
-    this.dirty = false
-    this.data = data
-    return new Proxy(this, instanceHandler)
-  }
-  Member.fields = {}
-  for (let k in testMetadata) {
-    let field = new Field(testMetadata[k])
-    Member.fields[k] = field
-  }
+  const Member = createModelClass('Member', testMetadata)
 
   console.log('Member.id', Member.fields.id)
   let vahid = new Member({

@@ -1,40 +1,43 @@
 /**
  * Created by vahid on 7/15/17.
  */
+import Field from './field'
 
-
-class BaseType {
-
-  constructor (fields) {
-    this.fields = fields
-  }
-
-}
-
-class InstanceProxyHandler {
-
-  constructor (typeProxy) {
-    this.typeProxy = typeProxy
-    this.dirty = false
-  }
-
+const instanceHandler = {
   get (target, name) {
-    if (name === 'constructor') {
-      return this.typeProxy
+    if (name in target) {
+      return target[name]
     }
-    return target[name]
+    if (name in target.data) {
+      return target.data[name]
+    }
+    return undefined
+  },
+
+  set (target, name, value) {
+    if (name in target.constructor.fields) {
+      if (target.data[name] !== value) {
+        target.data[name] = value
+        target.dirty = true
+      }
+      return
+    }
+    target[name] = value
   }
 }
 
-const typeProxyHandler = {
-
-  construct (target, argumentsList, newTarget) {
-    let data = argumentsList[0]
-    return new Proxy(data, new InstanceProxyHandler(newTarget))
+export default function createModelClass (name, fields) {
+  let Model = function (data) {
+    this.dirty = false
+    this.data = data
+    return new Proxy(this, instanceHandler)
   }
 
-}
-
-export default function createModel (fields) {
-  return new Proxy(fields, typeProxyHandler)
+  Reflect.defineProperty(Model, 'name', {value: name})
+  // Model.name = name
+  Model.fields = {}
+  for (let k in fields) {
+    Model.fields[k] = new Field(fields[k])
+  }
+  return Model
 }

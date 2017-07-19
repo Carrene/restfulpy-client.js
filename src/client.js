@@ -62,8 +62,8 @@ export default class RestfulpyClient {
   }
 
   loadMetadata (entities) {
-    window.__restfulpy_metadata__ = new Metadata(entities)
-    return window.__restfulpy_metadata__.load(this)
+    window.__restfulpy_metadata__ = new Metadata()
+    return window.__restfulpy_metadata__.load(this, entities)
   }
 
   get metadata () {

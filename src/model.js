@@ -2,23 +2,39 @@
  * Created by vahid on 7/15/17.
  */
 
-export default class Model {
-  constructor (data) {
+
+class BaseType {
+
+  constructor (fields) {
+    this.fields = fields
+  }
+
+}
+
+class InstanceProxyHandler {
+
+  constructor (typeProxy) {
+    this.typeProxy = typeProxy
     this.dirty = false
-    this.data = data
   }
 
-  get name () { return this.data['firstName']}
-
-  set name (v) {
-    this.data['firstName'] = v
-    this.dirty = true
-  }
-
-  put () {
-    if (!this.dirty) {
-      throw new Error('Object is not changed.')
+  get (target, name) {
+    if (name === 'constructor') {
+      return this.typeProxy
     }
+    return target[name]
+  }
+}
+
+const typeProxyHandler = {
+
+  construct (target, argumentsList, newTarget) {
+    let data = argumentsList[0]
+    return new Proxy(data, new InstanceProxyHandler(newTarget))
   }
 
+}
+
+export default function createModel (fields) {
+  return new Proxy(fields, typeProxyHandler)
 }

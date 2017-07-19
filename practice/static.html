@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Static</title>
+</head>
+<body>
+
+<script>
+  const testMetadata = {
+    'id': {
+      'name': 'id',
+      'key': 'id',
+      'type_': 'int',
+      'default': '',
+      'optional': false,
+      'pattern': null,
+      'maxLength': null,
+      'minLength': null,
+      'message': 'Invalid Value',
+      'watermark': null,
+      'label': null,
+      'icon': null,
+      'example': null
+    },
+    'email': {
+      'name': 'email',
+      'key': 'email',
+      'type_': 'str',
+      'default': '',
+      'optional': false,
+      'pattern': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+      'maxLength': 100,
+      'minLength': null,
+      'message': 'Invalid Value',
+      'watermark': null,
+      'label': null,
+      'icon': null,
+      'example': null
+    },
+    'name': {
+      'name': 'name',
+      'key': 'name',
+      'type_': 'str',
+      'default': '',
+      'optional': false,
+      'pattern': null,
+      'maxLength': 100,
+      'minLength': 1,
+      'message': 'Invalid Value',
+      'watermark': null,
+      'label': null,
+      'icon': null,
+      'example': null
+    }
+  }
+
+</script>
+
+<script type="text/javascript">
+
+  class Field {
+    constructor (attributes) {
+      for (let k in attributes) {
+        this[k] = attributes[k]
+      }
+    }
+  }
+
+  class MetaClass {
+    constructor (metadata) {
+      this.metadata = metadata
+      for (let k in metadata) {
+        this[k] = new Field(metadata[k])
+      }
+    }
+  }
+
+  let instanceHandler = {
+    get (target, name) {
+      if (name in target.data) {
+        return target.data[name]
+      }
+      return target[name]
+    },
+
+    set (target, name, value) {
+      if (name in target.data) {
+        if (target.data[name] !== value) {
+          target.data[name] = value
+          target.dirty = true
+        }
+        return
+      }
+      target[name] = value
+    }
+  }
+
+  let metaPrototye = new MetaClass(testMetadata)
+
+  function Member (data) {
+    this.dirty = false
+    this.data = data
+    return new Proxy(this, instanceHandler)
+  }
+  Member.prototype = metaPrototye
+
+  console.log('Member.id', Member.prototype.id.constructor.name, Member.prototype.id)
+  let vahid = new Member({
+    id: 1,
+    name: 'vahid',
+    email: 'vahid@example.com'
+  })
+
+  console.log(vahid.name, vahid.id, vahid.dirty)
+  vahid.name = 'Vahid Mardani'
+  console.log(vahid.name, vahid.id, vahid.dirty)
+  vahid.name = 'vahid'
+  console.log(vahid.name, vahid.id, vahid.dirty)
+
+
+</script>
+
+</body>
+</html>

@@ -67,17 +67,20 @@
     }
   }
 
-  class MetaClass {
-    constructor (metadata) {
-      this.metadata = metadata
-      for (let k in metadata) {
-        this[k] = new Field(metadata[k])
-      }
-    }
-  }
+//  class MetaClass {
+//    constructor (metadata) {
+//      this.metadata = metadata
+//      for (let k in metadata) {
+//        this[k] = new Field(metadata[k])
+//      }
+//    }
+//  }
 
   let instanceHandler = {
     get (target, name) {
+      if (name === 'constructor') {
+        return target.constructor
+      }
       if (name in target.data) {
         return target.data[name]
       }
@@ -96,16 +99,20 @@
     }
   }
 
-  let metaPrototye = new MetaClass(testMetadata)
+//  let metaPrototye = new MetaClass(testMetadata)
 
   function Member (data) {
     this.dirty = false
     this.data = data
     return new Proxy(this, instanceHandler)
   }
-  Member.prototype = metaPrototye
+  Member.fields = {}
+  for (let k in testMetadata) {
+    let field = new Field(testMetadata[k])
+    Member.fields[k] = field
+  }
 
-  console.log('Member.id', Member.prototype.id.constructor.name, Member.prototype.id)
+  console.log('Member.id', Member.fields.id)
   let vahid = new Member({
     id: 1,
     name: 'vahid',
@@ -117,6 +124,7 @@
   console.log(vahid.name, vahid.id, vahid.dirty)
   vahid.name = 'vahid'
   console.log(vahid.name, vahid.id, vahid.dirty)
+  console.log(vahid.constructor.fields.name, vahid.constructor.fields.id)
 
 
 </script>

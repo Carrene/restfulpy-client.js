@@ -9,11 +9,11 @@ describe('Authentication', function () {
   it('Login', function (done) {
     c.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {
       expect(resp.json.token).not.toBe(null)
-      expect(c.authenticator.authenticated).toBe(true)
+      expect(c.authenticator.authenticated).toBeTruthy()
       done()
     }).catch(resp => {
-      expect(resp.error).toBeNull()
       done()
+      throw resp.error
     })
   })
 

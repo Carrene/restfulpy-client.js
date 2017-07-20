@@ -33,7 +33,7 @@ const DEFAULT_VERBS = {
   delete: 'DELETE'
 }
 
-export default function createModelClass (name, options, client, fields) {
+export default function createModelClass (name, options, client, metadata) {
   let Model = function (data) {
     this.dirty = false
     this.data = data
@@ -45,11 +45,12 @@ export default function createModelClass (name, options, client, fields) {
   Model.__url__ = options.url
   // Creating a static member consist of of all fields
   Model.fields = {}
-  for (let k in fields) {
-    Model.fields[k] = new Field(fields[k])
+  for (let k in metadata.fields) {
+    Model.fields[k] = new Field(metadata.fields[k])
   }
-  // Storing a static reference to client
+  // Storing some static variables
   Model.__client__ = client
+  Model.primaryKeys = metadata.primaryKeys
   // Creating HTTP shorthands
   let verbs = Object.assign({}, DEFAULT_VERBS, options.verbs || {})
   Model.load = (...filters) => {
@@ -62,8 +63,8 @@ export default function createModelClass (name, options, client, fields) {
       })
     })
   }
-  for (let verb in verbs) {
-
-  }
+  // for (let verb in verbs) {
+  //
+  // }
   return Model
 }

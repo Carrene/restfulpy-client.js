@@ -62,5 +62,8 @@ export default function createModelClass (name, options, client, fields) {
       })
     })
   }
+  for (let verb in verbs) {
+
+  }
   return Model
 }

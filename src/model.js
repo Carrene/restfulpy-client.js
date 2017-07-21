@@ -69,7 +69,22 @@ const modelPrototype = {
     })
   },
   reload () {
-
+    switch (this.__status__) {
+      case 'new':
+        throw new ModelStateError('Save object before reload.')
+      case 'deleted':
+        throw new ModelStateError('Object is deleted.')
+    }
+    return new Promise((resolve, reject) => {
+      this.constructor.__client__.request(this.resourcePath, 'GET').done().then(resp => {
+        this.update(resp.json)
+        this.__status__ = 'loaded'
+        resolve(this)
+      }, resp => {
+        // Error
+        reject(resp)
+      })
+    })
   },
   save () {
     switch (this.__status__) {
@@ -78,6 +93,18 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
     }
+    return new Promise((resolve, reject) => {
+      this.constructor.__client__.request(this.constructor.resource, (this.__status__ === 'new') ? 'POST' : 'PUT')
+        .addParameters(this.data)
+        .done().then(resp => {
+          this.update(resp.json)
+          this.__status__ = 'loaded'
+          resolve(this)
+        }, resp => {
+          // Error
+          reject(resp)
+        })
+    })
   }
 }
 

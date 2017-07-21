@@ -10,6 +10,7 @@ describe('Model', function () {
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
       Resource.load('id', '<5').then(resources => {
         expect(resources.length).toEqual(4)
+        expect(resources[0].__status__).toEqual('loaded')
         expect(resources[0].constructor).toEqual(Resource)
         done()
       })

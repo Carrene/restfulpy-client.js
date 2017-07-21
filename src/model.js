@@ -40,7 +40,7 @@ const modelPrototype = {
     return `${this.__url__}/${this.__identity__.join('/')}`
   },
   changed () {
-    this.__hash__ = this.constructor.getHashCode(this.data)
+    this.__hash__ = getObjectHashCode(this.data)
     if (this.__status__ === 'loaded') {
       this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
     }
@@ -119,9 +119,9 @@ export default function createModelClass (name, options, client, metadata) {
   let Model = function (data, status = 'new') {
     this.__status__ = status
     this.__hash__ = 0
-    this.__server_hash__ = (status === 'loaded') ? this.constructor.getHashCode(data) : 0
-    this.data = data
     this.constructor = Model
+    this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(data) : 0
+    this.data = data
     this.changed()
     return new Proxy(this, instanceHandler)
   }
@@ -140,11 +140,10 @@ export default function createModelClass (name, options, client, metadata) {
   Model.__primaryKeys__ = metadata.primaryKeys
   // Creating HTTP shorthands
   Model.__verbs__ = Object.assign({}, DEFAULT_VERBS, options.verbs || {})
-  Model.getHashCode = getObjectHashCode
   Model.load = (...filters) => {
     return new Promise((resolve, reject) => {
       Model.__client__.request(Model.__url__, Model.__verbs__.load).filter(...filters).done().then(resp => {
-        resolve(resp.json.map(o => new Model(o)))
+        resolve(resp.json.map(o => new Model(o, 'loaded')))
       }, resp => {
         // Error
         reject(resp)

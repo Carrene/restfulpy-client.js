@@ -29,7 +29,7 @@ describe('Model', function () {
       })
     })
   })
-  it('States', function (done) {
+  it('CRUD', function (done) {
     let c = new MockupClient()
     const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {

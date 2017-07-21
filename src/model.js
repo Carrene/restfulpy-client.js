@@ -58,7 +58,7 @@ const modelPrototype = {
         throw new ModelStateError('Object is dirty and cannot delete a dirty object, use reload to reset it\'s state')
     }
     return new Promise((resolve, reject) => {
-      this.constructor.__client__.delete(this.resourcePath).done().then(resp => {
+      this.constructor.__client__.request(this.resourcePath, 'DELETE').done().then(resp => {
         this.update(resp.json)
         this.__status__ = 'deleted'
         resolve(this)

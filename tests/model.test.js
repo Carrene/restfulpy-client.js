@@ -45,10 +45,15 @@ describe('Model', function () {
         expect(resource.__status__).toEqual('dirty')
         // PUT
         resource.save().then(r => {
-          expect(r).toBe(resource)
+          expect(resource).toBe(r)
           expect(resource.__status__).toEqual('loaded')
           expect(resource.title).toEqual('resource1(Updated)')
-          done()
+          // DELETE
+          resource.delete().then(d => {
+            expect(resource).toBe(d)
+            expect(resource.__status__).toEqual('deleted')
+            done()
+          })
         })
       })
     })

@@ -22,13 +22,12 @@ const instanceHandler = {
       if (target.__status__ === 'deleted') {
         throw new ModelStateError('Cannot change deleted object.')
       }
-      if (target.data[name] !== value) {
-        target.data[name] = value
-        target.changed()
-      }
-      return
+      target.data[name] = value
+      target.changed()
+    } else {
+      target[name] = value
     }
-    target[name] = value
+    return true
   }
 }
 
@@ -41,9 +40,10 @@ const modelPrototype = {
   },
   changed () {
     this.__hash__ = getObjectHashCode(this.data)
-    if (this.__status__ === 'loaded') {
-      this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
+    if (this.__status__ === 'new') {
+      return
     }
+    this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
   },
   update (obj) {
     Object.assign(this.data, obj)
@@ -94,7 +94,7 @@ const modelPrototype = {
         throw new ModelStateError('Object is deleted.')
     }
     return new Promise((resolve, reject) => {
-      this.constructor.__client__.request(this.constructor.resource, (this.__status__ === 'new') ? 'POST' : 'PUT')
+      this.constructor.__client__.request(this.constructor.__url__, (this.__status__ === 'new') ? 'POST' : 'PUT')
         .addParameters(this.data)
         .done().then(resp => {
           this.update(resp.json)
@@ -150,10 +150,15 @@ export default function createModelClass (name, options, client, metadata) {
       })
     })
   }
-  // for (let method in verbs) {
-  //   Model[method] = (...queryString) => {
-  //
-  //   }
-  // }
+  Model.get = (...keys) => {
+    return new Promise((resolve, reject) => {
+      Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET').done().then(resp => {
+        resolve(new Model(resp.json, 'loaded'))
+      }, resp => {
+        // Error
+        reject(resp)
+      })
+    })
+  }
   return Model
 }

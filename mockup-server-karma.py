@@ -117,15 +117,18 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
 
     @json
     @Resource.expose
-    def get(self):
-        return Resource.query
+    def get(self, id_: int=None):
+        q = Resource.query
+        if id_ is not None:
+            return q.filter(Resource.id == id_).one_or_none()
+        return q
 
 
 class Root(RootController):
     resources = ResourceController()
     sessions = AuthController()
 
-    @text
+    @text('get')
     def index(self):
         return 'Index'
 

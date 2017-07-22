@@ -9,7 +9,7 @@ describe('Filtering', function () {
     let c = new MockupClient()
     c.request('resources').filter('id', 1).done().then((resp) => {
       expect(resp.json.length).toEqual(1)
-      expect(resp.json[0]).toEqual({id: 1, title: 'resource1'})
+      expect(resp.json[0]['id']).toEqual(1)
       done()
     })
   })
@@ -17,7 +17,7 @@ describe('Filtering', function () {
     let c = new MockupClient()
     c.request('resources').filter({id: 1, title: 'resource1'}).done().then((resp) => {
       expect(resp.json.length).toEqual(1)
-      expect(resp.json[0]).toEqual({id: 1, title: 'resource1'})
+      expect(resp.json[0]['id']).toEqual(1)
       done()
     })
   })

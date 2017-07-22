@@ -84,7 +84,7 @@ const modelPrototype = {
     }
     return this.constructor.__client__.request(this.resourcePath, 'GET')
       .setPostProcessor(resp => {
-        this.update(resp.json)
+        this.updateFromResponse(resp)
         this.__status__ = 'loaded'
         return this
       })
@@ -123,8 +123,9 @@ const DEFAULT_VERBS = {
 }
 
 export default function createModelClass (name, options, client, metadata) {
-  let Model = function (data, status = 'new') {
+  let Model = function (data, status = 'new', etag = undefined) {
     this.__status__ = status
+    this.__etag__ = etag
     this.__hash__ = 0
     this.constructor = Model
     this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(data) : 0
@@ -153,9 +154,12 @@ export default function createModelClass (name, options, client, metadata) {
       .filter(...filters)
       .setPostProcessor(resp => resp.json.map(i => new Model(i, 'loaded')))
   }
+  Model.fromResponse = (resp) => {
+    return new Model(resp.json, 'loaded', resp.getHeader('ETag'))
+  }
   Model.get = (...keys) => {
     return Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET')
-      .setPostProcessor(resp => new Model(resp.json, 'loaded'))
+      .setPostProcessor(resp => Model.fromResponse(resp))
   }
   return Model
 }

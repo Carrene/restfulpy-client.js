@@ -9,13 +9,13 @@ from subprocess import run
 from wsgiref.simple_server import make_server
 
 from sqlalchemy import Integer, Unicode
-from nanohttp import text, json, context, RestController, HttpBadRequest
+from nanohttp import text, json, context, RestController, HttpBadRequest, etag
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
 from restfulpy.controllers import RootController, ModelRestController, JsonPatchControllerMixin
 from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, FilteringMixin, Field, setup_schema, \
-    DBSession
+    DBSession, ModifiedMixin
 from restfulpy.principal import JwtPrincipal, JwtRefreshToken
 
 
@@ -39,12 +39,16 @@ class MockupMember:
         self.__dict__.update(kwargs)
 
 
-class Resource(OrderingMixin, PaginationMixin, FilteringMixin, DeclarativeBase):
+class Resource(ModifiedMixin, OrderingMixin, PaginationMixin, FilteringMixin, DeclarativeBase):
     __tablename__ = 'resource'
 
     id = Field(Integer, primary_key=True)
     title = Field(Unicode(30), watermark='title here', icon='default', label='Title', pattern='[a-zA-Z0-9]{3,}',
                   min_length=3)
+
+    @property
+    def __etag__(self):
+        return self.last_modification_time.isoformat()
 
 
 class MockupAuthenticator(StatefulAuthenticator):
@@ -121,6 +125,7 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     __model__ = Resource
 
     @json
+    @etag
     @Resource.expose
     def get(self, id_: int=None):
         q = Resource.query

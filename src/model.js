@@ -105,7 +105,6 @@ const modelPrototype = {
         verb = 'PUT'
         resourceUrl = this.resourcePath
     }
-    console.log('__identity__', resourceUrl)
     return this.constructor.__client__.request(resourceUrl, verb)
       .addParameters(this.data)
       .setPostProcessor(resp => {

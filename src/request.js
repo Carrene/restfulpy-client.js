@@ -134,6 +134,11 @@ export default class Request {
         reject(resp)
       }
       xhr.open(this.verb.toUpperCase(), this.composeUrl())
+
+      for (let header in this.headers){
+        xhr.setRequestHeader(header, this.headers[header])
+      }
+
       if (this.encoding === 'json') {
         requestBody = JSON.stringify(this.payload)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')

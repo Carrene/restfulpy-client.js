@@ -8,6 +8,7 @@ describe('Filtering', function () {
   it('Simple filter', function (done) {
     let c = new MockupClient()
     c.request('resources').filter('id', 1).done().then((resp) => {
+      debugger
       expect(resp.json.length).toEqual(1)
       expect(resp.json[0]['id']).toEqual(1)
       done()

@@ -74,10 +74,11 @@ const modelPrototype = {
     }
     return this.constructor.__client__.request(this.resourcePath, 'DELETE')
       .setPostProcessor(resp => {
-        this.update(resp.json)
+        this.updateFromResponse(resp)
         this.__status__ = 'deleted'
         return this
       })
+      .ifMatch(this.__etag__)
   },
   reload () {
     switch (this.__status__) {
@@ -92,6 +93,7 @@ const modelPrototype = {
         this.__status__ = 'loaded'
         return this
       })
+      .ifNoneMatch(this.__etag__)
   },
   save () {
     let verb
@@ -112,11 +114,11 @@ const modelPrototype = {
     return this.constructor.__client__.request(resourceUrl, verb)
       .addParameters(this.data)
       .setPostProcessor(resp => {
-        this.update(resp.json)
+        this.updateFromResponse(resp)
         this.__status__ = 'loaded'
         return this
       })
-      .addHeader
+      .ifMatch(this.__etag__)
   }
 }
 

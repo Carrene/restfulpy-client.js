@@ -34,31 +34,35 @@ describe('Model', function () {
     let c = new MockupClient()
     const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
-      // GET
-      Resource.get('1').done().then(resource => {
-        expect(resource.title).toEqual('resource1')
-        expect(resource.__status__).toEqual('loaded')
-        resource.title = 'resource1(Updated)'
-        expect(resource.__status__).toEqual('dirty')
-        resource.title = 'resource1'
-        expect(resource.__status__).toEqual('loaded')
-        resource.title = 'resource1(Updated)'
-        expect(resource.__status__).toEqual('dirty')
-        // PUT
-        resource.save().done().then(r => {
-          expect(resource).toBe(r)
+      // POST
+      (new Resource({title: 'CRUD'})).save().done().then(newResource => {
+        expect(newResource.__status__).toEqual('loaded')
+        // GET
+        Resource.get(newResource.id).done().then(resource => {
+          expect(resource.title).toEqual('CRUD')
           expect(resource.__status__).toEqual('loaded')
-          expect(resource.title).toEqual('resource1(Updated)')
-
-          // Reload (GET)
-          resource.reload().done.then(rr => {
-            expect(resource).toBe(rr)
+          resource.title = 'CRUD(Updated)'
+          expect(resource.__status__).toEqual('dirty')
+          resource.title = 'CRUD'
+          expect(resource.__status__).toEqual('loaded')
+          resource.title = 'CRUD(Updated)'
+          expect(resource.__status__).toEqual('dirty')
+          // PUT
+          resource.save().done().then(r => {
+            expect(resource).toBe(r)
             expect(resource.__status__).toEqual('loaded')
-            // DELETE
-            resource.delete().done().then(d => {
-              expect(resource).toBe(d)
-              expect(resource.__status__).toEqual('deleted')
-              done()
+            expect(resource.title).toEqual('CRUD(Updated)')
+
+            // Reload (GET)
+            resource.reload().done().then(rr => {
+              expect(resource).toBe(rr)
+              expect(resource.__status__).toEqual('loaded')
+              // DELETE
+              resource.delete().done().then(d => {
+                expect(resource).toBe(d)
+                expect(resource.__status__).toEqual('deleted')
+                done()
+              })
             })
           })
         })

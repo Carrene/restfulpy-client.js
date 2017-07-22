@@ -24,9 +24,14 @@ __version__ = '0.1.0'
 
 HERE = abspath(dirname(__file__))
 KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, 'node_modules/karma/bin/karma')
-SQLITE_DB = join(HERE, 'tests', 'data', 'mockup.sqlite')
+DATA_DIR = join(HERE, 'tests', 'data')
+SQLITE_DB = join(DATA_DIR, 'mockup.sqlite')
+
 if exists(SQLITE_DB):
     os.remove(SQLITE_DB)
+
+if not exists(DATA_DIR):
+    os.mkdir(DATA_DIR)
 
 
 class MockupMember:
@@ -62,7 +67,7 @@ class MockupApplication(Application):
     builtin_configuration = '''
     debug: true
     db:
-      uri: sqlite:///%s    
+      uri: sqlite:///%s
     jwt:
       max_age: 20
       refresh_token:

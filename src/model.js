@@ -68,16 +68,12 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is already deleted.')
     }
-    return new Promise((resolve, reject) => {
-      this.constructor.__client__.request(this.resourcePath, 'DELETE').done().then(resp => {
+    return this.constructor.__client__.request(this.resourcePath, 'DELETE')
+      .setPostProcessor(resp => {
         this.update(resp.json)
         this.__status__ = 'deleted'
-        resolve(this)
-      }, resp => {
-        // Error
-        reject(resp)
+        return this
       })
-    })
   },
   reload () {
     switch (this.__status__) {
@@ -86,36 +82,37 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
     }
-    return new Promise((resolve, reject) => {
-      this.constructor.__client__.request(this.resourcePath, 'GET').done().then(resp => {
+    return this.constructor.__client__.request(this.resourcePath, 'GET')
+      .setPostProcessor(resp => {
         this.update(resp.json)
         this.__status__ = 'loaded'
-        resolve(this)
-      }, resp => {
-        // Error
-        reject(resp)
+        return this
       })
-    })
   },
   save () {
+    let verb
+    let resourceUrl
     switch (this.__status__) {
       case 'loaded':
         throw new ModelStateError('Object is not changed.')
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
+      case 'new':
+        verb = 'POST'
+        resourceUrl = this.constructor.__url__
+        break
+      default:
+        verb = 'PUT'
+        resourceUrl = this.resourcePath
     }
-    return new Promise((resolve, reject) => {
-      this.constructor.__client__.request(this.constructor.__url__, (this.__status__ === 'new') ? 'POST' : 'PUT')
-        .addParameters(this.data)
-        .done().then(resp => {
-          this.update(resp.json)
-          this.__status__ = 'loaded'
-          resolve(this)
-        }, resp => {
-          // Error
-          reject(resp)
-        })
-    })
+    console.log('__identity__', resourceUrl)
+    return this.constructor.__client__.request(resourceUrl, verb)
+      .addParameters(this.data)
+      .setPostProcessor(resp => {
+        this.update(resp.json)
+        this.__status__ = 'loaded'
+        return this
+      })
   }
 }
 
@@ -152,24 +149,14 @@ export default function createModelClass (name, options, client, metadata) {
   // Creating HTTP shorthands
   Model.__verbs__ = Object.assign({}, DEFAULT_VERBS, options.verbs || {})
   Model.load = (...filters) => {
-    return new Promise((resolve, reject) => {
-      Model.__client__.request(Model.__url__, Model.__verbs__.load).filter(...filters).done().then(resp => {
-        resolve(resp.json.map(o => new Model(o, 'loaded')))
-      }, resp => {
-        // Error
-        reject(resp)
-      })
-    })
+    return Model.__client__
+      .request(Model.__url__, Model.__verbs__.load)
+      .filter(...filters)
+      .setPostProcessor(resp => resp.json.map(i => new Model(i, 'loaded')))
   }
   Model.get = (...keys) => {
-    return new Promise((resolve, reject) => {
-      Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET').done().then(resp => {
-        resolve(new Model(resp.json, 'loaded'))
-      }, resp => {
-        // Error
-        reject(resp)
-      })
-    })
+    return Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET')
+      .setPostProcessor(resp => new Model(resp.json, 'loaded'))
   }
   return Model
 }

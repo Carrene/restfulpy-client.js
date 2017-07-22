@@ -13,6 +13,12 @@ export default class Request {
     this.headers = headers
     this.queryString = queryString
     this.encoding = encoding
+    this.postProcessor = null
+  }
+
+  setPostProcessor (processor) {
+    this.postProcessor = processor
+    return this
   }
 
   setVerb (verb) {
@@ -106,7 +112,11 @@ export default class Request {
 
       xhr.onload = () => {
         console.log('HTTP OK', this.resource, this.verb, xhr.status)
-        resolve(new Response(xhr))
+        let result = new Response(xhr)
+        if (this.postProcessor) {
+          result = this.postProcessor(result)
+        }
+        resolve(result)
       }
       xhr.onerror = () => {
         console.log('HTTP ERROR', this.resource, this.verb, xhr.status)

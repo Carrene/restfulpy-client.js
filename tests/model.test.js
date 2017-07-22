@@ -8,10 +8,11 @@ describe('Model', function () {
     let c = new MockupClient()
     const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
-      Resource.load('id', '<5').then(resources => {
+      Resource.load('id', '<5').sort('id').done().then(resources => {
         expect(resources.length).toEqual(4)
         expect(resources[0].__status__).toEqual('loaded')
         expect(resources[0].constructor).toEqual(Resource)
+        expect(resources[0])
         done()
       })
     })
@@ -20,7 +21,7 @@ describe('Model', function () {
     let c = new MockupClient()
     const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
-      Resource.get('1').then(resource => {
+      Resource.get('1').done().then(resource => {
         expect(resource.__status__).toEqual('loaded')
         expect(resource.id).toEqual(1)
         expect(resource.title).toEqual('resource1')
@@ -34,7 +35,7 @@ describe('Model', function () {
     const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
       // GET
-      Resource.get('1').then(resource => {
+      Resource.get('1').done().then(resource => {
         expect(resource.title).toEqual('resource1')
         expect(resource.__status__).toEqual('loaded')
         resource.title = 'resource1(Updated)'
@@ -44,12 +45,12 @@ describe('Model', function () {
         resource.title = 'resource1(Updated)'
         expect(resource.__status__).toEqual('dirty')
         // PUT
-        resource.save().then(r => {
+        resource.save().done().then(r => {
           expect(resource).toBe(r)
           expect(resource.__status__).toEqual('loaded')
           expect(resource.title).toEqual('resource1(Updated)')
           // DELETE
-          resource.delete().then(d => {
+          resource.delete().done().then(d => {
             expect(resource).toBe(d)
             expect(resource.__status__).toEqual('deleted')
             done()

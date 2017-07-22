@@ -32,6 +32,19 @@ const instanceHandler = {
 }
 
 const modelPrototype = {
+  /*
+   * +----------------+----------------+--------+--------+---------+
+   * | state / ACTION | CHANGE         | SAVE   | RELOAD | DELETE  |
+   * +----------------+----------------+--------+--------+---------+
+   * | new            | new            | loaded | error  | error   |
+   * +----------------+----------------+--------+--------+---------+
+   * | loaded         | dirty          | error  | loaded | deleted |
+   * +----------------+----------------+--------+--------+---------+
+   * | dirty          | dirty / loaded | loaded | loaded | deleted |
+   * +----------------+----------------+--------+--------+---------+
+   * | deleted        | error          | error  | error  | error   |
+   * +----------------+----------------+--------+--------+---------+
+   */
   get __identity__ () {
     return this.constructor.__primaryKeys__.map(k => this[k])
   },
@@ -54,8 +67,6 @@ const modelPrototype = {
         throw new ModelStateError('Cannot delete unsaved objects.')
       case 'deleted':
         throw new ModelStateError('Object is already deleted.')
-      case 'dirty':
-        throw new ModelStateError('Object is dirty and cannot delete a dirty object, use reload to reset it\'s state')
     }
     return new Promise((resolve, reject) => {
       this.constructor.__client__.request(this.resourcePath, 'DELETE').done().then(resp => {

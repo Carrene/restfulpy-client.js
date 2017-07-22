@@ -15,7 +15,7 @@ from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
 from restfulpy.controllers import RootController, ModelRestController, JsonPatchControllerMixin
 from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, FilteringMixin, Field, setup_schema, \
-    DBSession, ModifiedMixin
+    DBSession, ModifiedMixin, commit
 from restfulpy.principal import JwtPrincipal, JwtRefreshToken
 
 
@@ -132,6 +132,34 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
         if id_ is not None:
             return q.filter(Resource.id == id_).one_or_none()
         return q
+
+    @json
+    @etag
+    @Resource.expose
+    @commit
+    def put(self, id_: int=None):
+        m = Resource.query.filter(Resource.id == id_).one_or_none()
+        m.update_from_request()
+        context.etag_match(m.__etag__)
+        return m
+
+    @json
+    @etag
+    @commit
+    def post(self):
+        m = Resource()
+        m.update_from_request()
+        DBSession.add(m)
+        return m
+
+    @json
+    @etag
+    @commit
+    def delete(self, id_: int=None):
+        m = Resource.query.filter(Resource.id == id_).one_or_none()
+        context.etag_match(m.__etag__)
+        DBSession.delete(m)
+        return m
 
 
 class Root(RootController):

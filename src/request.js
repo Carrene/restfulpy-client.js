@@ -105,6 +105,16 @@ export default class Request {
     return url
   }
 
+  ifMatch (etag) {
+    this.headers['If-Match'] = etag
+    return this
+  }
+
+  ifNoneMatch (etag) {
+    this.headers['If-None-Match'] = etag
+    return this
+  }
+
   done () {
     return new Promise((resolve, reject) => {
       let xhr = new window.XMLHttpRequest()

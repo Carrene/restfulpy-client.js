@@ -46,10 +46,10 @@ const modelPrototype = {
    * +----------------+----------------+--------+--------+---------+
    */
   get __identity__ () {
-    return this.constructor.__primaryKeys__.map(k => this[k])
+    return this.constructor.__primaryKeys__.map(k => this.data[k])
   },
   get resourcePath () {
-    return `${this.__url__}/${this.__identity__.join('/')}`
+    return `${this.constructor.__url__}/${this.__identity__.join('/')}`
   },
   changed () {
     this.__hash__ = getObjectHashCode(this.data)
@@ -60,6 +60,10 @@ const modelPrototype = {
   },
   update (obj) {
     Object.assign(this.data, obj)
+  },
+  updateFromResponse (resp) {
+    this.__etag__ = resp.getHeader('ETag')
+    Object.assign(this.data, resp.json)
   },
   delete () {
     switch (this.__status__) {
@@ -112,6 +116,7 @@ const modelPrototype = {
         this.__status__ = 'loaded'
         return this
       })
+      .addHeader
   }
 }
 

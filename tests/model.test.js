@@ -49,11 +49,17 @@ describe('Model', function () {
           expect(resource).toBe(r)
           expect(resource.__status__).toEqual('loaded')
           expect(resource.title).toEqual('resource1(Updated)')
-          // DELETE
-          resource.delete().done().then(d => {
-            expect(resource).toBe(d)
-            expect(resource.__status__).toEqual('deleted')
-            done()
+
+          // Reload (GET)
+          resource.reload().done.then(rr => {
+            expect(resource).toBe(rr)
+            expect(resource.__status__).toEqual('loaded')
+            // DELETE
+            resource.delete().done().then(d => {
+              expect(resource).toBe(d)
+              expect(resource.__status__).toEqual('deleted')
+              done()
+            })
           })
         })
       })

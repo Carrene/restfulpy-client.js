@@ -4,12 +4,42 @@ restfulpy-client.js
 Javascript client for [restfulpy](https://github.com/pylover/restfulpy)
 
 
-## Install
+Install
+-------
 
 ```bash
 npm install restfulpy
-``
+```
 
+Usage
+-----
+
+```javascript
+let client = new MockupClient('http://example.org/api/v1')
+
+// Login
+client.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {
+  // Authentication success, so
+  console.log(resp.json.token) // is not null
+  console.log(client.authenticator.authenticated) // is true
+}).catch(resp => {
+  throw resp.error
+})
+
+
+// Posting some data to `http://example.org/api/v1/echo`
+client.request('echo', 'POST').addParameters({item1: "Value1"}).done().then((resp) => {
+  console.log(resp.status) // Is 200
+  console.log(resp.json)
+  console.log(resp.getHeader('Content-Type'))
+}).catch(resp => {
+  console.log(resp.status)
+  throw resp.error
+})
+
+// Logout
+client.logout()
+```
 
 ## Development Environment Setup
 
@@ -77,5 +107,3 @@ npm run test -- --no-single-run
 ```
 
 To keep the browser open for more investigation and watch for changes. see karma documents for more info.
-
-

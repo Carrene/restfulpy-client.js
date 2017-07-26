@@ -22,4 +22,3 @@ describe('Authentication', function () {
     expect(c.authenticator.authenticated).toBe(false)
   })
 })
-

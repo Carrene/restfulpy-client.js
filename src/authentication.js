@@ -52,4 +52,16 @@ export default class Authenticator {
       this.token = token
     }
   }
+
+  isInRole (role) {
+    if (!this.authenticated) {
+      throw new AuthenticationRequiredError()
+    }
+    for (let r of this.member.roles) {
+      if (r === role) {
+        return true
+      }
+    }
+    return false
+  }
 }

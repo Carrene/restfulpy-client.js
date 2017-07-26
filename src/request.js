@@ -135,7 +135,7 @@ export default class Request {
       }
       xhr.open(this.verb.toUpperCase(), this.composeUrl())
 
-      for (let header in this.headers){
+      for (let header in this.headers) {
         xhr.setRequestHeader(header, this.headers[header])
       }
 

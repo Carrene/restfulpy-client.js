@@ -10,6 +10,7 @@ describe('Authentication', function () {
     c.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {
       expect(resp.json.token).not.toBe(null)
       expect(c.authenticator.authenticated).toBeTruthy()
+      expect(c.authenticator.isInRole('user')).toBeTruthy()
       done()
     }).catch(resp => {
       done()

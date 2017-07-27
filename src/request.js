@@ -130,9 +130,7 @@ export default class Request {
         console.log('HTTP OK', this.resource, this.verb, xhr.status)
         let response = new Response(xhr)
         if (this.postProcessor) {
-          this.postProcessor(response, (...args) => {
-            res
-          } , reject)
+          this.postProcessor(response, resolve, reject)
         } else {
           resolve(response)
         }

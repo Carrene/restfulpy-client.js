@@ -13,7 +13,7 @@ describe('Model', function () {
         expect(resources[0].__status__).toEqual('loaded')
         expect(resources[0].constructor).toEqual(Resource)
         expect(resources[0])
-        expect(resp.status).toEqual(200)
+        // expect(resp.status).toEqual(200)
         done()
       })
     })

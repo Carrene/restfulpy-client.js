@@ -45,6 +45,12 @@ export default class Request {
     return this
   }
 
+  addParameter (name, value) {
+    let o = {}
+    o[name] = value
+    return this.addParameters(o)
+  }
+
   addParameters (parameters) {
     Object.assign(this.payload, parameters)
     return this

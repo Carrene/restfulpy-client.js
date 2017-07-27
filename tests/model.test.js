@@ -8,11 +8,12 @@ describe('Model', function () {
     let c = new MockupClient()
     const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
-      Resource.load('id', '<5').sort('id').done().then(resources => {
+      Resource.load('id', '<5').sort('id').done().then((resources, resp) => {
         expect(resources.length).toEqual(4)
         expect(resources[0].__status__).toEqual('loaded')
         expect(resources[0].constructor).toEqual(Resource)
         expect(resources[0])
+        expect(resp.status).toEqual(200)
         done()
       })
     })

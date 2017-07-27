@@ -128,11 +128,14 @@ export default class Request {
 
       xhr.onload = () => {
         console.log('HTTP OK', this.resource, this.verb, xhr.status)
-        let result = new Response(xhr)
+        let response = new Response(xhr)
         if (this.postProcessor) {
-          result = this.postProcessor(result)
+          this.postProcessor(response, (...args) => {
+            res
+          } , reject)
+        } else {
+          resolve(response)
         }
-        resolve(result)
       }
       xhr.onerror = () => {
         console.log('HTTP ERROR', this.resource, this.verb, xhr.status)

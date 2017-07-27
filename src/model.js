@@ -73,10 +73,10 @@ const modelPrototype = {
         throw new ModelStateError('Object is already deleted.')
     }
     return this.constructor.__client__.request(this.resourcePath, 'DELETE')
-      .setPostProcessor(resp => {
+      .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         this.__status__ = 'deleted'
-        return this
+        resolve(this, resp)
       })
       .ifMatch(this.__etag__)
   },
@@ -88,10 +88,10 @@ const modelPrototype = {
         throw new ModelStateError('Object is deleted.')
     }
     return this.constructor.__client__.request(this.resourcePath, 'GET')
-      .setPostProcessor(resp => {
+      .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         this.__status__ = 'loaded'
-        return this
+        resolve(this, resp)
       })
       .ifNoneMatch(this.__etag__)
   },
@@ -113,10 +113,10 @@ const modelPrototype = {
     }
     return this.constructor.__client__.request(resourceUrl, verb)
       .addParameters(this.data)
-      .setPostProcessor(resp => {
+      .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         this.__status__ = 'loaded'
-        return this
+        resolve(this, resp)
       })
       .ifMatch(this.__etag__)
   }
@@ -159,14 +159,16 @@ export default function createModelClass (name, options, client, metadata) {
     return Model.__client__
       .request(Model.__url__, Model.__verbs__.load)
       .filter(...filters)
-      .setPostProcessor(resp => resp.json.map(i => new Model(i, 'loaded')))
+      .setPostProcessor((resp, resolve) => {
+        resolve(resp.json.map(i => new Model(i, 'loaded')), resp)
+      })
   }
   Model.fromResponse = (resp) => {
     return new Model(resp.json, 'loaded', resp.getHeader('ETag'))
   }
   Model.get = (...keys) => {
     return Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET')
-      .setPostProcessor(resp => Model.fromResponse(resp))
+      .setPostProcessor((resp, resolve) => resolve(Model.fromResponse(resp), resp))
   }
   return Model
 }

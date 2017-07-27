@@ -35,5 +35,17 @@ export default class Response {
   get error () {
     return (this.status === 200) ? null : this.xhr.responseText
   }
+
+  get totalCount () {
+    return this.getHeader('X-Pagination-Count')
+  }
+
+  get take () {
+    return this.getHeader('X-Pagination-Take')
+  }
+
+  get skip () {
+    return this.getHeader('X-Pagination-Skip')
+  }
 }
 

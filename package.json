@@ -2,11 +2,11 @@
   "name": "restfulpy",
   "version": "0.1.0",
   "description": "A javascript client for restfulpy",
-  "main": "dist/restfulpy-client.js",
+  "main": "dist/restfulpy.js",
   "module": "src/index.js",
   "scripts": {
     "test": "./mockup-server-karma.py",
-    "dev": "webpack",
+    "dev": "webpack --progress --colors --watch --env dev",
     "build": "webpack -p"
   },
   "repository": {

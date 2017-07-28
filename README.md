@@ -28,7 +28,7 @@ client.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => 
 
 
 // Posting some data to `http://example.org/api/v1/echo`
-client.request('echo', 'POST').addParameters({item1: "Value1"}).done().then((resp) => {
+client.request('echo', 'POST').addParameters({item1: "Value1"}).send().then(resp => {
   console.log(resp.status) // Is 200
   console.log(resp.json)
   console.log(resp.getHeader('Content-Type'))

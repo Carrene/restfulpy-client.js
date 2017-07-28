@@ -8,7 +8,7 @@ describe('JsonPatch', function () {
   /* Testing json payload in both request & response */
   it('jsonpatch', function (done) {
     let c = new MockupClient()
-    c.jsonPatchRequest('resources').addRequest('', 'get').addRequest('', 'get').done().then((resp) => {
+    c.jsonPatchRequest('resources').addRequest('', 'get').addRequest('', 'get').send().then((resp) => {
       expect(resp.status).toEqual(200)
       expect(resp.json.length).toEqual(2)
       expect(resp.json[0].length).toEqual(10)

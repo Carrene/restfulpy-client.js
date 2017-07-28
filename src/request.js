@@ -122,7 +122,7 @@ export default class Request {
     return this
   }
 
-  done () {
+  send () {
     return new Deal((resolve, reject) => {
       let xhr = new window.XMLHttpRequest()
       let requestBody = ''

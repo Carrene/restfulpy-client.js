@@ -3,6 +3,7 @@ import urljoin from 'url-join'
 import { AuthenticationRequiredError } from './exceptions'
 import Response from './response'
 import { encodeQueryString } from './helpers'
+import Deal from './deal'
 
 export default class Request {
   constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = [], encoding = 'json') {
@@ -122,12 +123,11 @@ export default class Request {
   }
 
   done () {
-    return new Promise((resolve, reject) => {
+    return new Deal((resolve, reject) => {
       let xhr = new window.XMLHttpRequest()
       let requestBody = ''
 
       xhr.onload = () => {
-        console.log('HTTP OK', this.resource, this.verb, xhr.status)
         let response = new Response(xhr)
         if (this.postProcessor) {
           this.postProcessor(response, resolve, reject)
@@ -136,9 +136,7 @@ export default class Request {
         }
       }
       xhr.onerror = () => {
-        console.log('HTTP ERROR', this.resource, this.verb, xhr.status)
-        let resp = new Response(xhr)
-        reject(resp)
+        reject(new Response(xhr))
       }
       xhr.open(this.verb.toUpperCase(), this.composeUrl())
 

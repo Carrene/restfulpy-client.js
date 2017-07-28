@@ -25,7 +25,6 @@ export default class Deal extends Promise {
   }
 
   static _call (innerFunc, args) {
-    console.log('args.length', args.length)
     if (args.length < 2) {
       innerFunc(...args)
     } else {

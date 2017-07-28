@@ -15,7 +15,9 @@ Usage
 -----
 
 ```javascript
-let client = new MockupClient('http://example.org/api/v1')
+import Client from 'restfulpy'
+
+let client = new Client('http://example.org/api/v1')
 
 // Login
 client.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {

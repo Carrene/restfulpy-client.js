@@ -128,7 +128,7 @@ export default class Request {
       let requestBody = ''
 
       xhr.onload = () => {
-        let response = new Response(xhr)
+        let response = Response.fromXhr(xhr)
         if (this.postProcessor) {
           this.postProcessor(response, resolve, reject)
         } else {

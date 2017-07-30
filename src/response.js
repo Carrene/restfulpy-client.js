@@ -36,6 +36,16 @@ export default class Response {
     return (this.status === 200) ? null : this.xhr.responseText
   }
 
+  static fromXhr (xhr) {
+    if (xhr.getResponseHeader('X-Pagination-Count')) {
+      return new PagedResponse(xhr)
+    }
+    return new Response(xhr)
+  }
+
+}
+
+class PagedResponse extends Response {
   get totalCount () {
     return parseInt(this.getHeader('X-Pagination-Count'))
   }

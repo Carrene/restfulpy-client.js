@@ -37,15 +37,26 @@ export default class Response {
   }
 
   get totalCount () {
-    return this.getHeader('X-Pagination-Count')
+    return parseInt(this.getHeader('X-Pagination-Count'))
   }
 
   get take () {
-    return this.getHeader('X-Pagination-Take')
+    return parseInt(this.getHeader('X-Pagination-Take'))
   }
 
   get skip () {
-    return this.getHeader('X-Pagination-Skip')
+    return parseInt(this.getHeader('X-Pagination-Skip'))
+  }
+
+  get pageIndex () {
+    return Math.floor(this.skip / this.take)
+  }
+
+  get pageSize () {
+    return this.take
+  }
+
+  get totalPages () {
+    return Math.floor(this.totalCount / this.take) + 1
   }
 }
-

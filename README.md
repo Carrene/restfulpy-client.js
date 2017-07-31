@@ -47,7 +47,13 @@ client.logout()
 
 ```javascrypt
 
-client.metadata.ModelName.get(1)
+client.metadata.ModelName.get(1).done(model => {
+  // Use model
+})
+
+client.metadata.ModelName.load().done(models => {
+  // Use models
+})
 
 ```
 

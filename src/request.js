@@ -167,7 +167,6 @@ export default class Request {
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)
       }
-      console.log(requestBody)
       xhr.send(requestBody)
     })
   }

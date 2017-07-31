@@ -40,12 +40,12 @@ export default class RestfulpyClient {
 
   login (credentials) {
     if (this.authenticator.authenticated) {
-      throw AlreadyAuthenticatedError()
+      throw new AlreadyAuthenticatedError()
     }
     return new Promise((resolve, reject) => {
       this.request('sessions', 'POST')
         .addParameters(this.constructor.validateCredentials(credentials))
-        .done() // Returns a promise
+        .send() // Returns a promise
         .then((resp) => {
           this.authenticator.token = resp.json['token']
           resolve(resp)

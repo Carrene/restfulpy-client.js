@@ -14,7 +14,7 @@ export default class Metadata {
     for (let entity in entities) {
       let options = entities[entity]
       promises.push(new Promise((resolve, reject) => {
-        client.request(options.url, 'METADATA').send().then(resp => {
+        client.request(options.url, 'METADATA').setEncoding(null).send().then(resp => {
           let modelClass = this.models[entity] = createModelClass(entity, options, client, resp.json)
           resolve(modelClass)
         }).catch(resp => {

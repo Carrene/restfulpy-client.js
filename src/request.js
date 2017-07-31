@@ -144,7 +144,9 @@ export default class Request {
         xhr.setRequestHeader(header, this.headers[header])
       }
 
-      if (this.encoding === 'json') {
+      if (this.encoding === null) {
+        requestBody = null
+      } else if (this.encoding === 'json') {
         requestBody = JSON.stringify(this.payload)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       } else if (this.encoding === 'urlencoded') {
@@ -165,6 +167,7 @@ export default class Request {
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)
       }
+      console.log(requestBody)
       xhr.send(requestBody)
     })
   }

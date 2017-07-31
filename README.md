@@ -43,6 +43,14 @@ client.request('echo', 'POST').addParameters({item1: "Value1"}).send().then(resp
 client.logout()
 ```
 
+## Metadata
+
+```javascrypt
+
+client.metadata.ModelName.get(1)
+
+```
+
 ## Development Environment Setup
 
 ```bash

@@ -45,7 +45,7 @@ export default class Response {
 
 }
 
-class PagedResponse extends Response {
+export class PagedResponse extends Response {
   get totalCount () {
     return parseInt(this.getHeader('X-Pagination-Count'))
   }

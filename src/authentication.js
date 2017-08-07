@@ -7,7 +7,7 @@ export default class Authenticator {
     this.tokenRequestHeaderKey = tokenRequestHeaderKey
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this.tokenResponseHeaderKey = tokenResponseHeaderKey
-    this.member = null
+    this._member = null
   }
 
   get token () {
@@ -26,6 +26,25 @@ export default class Authenticator {
     }
   }
 
+  restoreFromLocalStorage () {
+    let token = this.token
+    if (token === null) {
+      return
+    }
+    this._member = jwtDecode(token)
+  }
+
+  get member () {
+    if (this._member === null) {
+      this.restoreFromLocalStorage()
+    }
+    return this._member
+  }
+
+  set member (v) {
+    this._member = v
+  }
+
   get authenticated () {
     return this.member !== null
   }
@@ -42,8 +61,8 @@ export default class Authenticator {
   }
 
   deleteToken () {
-    this.member = null
     window.localStorage.removeItem(this.tokenLocalStorageKey)
+    this.member = null
   }
 
   checkResponse (response) {

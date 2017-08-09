@@ -167,6 +167,8 @@ export default class Request {
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)
       }
+      // FIXME : Make it an option
+      xhr.withCredentials = true
       xhr.send(requestBody)
     })
   }

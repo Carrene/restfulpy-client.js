@@ -75,6 +75,10 @@ export default class Request {
   }
 
   filter (field, expression) {
+    if (field === undefined) {
+      return this
+    }
+
     if (typeof field === 'object') {
       for (let i in field) {
         this.addQueryString(i, field[i], true)

@@ -10,7 +10,7 @@ export default class JsonPatchRequest extends Request {
   }
 
   addRequest (resource, verb, payload = null) {
-    this.payload.push({path: resource, op: verb, value: payload})
+    this.payload.push({path: resource, op: verb.toLowerCase(), value: payload})
     return this
   }
 }

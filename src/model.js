@@ -14,6 +14,9 @@ const instanceHandler = {
     if (name in target.data) {
       return target.data[name]
     }
+    if (name in target.constructor.fields) {
+      return target.constructor.fields[name].default
+    }
     return undefined
   },
 
@@ -28,6 +31,10 @@ const instanceHandler = {
       target[name] = value
     }
     return true
+  },
+
+  ownKeys: function (target) {
+    return Object.keys(target).concat(Object.keys(target.constructor.fields))
   }
 }
 
@@ -136,7 +143,7 @@ export default function createModelClass (name, options, client, metadata) {
     this.__hash__ = 0
     this.constructor = Model
     this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(data) : 0
-    this.data = data
+    this.data = data || {}
     this.changed()
     return new Proxy(this, instanceHandler)
   }

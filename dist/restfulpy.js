@@ -2404,6 +2404,10 @@ var instanceHandler = {
 
   ownKeys: function ownKeys(target) {
     return (0, _keys2.default)(target).concat((0, _keys2.default)(target.constructor.fields));
+  },
+
+  has: function has(target, key) {
+    return key in target || key in target.constructor.fields;
   }
 };
 
@@ -2419,6 +2423,9 @@ var modelPrototype = {
     return this.constructor.__url__ + '/' + this.__identity__.join('/');
   },
   changed: function changed() {
+    if (this.__ob__) {
+      this.__ob__.dep.notify();
+    }
     this.__hash__ = (0, _helpers.getObjectHashCode)(this.data);
     if (this.__status__ === 'new') {
       return;

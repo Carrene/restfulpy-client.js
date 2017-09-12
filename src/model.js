@@ -35,6 +35,10 @@ const instanceHandler = {
 
   ownKeys: function (target) {
     return Object.keys(target).concat(Object.keys(target.constructor.fields))
+  },
+
+  has: function (target, key) {
+    return key in target || key in target.constructor.fields
   }
 }
 
@@ -59,6 +63,10 @@ const modelPrototype = {
     return `${this.constructor.__url__}/${this.__identity__.join('/')}`
   },
   changed () {
+    // FIXME: This condition is for handling vuejs proxy
+    if (this.__ob__) {
+      this.__ob__.dep.notify()
+    }
     this.__hash__ = getObjectHashCode(this.data)
     if (this.__status__ === 'new') {
       return

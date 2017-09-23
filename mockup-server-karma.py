@@ -97,7 +97,7 @@ class MockupApplication(Application):
         DBSession.commit()
 
     def begin_request(self):
-        context.response_headers.add_header('Access-Control-Allow-Origin', '*')
+        context.response_headers.add_header('Access-Control-Allow-Origin', context.environ['HTTP_ORIGIN'])
 
 
 class AuthController(RestController):

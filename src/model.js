@@ -11,11 +11,8 @@ const instanceHandler = {
     if (name in target) {
       return target[name]
     }
-    if (name in target.data) {
-      return target.data[name]
-    }
     if (name in target.constructor.fields) {
-      return target.constructor.fields[name].default
+      return this[name] || target.constructor.fields[name].default
     }
     return undefined
   },
@@ -25,7 +22,7 @@ const instanceHandler = {
       if (target.__status__ === 'deleted') {
         throw new ModelStateError('Cannot change deleted object.')
       }
-      target.data[name] = value
+      target[name] = value
       target.changed()
     } else {
       target[name] = value
@@ -57,28 +54,21 @@ const modelPrototype = {
    * +----------------+----------------+--------+--------+---------+
    */
   get __identity__ () {
-    return this.constructor.__primaryKeys__.map(k => this.data[k])
+    return this.constructor.__primaryKeys__.map(k => this[k])
   },
   get resourcePath () {
     return `${this.constructor.__url__}/${this.__identity__.join('/')}`
   },
   changed () {
-    // FIXME: This condition is for handling vuejs proxy
-    if (this.__ob__) {
-      this.__ob__.dep.notify()
-    }
-    this.__hash__ = getObjectHashCode(this.data)
+    // // FIXME: This condition is for handling vuejs proxy
+    // if (this.__ob__) {
+    //   this.__ob__.dep.notify()
+    // }
+    this.__hash__ = getObjectHashCode(this.toJson())
     if (this.__status__ === 'new') {
       return
     }
     this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
-  },
-  update (obj) {
-    Object.assign(this.data, obj)
-  },
-  updateFromResponse (resp) {
-    this.__etag__ = resp.getHeader('ETag')
-    Object.assign(this.data, resp.json)
   },
   delete () {
     switch (this.__status__) {
@@ -127,13 +117,41 @@ const modelPrototype = {
         resourceUrl = this.resourcePath
     }
     return this.constructor.__client__.request(resourceUrl, verb)
-      .addParameters(this.data)
+      .addParameters(this.toJson())
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         this.__status__ = 'loaded'
         resolve(this, resp)
       })
       .ifMatch(this.__etag__)
+  },
+  toJson () {
+    let result = {}
+    for (let fieldName in this.constructor.fields) {
+      let value = this.encodeFieldValueToJson(this.constructor.fields[fieldName])
+      if (value === undefined) {
+        continue
+      }
+      result[fieldName] = value
+    }
+    return result
+  },
+  encodeFieldValueToJson (field) {
+    return this[field.name]
+  },
+  update (obj) {
+    for (let fieldName in obj) {
+      if (fieldName in this.constructor.fields) {
+        this[fieldName] = obj[fieldName]
+      }
+    }
+  },
+  updateFromResponse (resp) {
+    this.__etag__ = resp.getHeader('ETag')
+    this.updateFromJson(resp.json)
+  },
+  updateFromJson (json) {
+    this.update(this.constructor.decodeJson(json))
   }
 }
 
@@ -145,13 +163,15 @@ const DEFAULT_VERBS = {
 }
 
 export default function createModelClass (name, options, client, metadata) {
-  let Model = function (data, status = 'new', etag = undefined) {
+  let Model = function (values, status = 'new', etag = undefined) {
+    this.constructor = Model
     this.__status__ = status
     this.__etag__ = etag
     this.__hash__ = 0
-    this.constructor = Model
-    this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(data) : 0
-    this.data = data || {}
+    if (values) {
+      this.update(values)
+    }
+    this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(values) : 0
     this.changed()
     return new Proxy(this, instanceHandler)
   }
@@ -175,11 +195,23 @@ export default function createModelClass (name, options, client, metadata) {
       .request(Model.__url__, Model.__verbs__.load)
       .filter(...filters)
       .setPostProcessor((resp, resolve) => {
-        resolve(resp.json.map(i => new Model(i, 'loaded')), resp)
+        resolve(resp.json.map(i => new Model(Model.decodeJson(i), 'loaded')), resp)
       })
   }
   Model.fromResponse = (resp) => {
-    return new Model(resp.json, 'loaded', resp.getHeader('ETag'))
+    return new Model(Model.decodeJson(resp.json), 'loaded', resp.getHeader('ETag'))
+  }
+  Model.decodeJson = (json) => {
+    let result = {}
+    for (let fieldName in metadata.fields) {
+      if (fieldName in json) {
+        result[fieldName] = Model.decodeFieldValueFromJson(metadata.fields[fieldName], json[fieldName])
+      }
+    }
+    return result
+  }
+  Model.decodeFieldValueFromJson = (field, encodedValue) => {
+    return encodedValue
   }
   Model.get = (...keys) => {
     return Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET')

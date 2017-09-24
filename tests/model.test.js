@@ -6,8 +6,8 @@ import { MockupClient } from './helpers'
 describe('Model', function () {
   it('load', function (done) {
     let c = new MockupClient()
-    const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
+      const Resource = c.metadata.models.Resource
       Resource.load('id', '<5').sort('id').send().done((resources, resp) => {
         expect(resources.length).toEqual(4)
         expect(resources[0].__status__).toEqual('loaded')
@@ -20,8 +20,8 @@ describe('Model', function () {
   })
   it('loadOne', function (done) {
     let c = new MockupClient()
-    const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
+      const Resource = c.metadata.models.Resource
       Resource.get('1').send().done((resource, resp) => {
         expect(resource.__status__).toEqual('loaded')
         expect(resource.id).toEqual(1)
@@ -33,8 +33,8 @@ describe('Model', function () {
   })
   it('CRUD', function (done) {
     let c = new MockupClient()
-    const Resource = c.metadata.models.Resource
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
+      const Resource = c.metadata.models.Resource;
       // POST
       (new Resource({title: 'CRUD'})).save().send().done(newResource => {
         expect(newResource.__status__).toEqual('loaded')

@@ -9,7 +9,7 @@ from subprocess import run
 from wsgiref.simple_server import make_server
 
 from sqlalchemy import Integer, Unicode
-from nanohttp import text, json, context, RestController, HttpBadRequest, etag
+from nanohttp import text, json, context, RestController, HttpBadRequest, etag, HttpNotFound
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -43,8 +43,8 @@ class Resource(ModifiedMixin, OrderingMixin, PaginationMixin, FilteringMixin, De
     __tablename__ = 'resource'
 
     id = Field(Integer, primary_key=True)
-    title = Field(Unicode(30), watermark='title here', icon='default', label='Title', pattern='[a-zA-Z0-9]{3,}',
-                  min_length=3)
+    title = Field(Unicode(30),
+                  watermark='title here', icon='default', label='Title', pattern='[a-zA-Z0-9]{3,}', min_length=3)
 
     @property
     def __etag__(self):
@@ -58,9 +58,7 @@ class MockupAuthenticator(StatefulAuthenticator):
             return MockupMember(id=1, email=email, roles=['user'])
 
     def create_refresh_principal(self, member_id=None):
-        return JwtRefreshToken(dict(
-            id=member_id
-        ))
+        return JwtRefreshToken(dict(id=member_id))
 
     def create_principal(self, member_id=None, session_id=None):
         return JwtPrincipal(dict(id=1, email='user1@example.com', roles=['user'], sessionId='1'))
@@ -142,6 +140,8 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @commit
     def put(self, id_: int=None):
         m = Resource.query.filter(Resource.id == id_).one_or_none()
+        if m is None:
+            raise HttpNotFound()
         m.update_from_request()
         context.etag_match(m.__etag__)
         return m

@@ -60,9 +60,12 @@ export default class Authenticator {
     delete request.headers[this.tokenRequestHeaderKey]
   }
 
-  deleteToken () {
+  deleteToken (done) {
     window.localStorage.removeItem(this.tokenLocalStorageKey)
     this.member = null
+    if (done !== undefined) {
+      done()
+    }
   }
 
   checkResponse (response) {

@@ -41,6 +41,17 @@ export default class Request {
     return this
   }
 
+  addHeader (name, value) {
+    let o = {}
+    o[name] = value
+    return this.addHeaders(o)
+  }
+
+  addHeaders (headers) {
+    Object.assign(this.headers, headers)
+    return this
+  }
+
   removeAuthenticationHeaders () {
     this.client.authenticator.removeAuthenticationHeaders(this)
     return this

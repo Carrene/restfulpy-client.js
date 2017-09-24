@@ -53,7 +53,7 @@ export default class Authenticator {
     if (!this.authenticated) {
       throw new AuthenticationRequiredError()
     }
-    request.headers[this.tokenRequestHeaderKey] = `Bearer ${this.token}`
+    request.addHeader(this.tokenRequestHeaderKey, `Bearer ${this.token}`)
   }
 
   removeAuthenticationHeaders (request) {

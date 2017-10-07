@@ -23,7 +23,6 @@ __version__ = '0.1.0'
 
 
 HERE = abspath(dirname(__file__))
-KARMA_EXECUTABLE = '%s start karma.config.js' % join(HERE, 'node_modules/karma/bin/karma')
 DATA_DIR = join(HERE, 'tests', 'data')
 SQLITE_DB = join(DATA_DIR, 'mockup.sqlite')
 
@@ -200,11 +199,13 @@ def main():
 
     server_url = 'http://%s:%d' % httpd.server_address
     print('Serving %s' % server_url)
+    test_runner_command = ' '.join(sys.argv[1:]) % dict(url=server_url)
     server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     try:
         server_thread.start()
         time.sleep(2)
-        run('%s %s --server-url=%s' % (KARMA_EXECUTABLE, ' '.join(sys.argv[1:]), server_url), shell=True)
+
+        run(test_runner_command, shell=True)
         return 0
     except KeyboardInterrupt:
         print('CTRL+X is pressed.')

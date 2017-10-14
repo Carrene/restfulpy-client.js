@@ -106,7 +106,7 @@ mkvirtualenv --python=$(which python3) restfulpy
 Installing the python dependencies
 
 ```bash
-pip install restfulpy
+pip install "restfulpy >= 0.33.7"
 ```
 
 Finally! Running the tests.

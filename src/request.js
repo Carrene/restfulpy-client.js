@@ -3,7 +3,6 @@ import urljoin from 'url-join'
 import { AuthenticationRequiredError } from './exceptions'
 import Response from './response'
 import { encodeQueryString } from './helpers'
-import Deal from './deal'
 
 export default class Request {
   constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = [], encoding = 'json') {
@@ -138,7 +137,7 @@ export default class Request {
   }
 
   send () {
-    return new Deal((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let xhr = new window.XMLHttpRequest()
       let requestBody = ''
 

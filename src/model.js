@@ -216,6 +216,7 @@ export default function createModelClass (name, options, client, metadata) {
   Model.get = (...keys) => {
     return Model.__client__.request(`${Model.__url__}/${keys.join('/')}`, 'GET')
       .setPostProcessor((resp, resolve) => resolve(Model.fromResponse(resp), resp))
+      .send()
   }
   return Model
 }

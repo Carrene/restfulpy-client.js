@@ -82,7 +82,7 @@ Adding some stuff into the `~/.bashrc` file.
 
 ```bash
 alias v.activate="source /usr/local/bin/virtualenvwrapper.sh"
-export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+export VIRTUALENVWRAPPER_PYTHON="$(which python3.6)"
 ```
 
 Re-source the `~/.bashrc`
@@ -100,7 +100,7 @@ v.activate
 Creating a dedicated virtualenv for this project.
 
 ```bash
-mkvirtualenv --python=$(which python3) restfulpy
+mkvirtualenv --python=$(which python3.6) restfulpy
 ```
 
 Installing the python dependencies

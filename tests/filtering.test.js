@@ -37,21 +37,21 @@ describe('Filtering', function () {
   })
   it('LIKE filter', function (done) {
     let c = new MockupClient()
-    c.request('resources').filter('title', '%resource').send().then((resp) => {
+    c.request('resources').filter('title', '%resource%').send().then((resp) => {
       expect(resp.json.length).toEqual(10)
       done()
     })
   })
   it('ILIKE filter', function (done) {
     let c = new MockupClient()
-    c.request('resources').filter('title', '%~Resource').send().then((resp) => {
+    c.request('resources').filter('title', '~%Resource%').send().then((resp) => {
       expect(resp.json.length).toEqual(10)
       done()
     })
   })
   it('BETWEEN filter', function (done) {
     let c = new MockupClient()
-    c.request('resources').filter('id', '~2,9').send().then((resp) => {
+    c.request('resources').filter('id', 'BETWEEN(2,9)').send().then((resp) => {
       expect(resp.json.length).toEqual(8)
       done()
     })

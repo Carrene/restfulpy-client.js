@@ -9,6 +9,7 @@ Install
 
 ```bash
 npm install restfulpy
+sudo apt-get install redis-server
 ```
 
 Usage
@@ -62,6 +63,7 @@ client.metadata.ModelName.load().done(models => {
 ```bash
 git clone <repo> && cd into/cloned/repo
 npm install
+sudo apt-get install redis-server
 
 ```
 

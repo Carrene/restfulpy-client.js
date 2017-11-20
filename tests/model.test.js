@@ -32,7 +32,7 @@ describe('Model', function () {
       })
     })
   })
-  it('loadOneFromRootPath', function (done) {
+  it('loadOneByAbsolutePath', function (done) {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource

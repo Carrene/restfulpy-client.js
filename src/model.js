@@ -214,8 +214,13 @@ export default function createModelClass (name, options, client, metadata) {
     return encodedValue
   }
   Model.get = (...keys) => {
-    let inputPath = keys[0][0] === '/' ? keys.join('/').substr(1) : `${Model.__url__}/${keys.join('/')}`
-    return Model.__client__.request(inputPath, 'GET')
+    let resourcePath = ''
+    if (keys.join('').startsWith('/')) {
+      resourcePath = keys.join('/').substr(1)
+    } else {
+      resourcePath = `${Model.__url__}/${keys.join('/')}`
+    }
+    return Model.__client__.request(resourcePath, 'GET')
       .setPostProcessor((resp, resolve) => resolve(Model.fromResponse(resp), resp))
       .send()
   }

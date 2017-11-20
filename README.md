@@ -124,3 +124,15 @@ npm run test -- --no-single-run
 ```
 
 To keep the browser open for more investigation and watch for changes. see karma documents for more info.
+
+## Browser Support
+
+![Firefox] | ![Chrome] | ![IE/Edge] | ![Safari] | ![Opera]
+--- | --- | --- | --- | ---
+17 | 41 | 12.0 | 9 | 28
+
+[Firefox]: https://cdnjs.cloudflare.com/ajax/libs/browser-logos/43.2.0/archive/firefox_1.5-3/firefox_1.5-3_32x32.png (Firefox)
+[Chrome]: https://cdnjs.cloudflare.com/ajax/libs/browser-logos/43.2.0/chrome/chrome_32x32.png (Chrome)
+[IE/Edge]: https://cdnjs.cloudflare.com/ajax/libs/browser-logos/43.2.0/edge/edge_32x32.png (IE/Edge)
+[Safari]: https://cdnjs.cloudflare.com/ajax/libs/browser-logos/43.2.0/safari/safari_32x32.png (Safari)
+[Opera]: https://cdnjs.cloudflare.com/ajax/libs/browser-logos/43.2.0/opera/opera_32x32.png (Opera)

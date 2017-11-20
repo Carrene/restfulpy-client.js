@@ -27,6 +27,21 @@ describe('Model', function () {
         expect(resource.id).toEqual(1)
         expect(resource.title).toEqual('resource1')
         expect(resource.constructor).toEqual(Resource)
+        expect(resource.resourcePath).toEqual('resources/1')
+        done()
+      })
+    })
+  })
+  it('loadOneByAbsolutePath', function (done) {
+    let c = new MockupClient()
+    c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
+      const Resource = c.metadata.models.Resource
+      Resource.get('/resources/1').then((resource, resp) => {
+        expect(resource.__status__).toEqual('loaded')
+        expect(resource.id).toEqual(1)
+        expect(resource.title).toEqual('resource1')
+        expect(resource.constructor).toEqual(Resource)
+        expect(resource.resourcePath).toEqual('resources/1')
         done()
       })
     })

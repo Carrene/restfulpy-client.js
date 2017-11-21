@@ -7,8 +7,7 @@
   "scripts": {
     "test": "restfulpy mockup-server --bind 0 node_modules/karma/bin/karma start karma.config.js --server-url={url}",
     "dev": "webpack --progress --colors --watch --env dev",
-    "build": "webpack -p",
-    "postinstall": "postinstall-build dist"
+    "build": "webpack -p"
   },
   "repository": {
     "type": "git",
@@ -22,7 +21,6 @@
   "homepage": "https://github.com/Carrene/restfulpy-client.js#readme",
   "dependencies": {
     "jwt-decode": "^2.2.0",
-    "postinstall-build": "^5.0.1",
     "url-join": "^2.0.2"
   },
   "devDependencies": {

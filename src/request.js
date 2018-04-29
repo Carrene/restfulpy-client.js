@@ -1,6 +1,6 @@
 import urljoin from 'url-join'
 
-import { BaseException, AuthenticationRequiredError } from './exceptions'
+import { AuthenticationRequiredError, InvalidOperationError } from './exceptions'
 import Response from './response'
 import { encodeQueryString } from './helpers'
 
@@ -148,7 +148,7 @@ export default class Request {
 
   withCredentials () {
     if (this.xhrWithCredentials) {
-      throw new BaseException('XHR With Credentials is already true')
+      throw new InvalidOperationError()
     } else {
       this.xhrWithCredentials = true
     }
@@ -156,7 +156,7 @@ export default class Request {
 
   withoutCredentials () {
     if (!this.xhrWithCredentials) {
-      throw new BaseException('XHR With Credentials is already false')
+      throw new InvalidOperationError()
     } else {
       this.xhrWithCredentials = false
     }

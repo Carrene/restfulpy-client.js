@@ -25,3 +25,9 @@ export class BadCredentialsError extends BaseException {
     super(...args, 'Invalid or Bad Credentials.')
   }
 }
+
+export class InvalidOperationError extends BaseException {
+  constructor (...args) {
+    super(...args, 'Invalid Operation')
+  }
+}

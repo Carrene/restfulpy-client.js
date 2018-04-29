@@ -149,17 +149,15 @@ export default class Request {
   withCredentials () {
     if (this.xhrWithCredentials) {
       throw new InvalidOperationError()
-    } else {
-      this.xhrWithCredentials = true
     }
+    this.xhrWithCredentials = true
   }
 
   withoutCredentials () {
     if (!this.xhrWithCredentials) {
       throw new InvalidOperationError()
-    } else {
-      this.xhrWithCredentials = false
     }
+    this.xhrWithCredentials = false
   }
 
   send () {

@@ -1,11 +1,20 @@
 import urljoin from 'url-join'
 
-import { AuthenticationRequiredError } from './exceptions'
+import { AuthenticationRequiredError, InvalidOperationError } from './exceptions'
 import Response from './response'
 import { encodeQueryString } from './helpers'
 
 export default class Request {
-  constructor (client, resource = '', verb = 'get', payload = {}, headers = {}, queryString = [], encoding = 'json') {
+  constructor (
+    client,
+    resource = '',
+    verb = 'get',
+    payload = {},
+    headers = {},
+    queryString = [],
+    encoding = 'json',
+    withCredentials = true
+  ) {
     this.resource = resource
     this.client = client
     this.verb = verb
@@ -14,6 +23,7 @@ export default class Request {
     this.queryString = queryString
     this.encoding = encoding
     this.postProcessor = null
+    this.xhrWithCredentials = withCredentials
   }
 
   setPostProcessor (processor) {
@@ -136,6 +146,20 @@ export default class Request {
     return this
   }
 
+  withCredentials () {
+    if (this.xhrWithCredentials) {
+      throw new InvalidOperationError()
+    }
+    this.xhrWithCredentials = true
+  }
+
+  withoutCredentials () {
+    if (!this.xhrWithCredentials) {
+      throw new InvalidOperationError()
+    }
+    this.xhrWithCredentials = false
+  }
+
   send () {
     return new Promise((resolve, reject) => {
       let xhr = new window.XMLHttpRequest()
@@ -181,8 +205,7 @@ export default class Request {
       } else {
         throw new Error(`encoding: ${this.encoding} is not supported.`)
       }
-      // FIXME : Make it an option
-      xhr.withCredentials = true
+      xhr.withCredentials = this.xhrWithCredentials
       xhr.send(requestBody)
     })
   }

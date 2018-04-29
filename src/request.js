@@ -1,6 +1,6 @@
 import urljoin from 'url-join'
 
-import { AuthenticationRequiredError } from './exceptions'
+import { BaseException, AuthenticationRequiredError } from './exceptions'
 import Response from './response'
 import { encodeQueryString } from './helpers'
 
@@ -147,11 +147,19 @@ export default class Request {
   }
 
   withCredentials () {
-    this.xhrWithCredentials = true
+    if (this.xhrWithCredentials) {
+      throw new BaseException('XHR With Credentials is already true')
+    } else {
+      this.xhrWithCredentials = true
+    }
   }
 
   withoutCredentials () {
-    this.xhrWithCredentials = false
+    if (!this.xhrWithCredentials) {
+      throw new BaseException('XHR With Credentials is already false')
+    } else {
+      this.xhrWithCredentials = false
+    }
   }
 
   send () {

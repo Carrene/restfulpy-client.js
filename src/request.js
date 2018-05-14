@@ -196,6 +196,10 @@ export default class Request {
           let value = this.payload[paramName]
           if (value instanceof window.File) {
             requestBody.append(paramName, value, value.name)
+          } else if (value instanceof Array) {
+            for (let file of value) {
+              requestBody.append(paramName, file, file.name)
+            }
           } else {
             requestBody.append(paramName, value)
           }

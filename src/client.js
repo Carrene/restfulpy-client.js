@@ -1,4 +1,4 @@
-import { AlreadyAuthenticatedError, BadCredentialsError } from './exceptions'
+import { AlreadyAuthenticatedError, InvalidOperationError } from './exceptions'
 import Authenticator from './authentication'
 import Request from './request'
 import JsonPatchRequest from './jsonpatch'
@@ -31,30 +31,14 @@ export default class RestfulpyClient {
     return new JsonPatchRequest(this, ...kwargs).addAuthenticationHeaders(false)
   }
 
-  static validateCredentials (credentials) {
-    if (credentials === null || credentials === undefined) {
-      throw new BadCredentialsError()
-    }
-    return credentials
-  }
-
   login (credentials) {
+    if (!this.authenticator) {
+      throw new InvalidOperationError()
+    }
     if (this.authenticator.authenticated) {
       throw new AlreadyAuthenticatedError()
     }
-    return new Promise((resolve, reject) => {
-      this.request('sessions', 'POST')
-        .addParameters(this.constructor.validateCredentials(credentials))
-        .send() // Returns a promise
-        .then((resp) => {
-          this.authenticator.token = resp.json['token']
-          resolve(resp)
-        })
-        .catch((resp) => {
-          this.authenticator.deleteToken()
-          reject(resp)
-        })
-    })
+    return this.authenticator.login(credentials)
   }
 
   logout (done) {

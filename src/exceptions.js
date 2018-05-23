@@ -31,3 +31,15 @@ export class InvalidOperationError extends BaseException {
     super(...args, 'Invalid Operation')
   }
 }
+
+export class AbstractBaseClassError extends BaseException {
+  constructor (object, ...args) {
+    super(...args, `${object.name} must be inherited first`)
+  }
+}
+
+export class MethodMustOverrideError extends BaseException {
+  constructor (...args) {
+    super(...args, 'Method must be overridden')
+  }
+}

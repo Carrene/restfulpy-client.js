@@ -1,9 +1,12 @@
 
 import jwtDecode from 'jwt-decode'
-import { AuthenticationRequiredError } from './exceptions'
+import {AbstractBaseClassError, AuthenticationRequiredError, BadCredentialsError, MethodMustOverrideError} from './exceptions'
 
-export default class Authenticator {
+export default class AbstractAuthenticator {
   constructor (tokenRequestHeaderKey = 'Authorization', tokenLocalStorageKey = 'token', tokenResponseHeaderKey = 'X-New-JWT-Token') {
+    if (new.target === AbstractAuthenticator) {
+      throw new AbstractBaseClassError(this)
+    }
     this.tokenRequestHeaderKey = tokenRequestHeaderKey
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this.tokenResponseHeaderKey = tokenResponseHeaderKey
@@ -85,5 +88,16 @@ export default class Authenticator {
       }
     }
     return false
+  }
+
+  login (credentials) {
+    throw new MethodMustOverrideError()
+  }
+
+  static validateCredentials (credentials) {
+    if (credentials === null || credentials === undefined) {
+      throw new BadCredentialsError()
+    }
+    return credentials
   }
 }

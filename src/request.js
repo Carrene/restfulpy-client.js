@@ -1,7 +1,6 @@
 import urljoin from 'url-join'
 
 import { AuthenticationRequiredError, InvalidOperationError } from './exceptions'
-import Response from './response'
 import { encodeQueryString } from './helpers'
 import doHttpRequest from './http'
 
@@ -162,7 +161,7 @@ export default class Request {
   }
 
   send () {
-    doHttpRequest(this.composeUrl(), {
+    return doHttpRequest(this.composeUrl(), {
       payload: this.payload,
       verb: this.verb,
       headers: this.headers,

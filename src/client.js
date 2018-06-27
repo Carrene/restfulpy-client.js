@@ -31,14 +31,14 @@ export default class Session {
     return new JsonPatchRequest(this, ...kwargs).addAuthenticationHeaders(false)
   }
 
-  login (credentials) {
+  login (...kwargs) {
     if (!this.authenticator) {
       throw new InvalidOperationError()
     }
     if (this.authenticator.authenticated) {
       throw new AlreadyAuthenticatedError()
     }
-    return this.authenticator.login(credentials)
+    return this.authenticator.login(...kwargs)
   }
 
   logout (done) {

@@ -4,7 +4,7 @@ import Request from './request'
 import JsonPatchRequest from './jsonpatch'
 import Metadata from './metadata'
 
-export default class RestfulpyClient {
+export default class Session {
   constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator) {
     this.baseUrl = baseUrl
     this.tokenLocalStorageKey = tokenLocalStorageKey

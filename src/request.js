@@ -3,6 +3,7 @@ import urljoin from 'url-join'
 import { AuthenticationRequiredError, InvalidOperationError } from './exceptions'
 import Response from './response'
 import { encodeQueryString } from './helpers'
+import doHttpRequest from './http'
 
 export default class Request {
   constructor (
@@ -161,56 +162,13 @@ export default class Request {
   }
 
   send () {
-    return new Promise((resolve, reject) => {
-      let xhr = new window.XMLHttpRequest()
-      let requestBody = ''
-
-      xhr.onload = () => {
-        let response = Response.fromXhr(xhr)
-        if (this.postProcessor) {
-          this.postProcessor(response, resolve, reject)
-        } else {
-          resolve(response)
-        }
-      }
-      xhr.onerror = () => {
-        reject(new Response(xhr))
-      }
-      xhr.open(this.verb.toUpperCase(), this.composeUrl())
-
-      for (let header in this.headers) {
-        xhr.setRequestHeader(header, this.headers[header])
-      }
-
-      if (this.encoding === null) {
-        requestBody = null
-      } else if (this.encoding === 'json') {
-        requestBody = JSON.stringify(this.payload)
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-      } else if (this.encoding === 'urlencoded') {
-        requestBody = encodeQueryString(this.payload)
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-      } else if (this.encoding === 'multipart') {
-        requestBody = new window.FormData()
-        for (let paramName in this.payload) {
-          let value = this.payload[paramName]
-          if (value instanceof window.File) {
-            requestBody.append(paramName, value, value.name)
-          } else if (value instanceof Array) {
-            for (let file of value) {
-              requestBody.append(paramName, file, file.name)
-            }
-          } else {
-            requestBody.append(paramName, value)
-          }
-        }
-        // Do not setting the content type for multipart
-        // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
-      } else {
-        throw new Error(`encoding: ${this.encoding} is not supported.`)
-      }
-      xhr.withCredentials = this.xhrWithCredentials
-      xhr.send(requestBody)
+    doHttpRequest(this.composeUrl(), {
+      payload: this.payload,
+      verb: this.verb,
+      headers: this.headers,
+      encoding: this.encoding,
+      postProcessor: this.postProcessor,
+      xhrWithCredentials: this.xhrWithCredentials
     })
   }
 }

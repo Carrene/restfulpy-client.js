@@ -5,3 +5,4 @@ coverage
 data
 .nyc_output
 package-lock.json
+.ropeproject

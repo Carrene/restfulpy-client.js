@@ -5,7 +5,7 @@
   "main": "dist/restfulpy.js",
   "module": "src/index.js",
   "scripts": {
-    "test": "restfulpy mockup-server --bind 0 node_modules/karma/bin/karma start karma.config.js --server-url={url}",
+    "test": "./mockup-server/mockupserver.py --bind 0 node_modules/karma/bin/karma start karma.config.js --server-url={url}",
     "dev": "webpack --progress --colors --watch --env dev",
     "build": "webpack",
     "prepublish": "npm run build"

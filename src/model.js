@@ -192,11 +192,7 @@ export default function createModelClass (name, options, client, metadata) {
   Model.__verbs__ = Object.assign({}, DEFAULT_VERBS, options.verbs || {})
   Model.load = (...filters) => {
     return Model.__client__
-      .request(Model.__url__, Model.__verbs__.load)
-      .filter(...filters)
-      .setPostProcessor((resp, resolve) => {
-        resolve(resp.json.map(i => new Model(Model.decodeJson(i), 'loaded')), resp)
-      })
+      .requestModel(Model, Model.__url__, Model.__verbs__.load).filter(...filters)
   }
   Model.fromResponse = (resp) => {
     return new Model(Model.decodeJson(resp.json), 'loaded', resp.getHeader('ETag'))
@@ -220,9 +216,7 @@ export default function createModelClass (name, options, client, metadata) {
     } else {
       resourcePath = `${Model.__url__}/${keys.join('/')}`
     }
-    return Model.__client__.request(resourcePath, 'GET')
-      .setPostProcessor((resp, resolve) => resolve(Model.fromResponse(resp), resp))
-      .send()
+    return Model.__client__.requestModel(Model, resourcePath, 'GET').send()
   }
   return Model
 }

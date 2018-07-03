@@ -3,6 +3,7 @@ import urljoin from 'url-join'
 import { AuthenticationRequiredError, InvalidOperationError } from './exceptions'
 import { encodeQueryString } from './helpers'
 import doHttpRequest from './http'
+import Response from './response'
 
 export default class Request {
   constructor (
@@ -13,7 +14,8 @@ export default class Request {
     headers = {},
     queryString = [],
     encoding = 'json',
-    withCredentials = true
+    withCredentials = true,
+    modelClass = null
   ) {
     this.resource = resource
     this.client = client
@@ -24,6 +26,7 @@ export default class Request {
     this.encoding = encoding
     this.postProcessor = null
     this.xhrWithCredentials = withCredentials
+    this.modelClass = modelClass
   }
 
   setPostProcessor (processor) {
@@ -38,6 +41,11 @@ export default class Request {
 
   setEncoding (encoding) {
     this.encoding = encoding
+    return this
+  }
+
+  setModelClass (modelClass) {
+    this.modelClass = modelClass
     return this
   }
 
@@ -160,6 +168,10 @@ export default class Request {
     this.xhrWithCredentials = false
   }
 
+  responseFactory (...args) {
+    return new Response(this, ...args)
+  }
+
   send () {
     return doHttpRequest(this.composeUrl(), {
       payload: this.payload,
@@ -168,6 +180,6 @@ export default class Request {
       encoding: this.encoding,
       postProcessor: this.postProcessor,
       xhrWithCredentials: this.xhrWithCredentials
-    })
+    }, (...args) => { return this.responseFactory(...args) })
   }
 }

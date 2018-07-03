@@ -1,8 +1,10 @@
 
 export default class Response {
-  constructor (xhr) {
+  constructor (request, xhr) {
+    this.request = request
     this.xhr = xhr
     this._json = null
+    this._models = null
   }
 
   get status () {
@@ -30,6 +32,17 @@ export default class Response {
       this._json = JSON.parse(this.body)
     }
     return this._json
+  }
+
+  get models () {
+    if (this._models === null) {
+      if (Array.isArray(this.json)) {
+        this._models = this.json.map(i => new this.request.modelClass(this.request.modelClass.decodeJson(i), 'loaded'))
+      } else {
+        this._models = new this.request.modelClass(this.request.modelClass.decodeJson(this.json), 'loaded', this.getHeader('ETag'))
+      }
+    }
+    return this._models
   }
 
   get error () {

@@ -27,8 +27,8 @@ export default class Session {
     return new Request(this, ...args).addAuthenticationHeaders(false)
   }
 
-  requestModel (modelClass, url, verb) {
-    return this.request(url, verb).setModelClass(modelClass)
+  requestModel (ModelClass, url, verb) {
+    return this.request(url, verb).setModelClass(ModelClass)
   }
 
   jsonPatchRequest (...args) {

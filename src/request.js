@@ -15,7 +15,7 @@ export default class Request {
     queryString = [],
     encoding = 'json',
     withCredentials = true,
-    modelClass = null
+    ModelClass = null
   ) {
     this.resource = resource
     this.client = client
@@ -26,7 +26,7 @@ export default class Request {
     this.encoding = encoding
     this.postProcessor = null
     this.xhrWithCredentials = withCredentials
-    this.modelClass = modelClass
+    this.ModelClass = ModelClass
   }
 
   setPostProcessor (processor) {
@@ -44,8 +44,8 @@ export default class Request {
     return this
   }
 
-  setModelClass (modelClass) {
-    this.modelClass = modelClass
+  setModelClass (ModelClass) {
+    this.ModelClass = ModelClass
     return this
   }
 

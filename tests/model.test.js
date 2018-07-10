@@ -53,32 +53,37 @@ describe('Model', function () {
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource;
       // POST
-      (new Resource({title: 'CRUD'})).save().send().then(newResource => {
-        expect(newResource.__status__).toEqual('loaded')
+      (new Resource({title: 'CRUD'})).save().send().then(newResponse => {
+        expect(newResponse.models.__status__).toEqual('loaded')
+        expect(newResponse.status).toEqual(200)
         // GET
-        Resource.get(newResource.id).then(resource => {
-          expect(resource.title).toEqual('CRUD')
-          expect(resource.__status__).toEqual('loaded')
-          resource.title = 'CRUD(Updated)'
-          expect(resource.__status__).toEqual('dirty')
-          resource.title = 'CRUD'
-          expect(resource.__status__).toEqual('loaded')
-          resource.title = 'CRUD(Updated)'
-          expect(resource.__status__).toEqual('dirty')
+        Resource.get(newResponse.models.id).then(getResponse => {
+          expect(getResponse.models.title).toEqual('CRUD')
+          expect(getResponse.models.__status__).toEqual('loaded')
+          getResponse.models.title = 'CRUD(Updated)'
+          expect(getResponse.models.__status__).toEqual('dirty')
+          getResponse.models.title = 'CRUD'
+          expect(getResponse.models.__status__).toEqual('loaded')
+          getResponse.models.title = 'CRUD(Updated)'
+          expect(getResponse.models.__status__).toEqual('dirty')
+          expect(getResponse.status).toEqual(200)
           // PUT
-          resource.save().send().then(r => {
-            expect(resource).toBe(r)
-            expect(resource.__status__).toEqual('loaded')
-            expect(resource.title).toEqual('CRUD(Updated)')
+          getResponse.save().send().then(saveResponse => {
+            expect(getResponse.models).toBe(saveResponse.models)
+            expect(getResponse.models.__status__).toEqual('loaded')
+            expect(getResponse.models.title).toEqual('CRUD(Updated)')
+            expect(saveResponse.status).toEqual(200)
 
             // Reload (GET)
-            resource.reload().send().then(rr => {
-              expect(resource).toBe(rr)
-              expect(resource.__status__).toEqual('loaded')
+            getResponse.reload().send().then(reloadResponse => {
+              expect(getResponse.models).toBe(reloadResponse.models)
+              expect(getResponse.models.__status__).toEqual('loaded')
+              expect(reloadResponse.status).toEqual(200)
               // DELETE
-              resource.delete().send().then(d => {
-                expect(resource).toBe(d)
-                expect(resource.__status__).toEqual('deleted')
+              getResponse.delete().send().then(deleteResponse => {
+                expect(getResponse.models).toBe(deleteResponse.models)
+                expect(getResponse.models.__status__).toEqual('deleted')
+                expect(deleteResponse.status).toEqual(200)
                 done()
               })
             })

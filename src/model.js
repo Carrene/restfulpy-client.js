@@ -77,12 +77,14 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is already deleted.')
     }
-    return this.constructor.__client__.request(this.resourcePath, 'DELETE')
-      .setPostProcessor((resp, resolve) => {
-        this.updateFromResponse(resp)
-        this.__status__ = 'deleted'
-        resolve(this, resp)
-      })
+    return this.constructor.__client__
+      .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.delete)
+      // .request(this.resourcePath, 'DELETE')
+      // .setPostProcessor((resp, resolve) => {
+      //   this.updateFromResponse(resp)
+      //   this.__status__ = 'deleted'
+      //   resolve(this, resp)
+      // })
       .ifMatch(this.__etag__)
   },
   reload () {
@@ -92,12 +94,14 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
     }
-    return this.constructor.__client__.request(this.resourcePath, 'GET')
-      .setPostProcessor((resp, resolve) => {
-        this.updateFromResponse(resp)
-        this.__status__ = 'loaded'
-        resolve(this, resp)
-      })
+    return this.constructor.__client__
+      .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.get)
+      // .request(this.resourcePath, 'GET')
+      // .setPostProcessor((resp, resolve) => {
+      //   this.updateFromResponse(resp)
+      //   this.__status__ = 'loaded'
+      //   resolve(this, resp)
+      // })
       .ifNoneMatch(this.__etag__)
   },
   save () {
@@ -109,20 +113,24 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
       case 'new':
-        verb = 'POST'
+        // verb = 'POST'
+        verb = this.constructor.__verbs__.create
         resourceUrl = this.constructor.__url__
         break
       default:
-        verb = 'PUT'
+        // verb = 'PUT'
+        verb = this.constructor.__verbs__.update
         resourceUrl = this.resourcePath
     }
-    return this.constructor.__client__.request(resourceUrl, verb)
+    return this.constructor.__client__
+      .requestModel(this.constructor, resourceUrl, verb)
       .addParameters(this.toJson())
-      .setPostProcessor((resp, resolve) => {
-        this.updateFromResponse(resp)
-        this.__status__ = 'loaded'
-        resolve(this, resp)
-      })
+      // .request(resourceUrl, verb)
+      // .setPostProcessor((resp, resolve) => {
+      //   this.updateFromResponse(resp)
+      //   this.__status__ = 'loaded'
+      //   resolve(this, resp)
+      // })
       .ifMatch(this.__etag__)
   },
   toJson () {

@@ -37,9 +37,9 @@ export default class Response {
   get models () {
     if (this._models === null) {
       if (Array.isArray(this.json)) {
-        this._models = this.json.map(i => new this.request.ModelClass(this.request.modelClass.decodeJson(i), 'loaded'))
+        this._models = this.json.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), 'loaded'))
       } else {
-        this._models = new this.request.ModelClass(this.request.modelClass.decodeJson(this.json), 'loaded', this.getHeader('ETag'))
+        this._models = new this.request.ModelClass(this.request.ModelClass.decodeJson(this.json), 'loaded', this.getHeader('ETag'))
       }
     }
     return this._models
@@ -55,7 +55,6 @@ export default class Response {
     }
     return new Response(xhr)
   }
-
 }
 
 export class PagedResponse extends Response {

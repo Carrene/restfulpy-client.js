@@ -79,6 +79,7 @@ const modelPrototype = {
     }
     return this.constructor.__client__
       .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.delete)
+      // This is the old method for deleting the model
       // .request(this.resourcePath, 'DELETE')
       // .setPostProcessor((resp, resolve) => {
       //   this.updateFromResponse(resp)
@@ -96,6 +97,7 @@ const modelPrototype = {
     }
     return this.constructor.__client__
       .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.get)
+      // This is the old method for reloading the model
       // .request(this.resourcePath, 'GET')
       // .setPostProcessor((resp, resolve) => {
       //   this.updateFromResponse(resp)
@@ -125,6 +127,7 @@ const modelPrototype = {
     return this.constructor.__client__
       .requestModel(this.constructor, resourceUrl, verb)
       .addParameters(this.toJson())
+      // This is the old method for saving the model
       // .request(resourceUrl, verb)
       // .setPostProcessor((resp, resolve) => {
       //   this.updateFromResponse(resp)

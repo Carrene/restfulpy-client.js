@@ -126,7 +126,7 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @etag
     @Resource.expose
     def get(self, id_: int=None):
-        q = Resource.query
+        q = DBSession.query(Resource)
         if id_ is not None:
             return q.filter(Resource.id == id_).one_or_none()
         return q
@@ -136,7 +136,7 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @Resource.expose
     @commit
     def put(self, id_: int=None):
-        m = Resource.query.filter(Resource.id == id_).one_or_none()
+        m = DBSession.query(Resource).filter(Resource.id == id_).one_or_none()
         if m is None:
             raise HTTPNotFound()
         m.update_from_request()
@@ -156,7 +156,7 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @etag
     @commit
     def delete(self, id_: int=None):
-        m = Resource.query.filter(Resource.id == id_).one_or_none()
+        m = DBSession.query(Resource).filter(Resource.id == id_).one_or_none()
         context.etag_match(m.__etag__)
         DBSession.delete(m)
         return m

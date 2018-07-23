@@ -5,12 +5,15 @@ import time
 import argparse
 import threading
 import tempfile
+import functools
 from os.path import dirname, abspath, join, exists
 from subprocess import run
 from wsgiref.simple_server import make_server
 
+from mako.lookup import TemplateLookup
 from sqlalchemy import Integer, Unicode
-from nanohttp import text, json, context, RestController, HttpBadRequest, etag, HttpNotFound
+from nanohttp import text, json, context, RestController, HTTPBadRequest, \
+    etag, HTTPNotFound, settings, action
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -19,7 +22,6 @@ from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, Filte
     DBSession, ModifiedMixin, commit
 from restfulpy.principal import JwtPrincipal, JwtRefreshToken
 from restfulpy.cli import Launcher
-from restfulpy.templating import template
 
 
 __version__ = '0.1.1'
@@ -27,6 +29,34 @@ __version__ = '0.1.1'
 
 here = abspath(dirname(__file__))
 db = abspath(join(tempfile.gettempdir(), 'restfulpy-mockup-server.sqlite'))
+_lookup = None
+
+
+def get_lookup():
+    global _lookup
+    if _lookup is None:
+        _lookup = TemplateLookup(directories=settings.templates.directories)
+    return _lookup
+
+
+def render_template(func, template_name):
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+
+        result = func(*args, **kwargs)
+        if hasattr(result, 'to_dict'):
+            result = result.to_dict()
+        elif not isinstance(result, dict):
+            raise ValueError('The result must be an instance of dict, not: %s' % type(result))
+
+        template_ = get_lookup().get_template(template_name)
+        return template_.render(**result)
+
+    return wrapper
+
+
+template = functools.partial(action, content_type='text/html', inner_decorator=render_template)
 
 
 class MockupMember:
@@ -73,7 +103,7 @@ class AuthController(RestController):
         password = context.form.get('password')
 
         def bad():
-            raise HttpBadRequest('Invalid email or password')
+            raise HTTPBadRequest('Invalid email or password')
 
         if not (email and password):
             bad()
@@ -96,7 +126,7 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @etag
     @Resource.expose
     def get(self, id_: int=None):
-        q = Resource.query
+        q = DBSession.query(Resource)
         if id_ is not None:
             return q.filter(Resource.id == id_).one_or_none()
         return q
@@ -106,9 +136,9 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @Resource.expose
     @commit
     def put(self, id_: int=None):
-        m = Resource.query.filter(Resource.id == id_).one_or_none()
+        m = DBSession.query(Resource).filter(Resource.id == id_).one_or_none()
         if m is None:
-            raise HttpNotFound()
+            raise HTTPNotFound()
         m.update_from_request()
         context.etag_match(m.__etag__)
         return m
@@ -126,7 +156,7 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @etag
     @commit
     def delete(self, id_: int=None):
-        m = Resource.query.filter(Resource.id == id_).one_or_none()
+        m = DBSession.query(Resource).filter(Resource.id == id_).one_or_none()
         context.etag_match(m.__etag__)
         DBSession.delete(m)
         return m
@@ -158,7 +188,7 @@ class Root(RootController):
 
 class MockupApplication(Application):
     __authenticator__ = MockupAuthenticator()
-    builtin_configuration = f'''
+    __configuration__ = f'''
     debug: true
 
     db:
@@ -240,7 +270,7 @@ class SimpleMockupServerLauncher(Launcher):
         if exists(db):
             os.remove(db)
         # makedirs(settings.data_directory, exist_ok=True)
-        self.application.initialize_models()
+        self.application.initialize_orm()
         setup_schema()
         # DBSession.commit()
         print(f'DB {DBSession.bind}')

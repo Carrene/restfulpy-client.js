@@ -88,21 +88,21 @@
     $ curl $url/resources
 
     [
-      {
+    {
       "id":1,
       "createdAt":"2018-07-24T05:37:11.262348",
       "modifiedAt":null,
       "title":"resource1"
-      },
-      .
-      .
-      .
-      ,{
+    }
+    .
+    .
+    .
+    {
       "id":10,
       "createdAt":"2018-07-24T05:37:11.262357",
       "modifiedAt":null,
       "title":"resource10"
-      }
+    }
     ]
   </pre>
   <pre class="description">
@@ -115,11 +115,11 @@
       "createdAt":"2018-07-24T05:37:11.262348",
       "modifiedAt":null,
       "title":"resource1"
-      },
-      .
-      .
-      .
-      ,{
+     }
+     .
+     .
+     .
+     {
       "id":3,
       "createdAt":"2018-07-24T05:37:11.262352",
       "modifiedAt":null,
@@ -133,21 +133,21 @@
     $ curl $url/resources?skip=1
 
     [
-      {
+    {
       "id":2,
       "createdAt":"2018-07-24T05:37:11.262351",
       "modifiedAt":null,
       "title":"resource2"
-      },
-      .
-      .
-      .
-      ,{
+    }
+    .
+    .
+    .
+    {
       "id":10,
       "createdAt":"2018-07-24T05:37:11.262357",
       "modifiedAt":null,
       "title":"resource10"
-      }
+    }
     ]
   </pre>
   <pre class="description">
@@ -173,7 +173,7 @@
       "createdAt":"2018-07-24T05:37:11.262357",
       "modifiedAt":null,
       "title":"resource10"
-    },
+    }
     .
     .
     .
@@ -204,12 +204,32 @@
 
 	<h3 class="header-3">/post</h3>
 	<pre class="description">
-    Return updated resource
+    Create new resource
+
+    Example:
+
+    $ curl $url/resources -XPOST -F"title=this is new resource"
+    {
+      "id":11,
+      "title":"this is new resource",
+      "createdAt":"2018-07-25T05:40:07.622461",
+      "modifiedAt":null
+    }
   </pre>
 
 	<h3 class="header-3">/delete</h3>
 	<pre class="description">
-    Delete resorce based on id
+    Delete resource based on id
+
+    Example:
+
+    $ curl $url/resources/1 -XDELETE
+    {
+      "createdAt":"2018-07-25T06:11:07.325754",
+      "title":"resource1",
+      "id":1,
+      "modifiedAt":null
+    }
   </pre>
 
 	<h2 class="header-2">/sessions</h2>
@@ -217,11 +237,30 @@
 	<h3 class="header-3">/post</h3>
 	<pre class="description">
     Get email and password if email or password not true return invalid email or password else return token
+
+    Example-1:
+
+    $ curl $url/sessions -XPOST -F"email=user1@example.com" -F"password=123456"
+    {
+      "token":"eyJhbGciOiJIUzI1NiIsImlhdCI6MTUzMjUwMTEyOSwiZXhwIjoxNTMyNTAxMTQ5fQ.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGVzIjpbInVzZXIiXSwic2Vzc2lvbklkIjoiMSJ9.M0tbmo40hBNG-vmkiE5DP9p1T9Df5azOrr55Q06HdGc"
+    }
+
+    Example-2:
+
+    $ curl $url/sessions -XPOST -i  -F"email=user1@example.com" -F"password=1234568"
+    HTTP/1.0 400 Invalid email or password
+    Date: Wed, 25 Jul 2018 06:43:55 GMT
+    Server: WSGIServer/0.2 CPython/3.6.4
+    Content-Type: application/json; charset=utf-8
   </pre>
 
 	<h3 class="header-3">/delete</h3>
 	<pre class="description">
     Return {}
+
+    Example:
+
+    $ curl $url/sessions -XDELETE
   </pre>
 
 </body>

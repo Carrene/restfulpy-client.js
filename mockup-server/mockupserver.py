@@ -157,7 +157,9 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @commit
     def delete(self, id_: int=None):
         m = DBSession.query(Resource).filter(Resource.id == id_).one_or_none()
-        context.etag_match(m.__etag__)
+        if m is None:
+            raise HTTPNotFound()
+        #context.etag_match(m.__etag__)
         DBSession.delete(m)
         return m
 
@@ -195,9 +197,9 @@ class MockupApplication(Application):
       url: sqlite:///{db}
 
     jwt:
-      max_age: 20
+      max_age: 3600
       refresh_token:
-        max_age: 60
+        max_age: 92000
         secure: false
 
     templates:

@@ -10,17 +10,24 @@
 </template>
 
 <script>
+import server from './../server'
+
 export default {
   name: 'Login',
   data () {
     return {
       email: null,
-      password: null
+      password: null,
+      status: null
     }
   },
   methods: {
     login () {
-      console.log(this.email)
+      server.request('sessions').setVerb('POST').addParameters({email: this.email, password:
+      this.password}).send().then(resp => {
+        this.status = resp.status
+        console.log(this.status)
+      })
     }
   }
 }

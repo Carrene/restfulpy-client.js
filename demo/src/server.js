@@ -5,7 +5,7 @@ import { BASE_URL } from './settings.js'
 
 class MyAuthenticator extends Authenticator {
   login (email, password) {
-    return httpClient(`${BASE_URL}/apiv1/sessions`, {
+    return httpClient(`${BASE_URL}/sessions`, {
       verb: 'POST',
       payload: {
         email: email,
@@ -22,7 +22,7 @@ class MyAuthenticator extends Authenticator {
 
 class Server extends Session {
   constructor () {
-    super(`${BASE_URL}/apiv1`, undefined, new MyAuthenticator())
+    super(`${BASE_URL}/`, undefined, new MyAuthenticator())
   }
 }
 

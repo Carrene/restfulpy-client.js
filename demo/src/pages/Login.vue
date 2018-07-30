@@ -1,10 +1,12 @@
 <template>
   <div class="login">
-    <form @submit.prevent="login" class="form">
+    <form @submit.prevent="login" class="form" v-if="!success">
       <input type="text" class="input" placeholder="Email Address" v-model="email">
-      <input type="password" class="input" placeholder="Password" v-model="password" >
+      <input type="password" class="input" placeholder="Password" v-model="password">
       <button type="submit" class="button"> Login </button>
+      <p v-if="hasError">Invalid Email or Password!</p>
     </form>
+    <p  v-if="success">Welcome</p>
   </div>
 </template>
 
@@ -17,15 +19,19 @@ export default {
     return {
       email: null,
       password: null,
-      status: null
+      token: null,
+      hasError: false,
+      success: false
     }
   },
   methods: {
     login () {
-      server.request('sessions').setVerb('POST').addParameters({
-        email: this.email, password: this.password
-      }).send().then(resp => {
-        console.log(resp.status)
+      server.login(this.email, this.password).then(resp => {
+        if (resp.status === 200) {
+          this.success = true
+        }
+      }).catch(() => {
+        this.hasError = true
       })
     }
   }

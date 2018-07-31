@@ -1,48 +1,46 @@
 <template>
   <div class="resource">
-
-    <h3>Form</h3>
-
     <form @submit.prevent="update" class="form">
-      <label for="title">{{ Resource.fields.title.label }}</label>
-      <input
-        id="title"
-        type="text"
-        class="input"
-        :placeholder="Resource.fields.title.watermark"
-        v-model="$v.resource.title.$model"
-        :class="$v.resource.title.$error ? 'error' : null"
-      >
-      <button
-        v-if="resource.__status__ === 'new'"
-        :disabled="$v.resource.title.$invalid"
-        type="submit"
-        class="button"
-      >
-        Save
-      </button>
-      <button
-        v-else
-        type="submit"
-        :disabled="$v.resource.title.$invalid || resource.__status__ === 'loaded'"
-        class="button"
-      >
-        Update
-      </button>
-      <button type="button" @click="reload">Reload</button>
-      <button type="button" @click="deleteResource">Delete</button>
+      <h3>Form</h3>
+      <div class="title">
+        <label for="title">{{ Resource.fields.title.label }}</label>
+        <input
+          id="title"
+          type="text"
+          class="input"
+          :placeholder="Resource.fields.title.watermark"
+          v-model="$v.resource.title.$model"
+          :class="$v.resource.title.$error ? 'error' : null"
+        >
+      </div>
+      <div content="buttons">
+        <button
+          v-if="resource.__status__ === 'new'"
+          :disabled="$v.resource.title.$invalid"
+          type="submit"
+        >
+          Save
+        </button>
+        <button
+          v-else
+          type="submit"
+          :disabled="$v.resource.title.$invalid || resource.__status__ === 'loaded'"
+        >
+          Update
+        </button>
+        <button type="button" @click="reload">Reload</button>
+        <button type="button" @click="deleteResource">Delete</button>
+      </div>
     </form>
 
-    <hr>
+    <div>
+      <h3>Selected Resource</h3>
 
-    <h3>Selected Resource</h3>
+      {{ resource }}
+    </div>
 
-    {{ resource }}
-
-    <hr>
-
-    <h3>Resources</h3>
     <table>
+      <caption>Resources</caption>
       <tr>
         <th>ID</th>
         <th>Title</th>

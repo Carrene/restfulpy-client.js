@@ -3,8 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router.js'
+import Vuelidate from 'vuelidate'
 
 Vue.config.productionTip = false
+
+Vue.use(Vuelidate)
 
 require('./styles/index.sass')
 

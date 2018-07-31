@@ -6,7 +6,7 @@
       <button type="submit" class="button"> Login </button>
       <p v-if="hasError">Invalid Email or Password!</p>
     </form>
-    <p  v-if="success">Welcome</p>
+    <p  v-else>Welcome</p>
   </div>
 </template>
 

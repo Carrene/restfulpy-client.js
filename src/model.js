@@ -61,9 +61,9 @@ const modelPrototype = {
   },
   changed () {
     // // FIXME: This condition is for handling vuejs proxy
-    // if (this.__ob__) {
-    //   this.__ob__.dep.notify()
-    // }
+    if (this.__ob__) {
+      this.__ob__.dep.notify()
+    }
     this.__hash__ = getObjectHashCode(this.toJson())
     if (this.__status__ === 'new') {
       return

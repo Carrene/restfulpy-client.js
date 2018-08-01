@@ -13,11 +13,12 @@
           :class="$v.resource.title.$error ? 'error' : null"
         >
       </div>
-      <div content="buttons">
+      <div class="buttons">
         <button
           v-if="resource.__status__ === 'new'"
           :disabled="$v.resource.title.$invalid"
           type="submit"
+          class="button"
         >
           Save
         </button>
@@ -25,31 +26,33 @@
           v-else
           type="submit"
           :disabled="$v.resource.title.$invalid || resource.__status__ === 'loaded'"
+          class="button"
         >
           Update
         </button>
-        <button type="button" @click="reload">Reload</button>
-        <button type="button" @click="deleteResource">Delete</button>
+        <button type="button" @click="reload" class="button">Reload</button>
+        <button type="button" @click="deleteResource" class="button">Delete</button>
       </div>
     </form>
-
-    <div>
+    <div></div>
+    <div class="resource-table">
+      <table class="table">
+        <caption class="caption">Resources</caption>
+        <tr class="header">
+          <th>ID</th>
+          <th>Title</th>
+        </tr>
+        <tr v-for="singleResource in resources" :key="singleResource.id" @click="resource = singleResource" class="header">
+          <td>{{ singleResource.id }}</td>
+          <td>{{ singleResource.title }}</td>
+        </tr>
+      </table>
+    </div>
+     <div class="selected-resource">
       <h3>Selected Resource</h3>
 
-      {{ resource }}
+      <p>{{ resource }}</p>
     </div>
-
-    <table>
-      <caption>Resources</caption>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-      </tr>
-      <tr v-for="singleResource in resources" :key="singleResource.id" @click="resource = singleResource">
-        <td>{{ singleResource.id }}</td>
-        <td>{{ singleResource.title }}</td>
-      </tr>
-    </table>
   </div>
 </template>
 

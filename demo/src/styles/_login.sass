@@ -3,18 +3,30 @@
   width: 100%
   height: 100%
   display: grid
+  grid-gap: 10px
   justify-content: center
   align-content: center
-  .form
+  .body
+    width: 900px
+    height: 400px
+    background: #f2f2f2
     display: grid
-    grid-template-row: 4fr
     grid-gap: 10px
-    .input
-      border-radius: 4px
-    .button
-      background: #00A67C
-      width: 70px
-      height: 30px
-      border-radius: 7px
-
-
+    justify-content: center
+    align-content: center
+    .header
+        justify-self: center
+    .form
+      display: grid
+      grid-template-row: 4fr
+      grid-gap: 10px
+      .input
+        border-radius: 10px
+        height: 30px
+        width: 600px
+      .button
+        width: 100px
+        height: 30px
+        border-radius: 7px
+        justify-self: center
+        background: white

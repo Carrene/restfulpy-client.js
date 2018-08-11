@@ -144,16 +144,6 @@ export default class Request {
     return url
   }
 
-  ifMatch (etag) {
-    this.headers['If-Match'] = etag
-    return this
-  }
-
-  ifNoneMatch (etag) {
-    this.headers['If-None-Match'] = etag
-    return this
-  }
-
   withCredentials () {
     if (this.xhrWithCredentials) {
       throw new InvalidOperationError()

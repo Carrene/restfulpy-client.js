@@ -86,7 +86,6 @@ const modelPrototype = {
       //   this.__status__ = 'deleted'
       //   resolve(this, resp)
       // })
-      .ifMatch(this.__etag__)
   },
   reload () {
     switch (this.__status__) {
@@ -104,7 +103,6 @@ const modelPrototype = {
       //   this.__status__ = 'loaded'
       //   resolve(this, resp)
       // })
-      .ifNoneMatch(this.__etag__)
   },
   save () {
     let verb
@@ -134,7 +132,6 @@ const modelPrototype = {
       //   this.__status__ = 'loaded'
       //   resolve(this, resp)
       // })
-      .ifMatch(this.__etag__)
   },
   toJson () {
     let result = {}
@@ -158,7 +155,6 @@ const modelPrototype = {
     }
   },
   updateFromResponse (resp) {
-    this.__etag__ = resp.getHeader('ETag')
     this.updateFromJson(resp.json)
   },
   updateFromJson (json) {
@@ -174,10 +170,9 @@ const DEFAULT_VERBS = {
 }
 
 export default function createModelClass (name, options, client, metadata) {
-  let Model = function (values, status = 'new', etag = undefined) {
+  let Model = function (values, status = 'new') {
     this.constructor = Model
     this.__status__ = status
-    this.__etag__ = etag
     this.__hash__ = 0
     if (values) {
       this.update(values)
@@ -206,7 +201,7 @@ export default function createModelClass (name, options, client, metadata) {
       .requestModel(Model, Model.__url__, Model.__verbs__.load).filter(...filters)
   }
   Model.fromResponse = (resp) => {
-    return new Model(Model.decodeJson(resp.json), 'loaded', resp.getHeader('ETag'))
+    return new Model(Model.decodeJson(resp.json), 'loaded')
   }
   Model.decodeJson = (json) => {
     let result = {}

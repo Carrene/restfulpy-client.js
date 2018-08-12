@@ -1,5 +1,5 @@
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
-import { default as Session, Field, httpClient, Authenticator } from 'restfulpy'
+import { default as Session, Field, httpClient, Authenticator, Response } from 'restfulpy'
 
 import { BASE_URL } from './settings.js'
 
@@ -11,12 +11,13 @@ class MyAuthenticator extends Authenticator {
         email: email,
         password: password
       }
-    }).then(resp => {
-      this.token = resp.json.token
-      return resp
-    }).catch(() => {
-      this.deleteToken()
-    })
+    }, (...args) => { return new Response(undefined, ...args) })
+      .then(resp => {
+        this.token = resp.json.token
+        return resp
+      }).catch(() => {
+        this.deleteToken()
+      })
   }
 }
 

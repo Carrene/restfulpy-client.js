@@ -1,7 +1,6 @@
-import Response from './response'
 import { encodeQueryString } from './helpers'
 
-export default function doHttpRequest (url, options) {
+export default function doHttpRequest (url, options, responseFactory) {
   let defaultOptions = {
     payload: {},
     verb: 'get',
@@ -17,7 +16,7 @@ export default function doHttpRequest (url, options) {
     let requestBody = ''
 
     xhr.onload = () => {
-      let response = Response.fromXhr(xhr)
+      let response = responseFactory(xhr)
       if (defaultOptions.postProcessor) {
         defaultOptions.postProcessor(response, resolve, reject)
       } else {
@@ -25,7 +24,7 @@ export default function doHttpRequest (url, options) {
       }
     }
     xhr.onerror = () => {
-      reject(new Response(xhr))
+      reject(responseFactory(xhr))
     }
     xhr.open(defaultOptions.verb.toUpperCase(), url)
 

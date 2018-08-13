@@ -23,22 +23,26 @@ export default class Session {
     return this._authenticator
   }
 
-  request (...kwargs) {
-    return new Request(this, ...kwargs).addAuthenticationHeaders(false)
+  request (...args) {
+    return new Request(this, ...args).addAuthenticationHeaders(false)
   }
 
-  jsonPatchRequest (...kwargs) {
-    return new JsonPatchRequest(this, ...kwargs).addAuthenticationHeaders(false)
+  requestModel (ModelClass, url, verb) {
+    return this.request(url, verb).setModelClass(ModelClass)
   }
 
-  login (...kwargs) {
+  jsonPatchRequest (...args) {
+    return new JsonPatchRequest(this, ...args).addAuthenticationHeaders(false)
+  }
+
+  login (...args) {
     if (!this.authenticator) {
       throw new InvalidOperationError()
     }
     if (this.authenticator.authenticated) {
       throw new AlreadyAuthenticatedError()
     }
-    return this.authenticator.login(...kwargs)
+    return this.authenticator.login(...args)
   }
 
   logout (done) {

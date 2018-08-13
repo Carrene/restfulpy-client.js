@@ -8,12 +8,12 @@ describe('Model', function () {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource
-      Resource.load('id', '<5').sort('id').send().then(resources => {
-        expect(resources.length).toEqual(4)
-        expect(resources[0].__status__).toEqual('loaded')
-        expect(resources[0].constructor).toEqual(Resource)
-        expect(resources[0])
-        // expect(resp.status).toEqual(200)
+      Resource.load('id', '<5').sort('id').send().then(resp => {
+        expect(resp.models.length).toEqual(4)
+        expect(resp.models[0].__status__).toEqual('loaded')
+        expect(resp.models[0].constructor).toEqual(Resource)
+        expect(resp.models[0])
+        expect(resp.status).toEqual(200)
         done()
       })
     })
@@ -22,12 +22,13 @@ describe('Model', function () {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource
-      Resource.get('1').then((resource, resp) => {
-        expect(resource.__status__).toEqual('loaded')
-        expect(resource.id).toEqual(1)
-        expect(resource.title).toEqual('resource1')
-        expect(resource.constructor).toEqual(Resource)
-        expect(resource.resourcePath).toEqual('resources/1')
+      Resource.get('1').then((resp) => {
+        expect(resp.models.__status__).toEqual('loaded')
+        expect(resp.models.id).toEqual(1)
+        expect(resp.models.title).toEqual('resource1')
+        expect(resp.models.constructor).toEqual(Resource)
+        expect(resp.models.resourcePath).toEqual('resources/1')
+        expect(resp.status).toEqual(200)
         done()
       })
     })
@@ -36,12 +37,13 @@ describe('Model', function () {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource
-      Resource.get('/resources/1').then((resource, resp) => {
-        expect(resource.__status__).toEqual('loaded')
-        expect(resource.id).toEqual(1)
-        expect(resource.title).toEqual('resource1')
-        expect(resource.constructor).toEqual(Resource)
-        expect(resource.resourcePath).toEqual('resources/1')
+      Resource.get('/resources/1').then((resp) => {
+        expect(resp.models.__status__).toEqual('loaded')
+        expect(resp.models.id).toEqual(1)
+        expect(resp.models.title).toEqual('resource1')
+        expect(resp.models.constructor).toEqual(Resource)
+        expect(resp.models.resourcePath).toEqual('resources/1')
+        expect(resp.status).toEqual(200)
         done()
       })
     })
@@ -51,32 +53,37 @@ describe('Model', function () {
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource;
       // POST
-      (new Resource({title: 'CRUD'})).save().send().then(newResource => {
-        expect(newResource.__status__).toEqual('loaded')
+      (new Resource({title: 'CRUD'})).save().send().then(newResponse => {
+        expect(newResponse.models.__status__).toEqual('loaded')
+        expect(newResponse.status).toEqual(200)
         // GET
-        Resource.get(newResource.id).then(resource => {
-          expect(resource.title).toEqual('CRUD')
-          expect(resource.__status__).toEqual('loaded')
-          resource.title = 'CRUD(Updated)'
-          expect(resource.__status__).toEqual('dirty')
-          resource.title = 'CRUD'
-          expect(resource.__status__).toEqual('loaded')
-          resource.title = 'CRUD(Updated)'
-          expect(resource.__status__).toEqual('dirty')
+        Resource.get(newResponse.models.id).then(getResponse => {
+          expect(getResponse.models.title).toEqual('CRUD')
+          expect(getResponse.models.__status__).toEqual('loaded')
+          getResponse.models.title = 'CRUD(Updated)'
+          expect(getResponse.models.__status__).toEqual('dirty')
+          getResponse.models.title = 'CRUD'
+          expect(getResponse.models.__status__).toEqual('loaded')
+          getResponse.models.title = 'CRUD(Updated)'
+          expect(getResponse.models.__status__).toEqual('dirty')
+          expect(getResponse.status).toEqual(200)
           // PUT
-          resource.save().send().then(r => {
-            expect(resource).toBe(r)
-            expect(resource.__status__).toEqual('loaded')
-            expect(resource.title).toEqual('CRUD(Updated)')
+          getResponse.save().send().then(saveResponse => {
+            expect(getResponse.models).toBe(saveResponse.models)
+            expect(getResponse.models.__status__).toEqual('loaded')
+            expect(getResponse.models.title).toEqual('CRUD(Updated)')
+            expect(saveResponse.status).toEqual(200)
 
             // Reload (GET)
-            resource.reload().send().then(rr => {
-              expect(resource).toBe(rr)
-              expect(resource.__status__).toEqual('loaded')
+            getResponse.reload().send().then(reloadResponse => {
+              expect(getResponse.models).toBe(reloadResponse.models)
+              expect(getResponse.models.__status__).toEqual('loaded')
+              expect(reloadResponse.status).toEqual(200)
               // DELETE
-              resource.delete().send().then(d => {
-                expect(resource).toBe(d)
-                expect(resource.__status__).toEqual('deleted')
+              getResponse.delete().send().then(deleteResponse => {
+                expect(getResponse.models).toBe(deleteResponse.models)
+                expect(getResponse.models.__status__).toEqual('deleted')
+                expect(deleteResponse.status).toEqual(200)
                 done()
               })
             })

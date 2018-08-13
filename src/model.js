@@ -61,9 +61,9 @@ const modelPrototype = {
   },
   changed () {
     // // FIXME: This condition is for handling vuejs proxy
-    // if (this.__ob__) {
-    //   this.__ob__.dep.notify()
-    // }
+    if (this.__ob__) {
+      this.__ob__.dep.notify()
+    }
     this.__hash__ = getObjectHashCode(this.toJson())
     if (this.__status__ === 'new') {
       return
@@ -77,12 +77,15 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is already deleted.')
     }
-    return this.constructor.__client__.request(this.resourcePath, 'DELETE')
-      .setPostProcessor((resp, resolve) => {
-        this.updateFromResponse(resp)
-        this.__status__ = 'deleted'
-        resolve(this, resp)
-      })
+    return this.constructor.__client__
+      .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.delete)
+      // This is the old method for deleting the model
+      // .request(this.resourcePath, 'DELETE')
+      // .setPostProcessor((resp, resolve) => {
+      //   this.updateFromResponse(resp)
+      //   this.__status__ = 'deleted'
+      //   resolve(this, resp)
+      // })
       .ifMatch(this.__etag__)
   },
   reload () {
@@ -92,12 +95,15 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
     }
-    return this.constructor.__client__.request(this.resourcePath, 'GET')
-      .setPostProcessor((resp, resolve) => {
-        this.updateFromResponse(resp)
-        this.__status__ = 'loaded'
-        resolve(this, resp)
-      })
+    return this.constructor.__client__
+      .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.get)
+      // This is the old method for reloading the model
+      // .request(this.resourcePath, 'GET')
+      // .setPostProcessor((resp, resolve) => {
+      //   this.updateFromResponse(resp)
+      //   this.__status__ = 'loaded'
+      //   resolve(this, resp)
+      // })
       .ifNoneMatch(this.__etag__)
   },
   save () {
@@ -109,20 +115,25 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
       case 'new':
-        verb = 'POST'
+        // verb = 'POST'
+        verb = this.constructor.__verbs__.create
         resourceUrl = this.constructor.__url__
         break
       default:
-        verb = 'PUT'
+        // verb = 'PUT'
+        verb = this.constructor.__verbs__.update
         resourceUrl = this.resourcePath
     }
-    return this.constructor.__client__.request(resourceUrl, verb)
+    return this.constructor.__client__
+      .requestModel(this.constructor, resourceUrl, verb)
       .addParameters(this.toJson())
-      .setPostProcessor((resp, resolve) => {
-        this.updateFromResponse(resp)
-        this.__status__ = 'loaded'
-        resolve(this, resp)
-      })
+      // This is the old method for saving the model
+      // .request(resourceUrl, verb)
+      // .setPostProcessor((resp, resolve) => {
+      //   this.updateFromResponse(resp)
+      //   this.__status__ = 'loaded'
+      //   resolve(this, resp)
+      // })
       .ifMatch(this.__etag__)
   },
   toJson () {
@@ -192,11 +203,7 @@ export default function createModelClass (name, options, client, metadata) {
   Model.__verbs__ = Object.assign({}, DEFAULT_VERBS, options.verbs || {})
   Model.load = (...filters) => {
     return Model.__client__
-      .request(Model.__url__, Model.__verbs__.load)
-      .filter(...filters)
-      .setPostProcessor((resp, resolve) => {
-        resolve(resp.json.map(i => new Model(Model.decodeJson(i), 'loaded')), resp)
-      })
+      .requestModel(Model, Model.__url__, Model.__verbs__.load).filter(...filters)
   }
   Model.fromResponse = (resp) => {
     return new Model(Model.decodeJson(resp.json), 'loaded', resp.getHeader('ETag'))
@@ -220,9 +227,7 @@ export default function createModelClass (name, options, client, metadata) {
     } else {
       resourcePath = `${Model.__url__}/${keys.join('/')}`
     }
-    return Model.__client__.request(resourcePath, 'GET')
-      .setPostProcessor((resp, resolve) => resolve(Model.fromResponse(resp), resp))
-      .send()
+    return Model.__client__.requestModel(Model, resourcePath, 'GET').send()
   }
   return Model
 }

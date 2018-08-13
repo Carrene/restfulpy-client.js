@@ -164,6 +164,7 @@ const modelPrototype = {
 
 const DEFAULT_VERBS = {
   load: 'GET',
+  get: 'GET',
   create: 'POST',
   update: 'PUT',
   delete: 'DELETE'
@@ -222,7 +223,7 @@ export default function createModelClass (name, options, client, metadata) {
     } else {
       resourcePath = `${Model.__url__}/${keys.join('/')}`
     }
-    return Model.__client__.requestModel(Model, resourcePath, 'GET').send()
+    return Model.__client__.requestModel(Model, resourcePath, Model.__verbs__.get).send()
   }
   return Model
 }

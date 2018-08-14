@@ -13,7 +13,7 @@ from wsgiref.simple_server import make_server
 from mako.lookup import TemplateLookup
 from sqlalchemy import Integer, Unicode
 from nanohttp import text, json, context, RestController, HTTPBadRequest, \
-    etag, HTTPNotFound, settings, action
+    HTTPNotFound, settings, action
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -77,10 +77,6 @@ class Resource(ModifiedMixin, OrderingMixin, PaginationMixin, FilteringMixin, De
         min_length=3
     )
 
-    @property
-    def __etag__(self):
-        return self.last_modification_time.isoformat()
-
 
 class MockupAuthenticator(StatefulAuthenticator):
     def validate_credentials(self, credentials):
@@ -123,7 +119,6 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     __model__ = Resource
 
     @json
-    @etag
     @Resource.expose
     def get(self, id_: int=None):
         q = DBSession.query(Resource)
@@ -132,7 +127,6 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
         return q
 
     @json
-    @etag
     @Resource.expose
     @commit
     def put(self, id_: int=None):
@@ -140,11 +134,9 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
         if m is None:
             raise HTTPNotFound()
         m.update_from_request()
-        context.etag_match(m.__etag__)
         return m
 
     @json
-    @etag
     @commit
     def post(self):
         m = Resource()
@@ -153,13 +145,11 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
         return m
 
     @json
-    @etag
     @commit
     def delete(self, id_: int=None):
         m = DBSession.query(Resource).filter(Resource.id == id_).one_or_none()
         if m is None:
             raise HTTPNotFound()
-        #context.etag_match(m.__etag__)
         DBSession.delete(m)
         return m
 

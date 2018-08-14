@@ -39,7 +39,7 @@ export default class Response {
       if (Array.isArray(this.json)) {
         this._models = this.json.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), 'loaded'))
       } else {
-        this._models = new this.request.ModelClass(this.request.ModelClass.decodeJson(this.json), 'loaded', this.getHeader('ETag'))
+        this._models = new this.request.ModelClass(this.request.ModelClass.decodeJson(this.json), 'loaded')
       }
     }
     return this._models

@@ -68,19 +68,19 @@ describe('Model', function () {
           expect(getResponse.models.__status__).toEqual('dirty')
           expect(getResponse.status).toEqual(200)
           // PUT
-          getResponse.save().send().then(saveResponse => {
+          getResponse.models.save().send().then(saveResponse => {
             expect(getResponse.models).toBe(saveResponse.models)
             expect(getResponse.models.__status__).toEqual('loaded')
             expect(getResponse.models.title).toEqual('CRUD(Updated)')
             expect(saveResponse.status).toEqual(200)
 
             // Reload (GET)
-            getResponse.reload().send().then(reloadResponse => {
+            getResponse.models.reload().send().then(reloadResponse => {
               expect(getResponse.models).toBe(reloadResponse.models)
               expect(getResponse.models.__status__).toEqual('loaded')
               expect(reloadResponse.status).toEqual(200)
               // DELETE
-              getResponse.delete().send().then(deleteResponse => {
+              getResponse.models.delete().send().then(deleteResponse => {
                 expect(getResponse.models).toBe(deleteResponse.models)
                 expect(getResponse.models.__status__).toEqual('deleted')
                 expect(deleteResponse.status).toEqual(200)

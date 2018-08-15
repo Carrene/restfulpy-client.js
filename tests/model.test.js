@@ -22,7 +22,7 @@ describe('Model', function () {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource
-      Resource.get('1').then((resp) => {
+      Resource.get('1').send().then((resp) => {
         expect(resp.models.__status__).toEqual('loaded')
         expect(resp.models.id).toEqual(1)
         expect(resp.models.title).toEqual('resource1')
@@ -37,7 +37,7 @@ describe('Model', function () {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource
-      Resource.get('/resources/1').then((resp) => {
+      Resource.get('/resources/1').send().then((resp) => {
         expect(resp.models.__status__).toEqual('loaded')
         expect(resp.models.id).toEqual(1)
         expect(resp.models.title).toEqual('resource1')

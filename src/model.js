@@ -81,11 +81,11 @@ const modelPrototype = {
       .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.delete)
       // This is the old method for deleting the model
       // .request(this.resourcePath, 'DELETE')
-      // .setPostProcessor((resp, resolve) => {
-      //   this.updateFromResponse(resp)
-      //   this.__status__ = 'deleted'
-      //   resolve(this, resp)
-      // })
+      .setPostProcessor((resp, resolve) => {
+        this.updateFromResponse(resp)
+        this.__status__ = 'deleted'
+        resolve(this, resp)
+      })
   },
   reload () {
     switch (this.__status__) {
@@ -98,11 +98,11 @@ const modelPrototype = {
       .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.get)
       // This is the old method for reloading the model
       // .request(this.resourcePath, 'GET')
-      // .setPostProcessor((resp, resolve) => {
-      //   this.updateFromResponse(resp)
-      //   this.__status__ = 'loaded'
-      //   resolve(this, resp)
-      // })
+      .setPostProcessor((resp, resolve) => {
+        this.updateFromResponse(resp)
+        this.__status__ = 'loaded'
+        resolve(this, resp)
+      })
   },
   save () {
     let verb
@@ -127,11 +127,11 @@ const modelPrototype = {
       .addParameters(this.toJson())
       // This is the old method for saving the model
       // .request(resourceUrl, verb)
-      // .setPostProcessor((resp, resolve) => {
-      //   this.updateFromResponse(resp)
-      //   this.__status__ = 'loaded'
-      //   resolve(this, resp)
-      // })
+      .setPostProcessor((resp, resolve) => {
+        this.updateFromResponse(resp)
+        this.__status__ = 'loaded'
+        resolve(this, resp)
+      })
   },
   toJson () {
     let result = {}
@@ -223,7 +223,7 @@ export default function createModelClass (name, options, client, metadata) {
     } else {
       resourcePath = `${Model.__url__}/${keys.join('/')}`
     }
-    return Model.__client__.requestModel(Model, resourcePath, Model.__verbs__.get).send()
+    return Model.__client__.requestModel(Model, resourcePath, Model.__verbs__.get)
   }
   return Model
 }

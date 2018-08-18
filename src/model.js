@@ -83,8 +83,8 @@ const modelPrototype = {
       // .request(this.resourcePath, 'DELETE')
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
-        this.__status__ = 'deleted'
-        resolve(this, resp)
+        // this.__status__ = 'deleted'
+        resolve(resp)
       })
   },
   reload () {
@@ -100,8 +100,8 @@ const modelPrototype = {
       // .request(this.resourcePath, 'GET')
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
-        this.__status__ = 'loaded'
-        resolve(this, resp)
+        // this.__status__ = 'loaded'
+        resolve(resp)
       })
   },
   save () {
@@ -129,8 +129,8 @@ const modelPrototype = {
       // .request(resourceUrl, verb)
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
-        this.__status__ = 'loaded'
-        resolve(this, resp)
+        // this.__status__ = 'loaded'
+        resolve(resp)
       })
   },
   toJson () {

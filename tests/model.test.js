@@ -57,7 +57,7 @@ describe('Model', function () {
         expect(newResponse.models.__status__).toEqual('loaded')
         expect(newResponse.status).toEqual(200)
         // GET
-        Resource.get(newResponse.models.id).then(getResponse => {
+        Resource.get(newResponse.models.id).send().then(getResponse => {
           expect(getResponse.models.title).toEqual('CRUD')
           expect(getResponse.models.__status__).toEqual('loaded')
           getResponse.models.title = 'CRUD(Updated)'
@@ -68,7 +68,9 @@ describe('Model', function () {
           expect(getResponse.models.__status__).toEqual('dirty')
           expect(getResponse.status).toEqual(200)
           // PUT
+          debugger
           getResponse.models.save().send().then(saveResponse => {
+            debugger
             expect(getResponse.models).toBe(saveResponse.models)
             expect(getResponse.models.__status__).toEqual('loaded')
             expect(getResponse.models.title).toEqual('CRUD(Updated)')

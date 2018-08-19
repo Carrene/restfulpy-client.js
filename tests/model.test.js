@@ -89,7 +89,8 @@ describe('Model', function () {
               expect(reloadResponse.status).toEqual(200)
               // DELETE
               newInstance.delete().send().then(deleteResponse => {
-                // expect(newInstance).toEqual(deleteResponse.models[0])
+                debugger
+                expect(newInstance).toEqual(deleteResponse.models[0])
                 expect(newInstance.__status__).toEqual('deleted')
                 expect(deleteResponse.status).toEqual(200)
                 done()

@@ -65,7 +65,7 @@ const modelPrototype = {
       this.__ob__.dep.notify()
     }
     this.__hash__ = getObjectHashCode(this.toJson())
-    if (this.__status__ === 'new') {
+    if (this.__status__ === 'new' || this.__status__ === 'deleted') {
       return
     }
     this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
@@ -180,7 +180,8 @@ export default function createModelClass (name, options, client, metadata) {
     if (values) {
       this.update(values)
     }
-    this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(values) : 0
+    this.__server_hash__ = (status === 'loaded' || status === 'deleted')
+      ? getObjectHashCode(values) : 0
     this.changed()
     return new Proxy(this, instanceHandler)
   }

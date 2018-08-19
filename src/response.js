@@ -37,12 +37,12 @@ export default class Response {
   get models () {
     if (this._models === null) {
       let jsons = [].concat(this.json)
-      // FIXME: talk about this
-      // let newStatus = 'loaded'
-      // if (this.request.verb === this.request.ModelClass.__verbs__.delete) {
-      //   newStatus = 'deleted'
-      // }
-      this._models = jsons.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), 'loaded'))
+      let newStatus = 'loaded'
+      if (this.request.verb === this.request.ModelClass.__verbs__.delete) {
+        debugger
+        newStatus = 'deleted'
+      }
+      this._models = jsons.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), newStatus))
     }
     return this._models
   }

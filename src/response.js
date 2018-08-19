@@ -36,11 +36,13 @@ export default class Response {
 
   get models () {
     if (this._models === null) {
-      if (Array.isArray(this.json)) {
-        this._models = this.json.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), 'loaded'))
-      } else {
-        this._models = new this.request.ModelClass(this.request.ModelClass.decodeJson(this.json), 'loaded')
-      }
+      let jsons = [].concat(this.json)
+      // FIXME: talk about this
+      // let newStatus = 'loaded'
+      // if (this.request.verb === this.request.ModelClass.__verbs__.delete) {
+      //   newStatus = 'deleted'
+      // }
+      this._models = jsons.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), 'loaded'))
     }
     return this._models
   }

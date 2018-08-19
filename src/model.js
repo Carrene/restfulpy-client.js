@@ -83,7 +83,7 @@ const modelPrototype = {
       // .request(this.resourcePath, 'DELETE')
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
-        // this.__status__ = 'deleted'
+        this.__status__ = 'deleted'
         resolve(resp)
       })
   },
@@ -155,6 +155,8 @@ const modelPrototype = {
     }
   },
   updateFromResponse (resp) {
+    this.__hash__ = resp.models[0].__hash__
+    this.__server_hash__ = resp.models[0].__server_hash__
     this.updateFromJson(resp.json)
   },
   updateFromJson (json) {

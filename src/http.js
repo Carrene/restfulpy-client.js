@@ -17,10 +17,14 @@ export default function doHttpRequest (url, options, responseFactory) {
 
     xhr.onload = () => {
       let response = responseFactory(xhr)
-      if (defaultOptions.postProcessor) {
-        defaultOptions.postProcessor(response, resolve, reject)
+      if (response.status === 200) {
+        if (defaultOptions.postProcessor) {
+          defaultOptions.postProcessor(response, resolve)
+        } else {
+          resolve(response)
+        }
       } else {
-        resolve(response)
+        reject(response)
       }
     }
     xhr.onerror = () => {

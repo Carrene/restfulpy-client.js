@@ -59,9 +59,7 @@ export default class Request {
   }
 
   addHeader (name, value) {
-    let o = {}
-    o[name] = value
-    return this.addHeaders(o)
+    return this.addHeaders({[name]: value})
   }
 
   addHeaders (headers) {
@@ -75,9 +73,7 @@ export default class Request {
   }
 
   addParameter (name, value) {
-    let o = {}
-    o[name] = value
-    return this.addParameters(o)
+    return this.addParameters({[name]: value})
   }
 
   addParameters (parameters) {

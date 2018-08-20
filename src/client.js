@@ -11,6 +11,8 @@ export default class Session {
     this._authenticator = authenticator
   }
 
+  // FIXME: We have to remove this method because Authenticator is a abstract class and can't be
+  // Instantiated. We have to force user to set the authenticator object.
   static createAuthenticator () {
     return new Authenticator()
   }

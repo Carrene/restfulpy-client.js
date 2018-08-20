@@ -65,7 +65,7 @@ const modelPrototype = {
       this.__ob__.dep.notify()
     }
     this.__hash__ = getObjectHashCode(this.toJson())
-    if (this.__status__ === 'new') {
+    if (this.__status__ === 'new' || this.__status__ === 'deleted') {
       return
     }
     this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
@@ -79,13 +79,11 @@ const modelPrototype = {
     }
     return this.constructor.__client__
       .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.delete)
-      // This is the old method for deleting the model
-      // .request(this.resourcePath, 'DELETE')
-      // .setPostProcessor((resp, resolve) => {
-      //   this.updateFromResponse(resp)
-      //   this.__status__ = 'deleted'
-      //   resolve(this, resp)
-      // })
+      .setPostProcessor((resp, resolve) => {
+        this.updateFromResponse(resp)
+        this.__status__ = 'deleted'
+        resolve(resp)
+      })
   },
   reload () {
     switch (this.__status__) {
@@ -96,13 +94,10 @@ const modelPrototype = {
     }
     return this.constructor.__client__
       .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.get)
-      // This is the old method for reloading the model
-      // .request(this.resourcePath, 'GET')
-      // .setPostProcessor((resp, resolve) => {
-      //   this.updateFromResponse(resp)
-      //   this.__status__ = 'loaded'
-      //   resolve(this, resp)
-      // })
+      .setPostProcessor((resp, resolve) => {
+        this.updateFromResponse(resp)
+        resolve(resp)
+      })
   },
   save () {
     let verb
@@ -113,25 +108,20 @@ const modelPrototype = {
       case 'deleted':
         throw new ModelStateError('Object is deleted.')
       case 'new':
-        // verb = 'POST'
         verb = this.constructor.__verbs__.create
         resourceUrl = this.constructor.__url__
         break
       default:
-        // verb = 'PUT'
         verb = this.constructor.__verbs__.update
         resourceUrl = this.resourcePath
     }
     return this.constructor.__client__
       .requestModel(this.constructor, resourceUrl, verb)
       .addParameters(this.toJson())
-      // This is the old method for saving the model
-      // .request(resourceUrl, verb)
-      // .setPostProcessor((resp, resolve) => {
-      //   this.updateFromResponse(resp)
-      //   this.__status__ = 'loaded'
-      //   resolve(this, resp)
-      // })
+      .setPostProcessor((resp, resolve) => {
+        this.updateFromResponse(resp)
+        resolve(resp)
+      })
   },
   toJson () {
     let result = {}
@@ -155,6 +145,8 @@ const modelPrototype = {
     }
   },
   updateFromResponse (resp) {
+    this.__hash__ = resp.models[0].__hash__
+    this.__server_hash__ = resp.models[0].__server_hash__
     this.updateFromJson(resp.json)
   },
   updateFromJson (json) {
@@ -164,6 +156,7 @@ const modelPrototype = {
 
 const DEFAULT_VERBS = {
   load: 'GET',
+  get: 'GET',
   create: 'POST',
   update: 'PUT',
   delete: 'DELETE'
@@ -177,7 +170,8 @@ export default function createModelClass (name, options, client, metadata) {
     if (values) {
       this.update(values)
     }
-    this.__server_hash__ = (status === 'loaded') ? getObjectHashCode(values) : 0
+    this.__server_hash__ = (status === 'loaded' || status === 'deleted')
+      ? getObjectHashCode(values) : 0
     this.changed()
     return new Proxy(this, instanceHandler)
   }
@@ -222,7 +216,7 @@ export default function createModelClass (name, options, client, metadata) {
     } else {
       resourcePath = `${Model.__url__}/${keys.join('/')}`
     }
-    return Model.__client__.requestModel(Model, resourcePath, 'GET').send()
+    return Model.__client__.requestModel(Model, resourcePath, Model.__verbs__.get)
   }
   return Model
 }

@@ -39,7 +39,6 @@ export default class Response {
       let jsons = [].concat(this.json)
       let newStatus = 'loaded'
       if (this.request.verb === this.request.ModelClass.__verbs__.delete) {
-        debugger
         newStatus = 'deleted'
       }
       this._models = jsons.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), newStatus))

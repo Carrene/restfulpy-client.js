@@ -71,7 +71,6 @@ class Resource(ModifiedMixin, OrderingMixin, PaginationMixin, FilteringMixin, De
     title = Field(
         Unicode(30),
         watermark='title here',
-        icon='default',
         label='Title',
         pattern='[a-zA-Z0-9]{3,}',
         min_length=3

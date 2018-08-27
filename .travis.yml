@@ -1,0 +1,28 @@
+env:
+  global:
+  - COMMIT_AUTHOR_EMAIL: mahdiaryayi@gmail.com
+branches:
+  only:
+  - master
+  - develop
+  - "/^v([1-9]\\d*!)?(0|[1-9]\\d*)(\\.(0|[1-9]\\d*))*((a|b|rc)(0|[1-9]\\d*))?(\\.post(0|[1-9]\\d*))?(\\.dev(0|[1-9]\\d*))?$/"
+services:
+- redis-server
+language: python
+python: 3.6
+node_js:
+- lts/*
+before_install:
+- pip install restfulpy
+install: npm install
+script: npm run test
+deploy:
+  provider: npm
+  email: mahdiaryayi@gmail.com
+  api_key:
+    secure: hbumxnIxbbn3Po49BcFymFJHGnFPsD0gTttNX58X8Z1X4x5RdaKqw8FZtQDDHyUma1xk/iNjXT12XyNuaIU9VsadXlw6Frz8jsF2xcwfgJTKLzO2uD1KowoFbIqjUOkmRQkPUP7ZLC4x81ZNM3YCFN6tLXB5LODSJq2MSXoZ+NjGoiL4yp+1+dBNGVZdqW5NIdfssRIXRMmDPk9/5rY+eymjTBJlnEZOgh1kQE1jz1KDRIOA0XCvvdQ54lvpdYOftsnwoNKoYzpMMxAXXKMJW6jf9jtUMAYf6YN6QEMZJU8a0psb0DGgwZimnBv5/BuwX/dMpAWIGrD5HdiA8/TUXu59ezjXxn2OWpv/wKGH1OVTySEeOB7jNKy8A6Q1Tahb3sYhfFJrIYs8EVTPRyTNjvwmmoDWTZBhITJzGXy2nBcuUlKSCuRY4DPUo7487tsisx5gA2fhxX4a226tjQO2XRsu0mA/8jJw6WKChUUZ7R6gdPJdEhCld6wIX5T1gzqz6Fj45XPFpNJQGLfDVbQkGO4jRN+D4ky3ozFY8KJqYdDe4o3dZpy99VWxJ5wJnoIsB3IGESPqp6yyS/B3KmXliiLtr6pRXpr7x3+8oqz0Uc7PkPRTEWf5TCpzpdz/mALFM0CuDNybR9h8XGOZvj5a8hIht6YWAMPh8tQOruy57pU=
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: Carrene/restfulpy-client.js 
+

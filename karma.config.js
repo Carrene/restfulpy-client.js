@@ -3,7 +3,7 @@
 const path = require('path')
 
 module.exports = function (config) {
-  config.set({
+  const configurations = {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
@@ -57,9 +57,20 @@ module.exports = function (config) {
       Chrome_without_security: {
         base: 'Chrome',
         flags: ['--disable-web-security']
+      },
+      Travis_CI_Chrome: {
+        base: 'ChromeHeadless',
+        flags: ['--disable-web-security', '--no-sandbox']
       }
     },
     singleRun: true,
     concurrency: Infinity
-  })
+  }
+
+  // Changing Testing browser in Travis
+  if (process.env.TRAVIS) {
+    configurations.browsers = ['Travis_CI_Chrome']
+  }
+
+  config.set(configurations)
 }

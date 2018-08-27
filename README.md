@@ -3,6 +3,15 @@ restfulpy-client.js
 
 Javascript client for [restfulpy](https://github.com/pylover/restfulpy)
 
+### Branches
+
+#### master
+
+[![Build Status](https://travis-ci.org/Carrene/restfulpy-client.js.svg?branch=master&service=github)](https://travis-ci.org/Carrene/restfulpy-client.js)
+
+#### develop
+
+[![Build Status](https://travis-ci.org/Carrene/restfulpy-client.js.svg?branch=develop&service=github)](https://travis-ci.org/Carrene/restfulpy-client.js)
 
 Install
 -------

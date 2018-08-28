@@ -167,6 +167,9 @@ export default function createModelClass (name, options, client, metadata) {
     this.constructor = Model
     this.__status__ = status
     this.__hash__ = 0
+    for (let field of Object.keys(metadata.fields)) {
+      this[field] = metadata.fields[field].default_
+    }
     if (values) {
       this.update(values)
     }

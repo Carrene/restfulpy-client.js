@@ -277,17 +277,22 @@ class SimpleMockupServerLauncher(Launcher):
 
             if not self.args.command:
                 server_thread.join()
+                exitstatus = 0
             else:
                 test_runner_command = ' '.join(self.args.command).replace('{url}', url)
                 time.sleep(1)
-                run(test_runner_command, shell=True)
-            return 0
+                result = run(test_runner_command, shell=True)
+                exitstatus = result.returncode
+            return exitstatus
         except KeyboardInterrupt:
             print('CTRL+X is pressed.')
             return 1
         finally:
             httpd.shutdown()
-            server_thread.join()
+            sys.exit(exitstatus)
+            # commented by pylover because of wrong exit code
+            # server_thread.join()
+
 
 if __name__ == '__main__':
     SimpleMockupServerLauncher()()

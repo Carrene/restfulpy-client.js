@@ -52,6 +52,18 @@ describe('Model', function () {
       })
     })
   })
+  it('fieldExistence', function (done) {
+    let c = new MockupClient()
+    c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
+      const Resource = c.metadata.models.Resource;
+      const newInstance = new Resource()
+      expect(newInstance.title).toEqual(null)
+      expect(newInstance.createdAt).toEqual(null)
+      expect(newInstance.modifiedAt).toEqual(null)
+      expect(newInstance.id).toEqual(null)
+      done()
+    })
+  })
   it('CRUD', function (done) {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {

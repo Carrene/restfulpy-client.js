@@ -40,7 +40,9 @@ module.exports = function (config) {
         alias: {
           'restfulpy': path.resolve(__dirname, 'src')
         }
-      }
+      },
+      devtool: 'inline-source-map',
+      mode: 'development'
     },
 
     webpackMiddleware: {

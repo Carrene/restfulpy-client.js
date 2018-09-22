@@ -3,7 +3,7 @@
   "version": "0.10.0",
   "description": "A javascript client for restfulpy",
   "main": "dist/restfulpy.js",
-  "module": "src/index.js",
+  "module": "dist/restfulpy.js",
   "scripts": {
     "test": "./mockup-server/mockupserver.py --bind 0 node_modules/karma/bin/karma start karma.config.js --server-url={url}",
     "dev": "webpack --progress --colors --watch --env dev",

@@ -59,6 +59,12 @@ const modelPrototype = {
   get resourcePath () {
     return `${this.constructor.__url__}/${this.__identity__.join('/')}`
   },
+  get createURL () {
+    return this.constructor.__url__
+  },
+  get updateURL () {
+    return this.resourcePath
+  },
   changed () {
     // // FIXME: This condition is for handling vuejs proxy
     if (this.__ob__) {
@@ -109,11 +115,11 @@ const modelPrototype = {
         throw new ModelStateError('Object is deleted.')
       case 'new':
         verb = this.constructor.__verbs__.create
-        resourceUrl = this.constructor.__url__
+        resourceUrl = this.createURL
         break
       default:
         verb = this.constructor.__verbs__.update
-        resourceUrl = this.resourcePath
+        resourceUrl = this.updateURL
     }
     return this.constructor.__client__
       .requestModel(this.constructor, resourceUrl, verb)

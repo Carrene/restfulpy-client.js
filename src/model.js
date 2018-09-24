@@ -65,6 +65,12 @@ const modelPrototype = {
   get updateURL () {
     return this.resourcePath
   },
+  get reloadURL () {
+    return this.resourcePath
+  },
+  get deleteURL () {
+    return this.resourcePath
+  },
   changed () {
     // // FIXME: This condition is for handling vuejs proxy
     if (this.__ob__) {
@@ -84,7 +90,7 @@ const modelPrototype = {
         throw new ModelStateError('Object is already deleted.')
     }
     return this.constructor.__client__
-      .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.delete)
+      .requestModel(this.constructor, this.deleteURL, this.constructor.__verbs__.delete)
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         this.__status__ = 'deleted'
@@ -99,7 +105,7 @@ const modelPrototype = {
         throw new ModelStateError('Object is deleted.')
     }
     return this.constructor.__client__
-      .requestModel(this.constructor, this.resourcePath, this.constructor.__verbs__.get)
+      .requestModel(this.constructor, this.reloadURL, this.constructor.__verbs__.get)
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         resolve(resp)

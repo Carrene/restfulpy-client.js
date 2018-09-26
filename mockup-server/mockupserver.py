@@ -75,6 +75,12 @@ class Resource(ModifiedMixin, OrderingMixin, PaginationMixin, FilteringMixin, De
         pattern='[a-zA-Z0-9]{3,}',
         min_length=3
     )
+    password = Field(
+        Unicode(30),
+        protected=True,
+        nullable=False,
+        default='123456'
+    )
 
 
 class MockupAuthenticator(StatefulAuthenticator):
@@ -209,7 +215,7 @@ class MockupApplication(Application):
     def insert_mockup(self):
         for i in range(1, 11):
             # noinspection PyArgumentList
-            DBSession.add(Resource(id=i, title='resource%s' % i))
+            DBSession.add(Resource(id=i, title='resource%s' % i, password='password%s' % i))
         DBSession.commit()
 
     def begin_request(self):

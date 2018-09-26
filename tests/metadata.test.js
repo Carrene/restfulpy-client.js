@@ -13,5 +13,12 @@ describe('Metadata', function () {
       done()
     })
   })
+  it('Including protected field', function (done) {
+    let c = new MockupClient()
+    c.loadMetadata({'Resource': {url: 'resources'}}).then((resps) => {
+      expect(c.metadata.models.Resource.fields.password.protected).toBeTruthy()
+      done()
+    })
+  })
 })
 

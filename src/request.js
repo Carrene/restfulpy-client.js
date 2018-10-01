@@ -15,6 +15,7 @@ export default class Request {
     queryString = [],
     encoding = 'json',
     withCredentials = true,
+    errorHandlers = {},
     ModelClass = null
   ) {
     this.resource = resource
@@ -26,6 +27,7 @@ export default class Request {
     this.encoding = encoding
     this.postProcessor = null
     this.xhrWithCredentials = withCredentials
+    this.errorHandlers = errorHandlers
     this.ModelClass = ModelClass
   }
 
@@ -46,6 +48,11 @@ export default class Request {
 
   setModelClass (ModelClass) {
     this.ModelClass = ModelClass
+    return this
+  }
+
+  setErrorHandlers (errorHandlers) {
+    this.errorHandlers = errorHandlers
     return this
   }
 
@@ -165,7 +172,8 @@ export default class Request {
       headers: this.headers,
       encoding: this.encoding,
       postProcessor: this.postProcessor,
-      xhrWithCredentials: this.xhrWithCredentials
+      xhrWithCredentials: this.xhrWithCredentials,
+      errorHandlers: this.errorHandlers
     }, (...args) => { return this.responseFactory(...args) })
   }
 }

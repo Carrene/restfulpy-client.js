@@ -7,7 +7,8 @@ export default function doHttpRequest (url, options, responseFactory) {
     headers: {},
     encoding: 'json',
     postProcessor: null,
-    xhrWithCredentials: true
+    xhrWithCredentials: true,
+    errorHandlers: {}
   }
   Object.assign(defaultOptions, options)
 
@@ -23,6 +24,9 @@ export default function doHttpRequest (url, options, responseFactory) {
         } else {
           resolve(response)
         }
+      } else if (defaultOptions.errorHandlers[response.status]) {
+        defaultOptions.errorHandlers[response.status](response.status, window.location.pathname.substr(1))
+        reject(response)
       } else {
         reject(response)
       }

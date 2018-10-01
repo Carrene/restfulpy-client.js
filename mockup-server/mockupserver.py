@@ -13,7 +13,7 @@ from wsgiref.simple_server import make_server
 from mako.lookup import TemplateLookup
 from sqlalchemy import Integer, Unicode
 from nanohttp import text, json, context, RestController, HTTPBadRequest, \
-    HTTPNotFound, settings, action
+    HTTPNotFound, settings, action, HTTPStatus
 from restfulpy.authorization import authorize
 from restfulpy.application import Application
 from restfulpy.authentication import StatefulAuthenticator
@@ -127,6 +127,11 @@ class ResourceController(JsonPatchControllerMixin, ModelRestController):
     @Resource.expose
     def get(self, id_: int=None):
         q = DBSession.query(Resource)
+        status = context.query.get('status')
+
+        if status:
+            raise HTTPStatus(status)
+
         if id_ is not None:
             return q.filter(Resource.id == id_).one_or_none()
         return q

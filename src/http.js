@@ -25,7 +25,7 @@ export default function doHttpRequest (url, options, responseFactory) {
           resolve(response)
         }
       } else if (defaultOptions.errorHandlers[response.status]) {
-        defaultOptions.errorHandlers[response.status](response.status, window.location.pathname.substr(1))
+        defaultOptions.errorHandlers[response.status](response.status, window.location.href)
         reject(response)
       } else {
         reject(response)

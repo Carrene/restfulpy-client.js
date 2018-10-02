@@ -14,7 +14,6 @@ describe('Error handling', function () {
       expect(resp.status).toEqual(401)
       let newLocation = new URL(fakeWindow.location.href)
       expect(newLocation.pathname).toEqual('/login')
-      debugger
     })
     done()
   })

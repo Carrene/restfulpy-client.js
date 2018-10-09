@@ -5,6 +5,18 @@
 import { MockupClient } from './helpers'
 
 describe('Form', function () {
+  /* Testing no payload */
+  it('No payload', function (done) {
+    let c = new MockupClient()
+    c.request('resources/1').send().then((resp) => {
+      expect(resp.status).toEqual(200)
+      done()
+    }).catch(resp => {
+      console.log('ERROR', resp)
+      done()
+    })
+  })
+
   /* Testing json payload in both request & response */
   it('Json echo', function (done) {
     let c = new MockupClient()

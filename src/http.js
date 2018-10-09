@@ -43,8 +43,12 @@ export default function doHttpRequest (url, options, responseFactory) {
     if (defaultOptions.encoding === null) {
       requestBody = null
     } else if (defaultOptions.encoding === 'json') {
-      requestBody = JSON.stringify(defaultOptions.payload)
-      xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      if (Object.keys(defaultOptions.payload).length) {
+        requestBody = JSON.stringify(defaultOptions.payload)
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      } else {
+        requestBody = null
+      }
     } else if (defaultOptions.encoding === 'urlencoded') {
       requestBody = encodeQueryString(defaultOptions.payload)
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')

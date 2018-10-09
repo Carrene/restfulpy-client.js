@@ -123,7 +123,7 @@ class AuthController(RestController):
 class ResourceController(JsonPatchControllerMixin, ModelRestController):
     __model__ = Resource
 
-    @json
+    @json(prevent_form='666 Form does not allowed')
     @Resource.expose
     def get(self, id_: int=None):
         q = DBSession.query(Resource)

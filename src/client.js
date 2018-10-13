@@ -18,6 +18,12 @@ export default class Session {
     return new Authenticator()
   }
 
+  onResponse (response) {
+    if (this.authenticator) {
+      this.authenticator.checkResponse(response)
+    }
+  }
+
   get authenticator () {
     /* Singleton and Lazy-Initialization of the Authenticator object */
     if (this._authenticator === undefined) {

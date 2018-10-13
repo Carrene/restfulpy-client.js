@@ -173,7 +173,8 @@ export default class Request {
       encoding: this.encoding,
       postProcessor: this.postProcessor,
       xhrWithCredentials: this.xhrWithCredentials,
-      errorHandlers: this.errorHandlers
+      errorHandlers: this.errorHandlers,
+      onResponse: this.client.onResponse
     }, (...args) => { return this.responseFactory(...args) })
   }
 }

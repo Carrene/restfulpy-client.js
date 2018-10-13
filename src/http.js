@@ -8,7 +8,8 @@ export default function doHttpRequest (url, options, responseFactory) {
     encoding: 'json',
     postProcessor: null,
     xhrWithCredentials: true,
-    errorHandlers: {}
+    errorHandlers: {},
+    onResponse: null
   }
   Object.assign(defaultOptions, options)
 
@@ -19,6 +20,9 @@ export default function doHttpRequest (url, options, responseFactory) {
     xhr.onload = () => {
       let response = responseFactory(xhr)
       if (response.status === 200) {
+        if (defaultOptions.onResponse) {
+          defaultOptions.onResponse(response)
+        }
         if (defaultOptions.postProcessor) {
           defaultOptions.postProcessor(response, resolve)
         } else {

@@ -22,4 +22,19 @@ describe('Authentication', function () {
     c.logout()
     expect(c.authenticator.authenticated).toBe(false)
   })
+
+  it('Refresh Token', function (done) {
+    c.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {
+      let previousToken = resp.json.token
+      c.request('sessions').setVerb('RENEW').send().then(response => {
+        let currentToken = response.getHeader(c.authenticator.tokenResponseHeaderKey)
+        expect(currentToken).not.toBe(null)
+        expect(currentToken).not.toEqual(previousToken)
+        done()
+      })
+    }).catch(resp => {
+      done()
+      throw resp.error
+    })
+  })
 })

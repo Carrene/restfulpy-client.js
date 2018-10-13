@@ -2,22 +2,23 @@
  * Created by vahid on 7/11/17.
  */
 
-import { default as Client, Authenticator } from 'restfulpy'
+import { default as Client, Authenticator, httpClient, Response } from 'restfulpy'
+
+let BASE_URL = window.__karma__.config.serverUrl
 
 class MyAuthenticator extends Authenticator {
   login (credentials) {
-    return new Promise((resolve, reject) => {
-      this.request('sessions', 'POST')
-        .addParameters(this.constructor.validateCredentials(credentials))
-        .send() // Returns a promise
-        .then((resp) => {
-          this.token = resp.json['token']
-          resolve(resp)
-        })
-        .catch((resp) => {
-          this.deleteToken()
-          reject(resp)
-        })
+    return httpClient(`${BASE_URL}/sessions`, {
+      verb: 'POST',
+      payload: this.constructor.validateCredentials(credentials)
+    }, (...args) => {
+      return new Response(null, ...args)
+    }).then(resp => {
+      this.token = resp.json.token
+      return Promise.resolve(resp)
+    }).catch((resp) => {
+      this.deleteToken()
+      return Promise.reject(resp)
     })
   }
 }
@@ -31,7 +32,7 @@ let fakeWindow = {
 const errorHandler = {
   401: (status, redirectUrl) => {
     if (status === 401) {
-      fakeWindow.location.href = `${window.location.origin}/login?redirect=${window.__karma__.config.serverUrl}/${redirectUrl}`
+      fakeWindow.location.href = `${window.location.origin}/login?redirect=${BASE_URL}/${redirectUrl}`
     }
   }
 }
@@ -39,7 +40,7 @@ const errorHandler = {
 export class MockupClient extends Client {
   constructor () {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
-    super(window.__karma__.config.serverUrl, 'token', authenticator, errorHandler)
+    super(BASE_URL, 'token', authenticator, errorHandler)
   }
 }
 

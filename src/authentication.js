@@ -72,7 +72,7 @@ export default class AbstractAuthenticator {
   }
 
   checkResponse (response) {
-    let token = response.headers[this.tokenResponseHeaderKey]
+    let token = response.getHeader(this.tokenResponseHeaderKey)
     if (token) {
       this.token = token
     }

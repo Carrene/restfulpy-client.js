@@ -174,7 +174,7 @@ export default class Request {
       postProcessor: this.postProcessor,
       xhrWithCredentials: this.xhrWithCredentials,
       errorHandlers: this.errorHandlers,
-      onResponse: this.client.onResponse
+      onResponse: this.client.onResponse.bind(this.client)
     }, (...args) => { return this.responseFactory(...args) })
   }
 }

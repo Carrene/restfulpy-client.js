@@ -119,6 +119,14 @@ class AuthController(RestController):
     def delete(self):
         return {}
 
+    @json
+    @authorize
+    def renew(self):
+        context.application.__authenticator__.try_refresh_token(
+            context.identity.session_id
+        )
+        return ''
+
 
 class ResourceController(JsonPatchControllerMixin, ModelRestController):
     __model__ = Resource

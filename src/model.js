@@ -127,13 +127,17 @@ const modelPrototype = {
         verb = this.constructor.__verbs__.update
         resourceUrl = this.updateURL
     }
+    let data = this.prepareForSubmit(verb, resourceUrl, this.toJson())
     return this.constructor.__client__
       .requestModel(this.constructor, resourceUrl, verb)
-      .addParameters(this.toJson())
+      .addParameters(data)
       .setPostProcessor((resp, resolve) => {
         this.updateFromResponse(resp)
         resolve(resp)
       })
+  },
+  prepareForSubmit (verb, url, data) {
+    return data
   },
   toJson () {
     let result = {}

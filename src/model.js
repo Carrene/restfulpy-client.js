@@ -66,9 +66,9 @@ export default function createModelClass (name, options, client, metadata) {
       this.__status__ = status
       this.__hash__ = 0
       for (let field of Object.keys(metadata.fields)) {
-      // Ignoring protected items of metadata from model
-      if (metadata.fields[field].protected) {
-        continue
+        // Ignoring protected items of metadata from model
+        if (metadata.fields[field].protected) {
+          continue
         }
         this[field] = metadata.fields[field].default
       }

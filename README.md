@@ -26,7 +26,7 @@ import { BrowserSession, Authenticator, httpClient, Response } from 'restfulpy'
 class LocalAuthenticator extends Authenticator {
   login (credentials) {
     // Add your login method for example:
-    return httpClient(`${BASE_URL}/sessions`, {
+    return httpClient(`http://example.org/api/v1/sessions`, {
       verb: 'POST',
       payload: this.constructor.validateCredentials(credentials)
     }, (...args) => {
@@ -45,9 +45,8 @@ let authenticator = new LocalAuthenticator()
 
 const errorHandler = {
   401: (status, redirectUrl) => {
-    if (status === 401) {
-      fakeWindow.location.href = `${window.location.origin}/login?redirect=${BASE_URL}/${redirectUrl}`
-    }
+    // Your handler for 401 error
+    // You can add handler for each status code
   }
 }
 

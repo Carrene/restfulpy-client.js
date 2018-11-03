@@ -21,9 +21,37 @@ Usage
 -----
 
 ```javascript
-import Client from 'restfulpy'
+import { BrowserSession, Authenticator, httpClient, Response } from 'restfulpy'
 
-let client = new Client('http://example.org/api/v1')
+class LocalAuthenticator extends Authenticator {
+  login (credentials) {
+    // Add your login method for example:
+    return httpClient(`${BASE_URL}/sessions`, {
+      verb: 'POST',
+      payload: this.constructor.validateCredentials(credentials)
+    }, (...args) => {
+      return new Response(null, ...args)
+    }).then(resp => {
+      this.token = resp.json.token
+      return Promise.resolve(resp)
+    }).catch((resp) => {
+      this.deleteToken()
+      return Promise.reject(resp)
+    })
+  }
+}
+
+let authenticator = new LocalAuthenticator()
+
+const errorHandler = {
+  401: (status, redirectUrl) => {
+    if (status === 401) {
+      fakeWindow.location.href = `${window.location.origin}/login?redirect=${BASE_URL}/${redirectUrl}`
+    }
+  }
+}
+
+let client = new BrowserSession('http://example.org/api/v1', undefined, authenticator, errorHandlers)
 
 // Login
 client.login({'email': 'user1@example.com', 'password': '123456'}).then(resp => {
@@ -53,7 +81,7 @@ client.logout()
 
 ```javascrypt
 
-client.metadata.ModelName.get(1).done(model => {
+client.metadata.ModelName.get(1).done(models => {
   // Use model
 })
 

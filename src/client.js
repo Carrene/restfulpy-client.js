@@ -1,4 +1,4 @@
-import { AlreadyAuthenticatedError, InvalidOperationError } from './exceptions'
+import { AlreadyAuthenticatedError, InvalidOperationError, MethodMustOverrideError } from './exceptions'
 import Authenticator from './authentication'
 import Request from './request'
 import JsonPatchRequest from './jsonpatch'
@@ -60,11 +60,36 @@ export default class Session {
   }
 
   loadMetadata (entities) {
-    window.__restfulpy_metadata__ = new Metadata()
-    return window.__restfulpy_metadata__.load(this, entities)
+    throw new MethodMustOverrideError()
+  }
+
+  saveMetadata (entity) {
+    throw new MethodMustOverrideError()
+  }
+
+  createMetadata () {
+    return new Metadata()
   }
 
   get metadata () {
-    return window.__restfulpy_metadata__
+    throw new MethodMustOverrideError()
+  }
+}
+
+export class BrowserSession extends Session {
+  loadMetadata (entities) {
+    let metadata = this.createMetadata()
+    return metadata.load(this, entities).then(() => {
+      this.saveMetadata(metadata)
+    })
+  }
+
+  saveMetadata (metadata) {
+    window.__restfulpy_metadata__ = window.__restfulpy_metadata__ || {}
+    window.__restfulpy_metadata__[this.baseUrl] = metadata
+  }
+
+  get metadata () {
+    return window.__restfulpy_metadata__[this.baseUrl]
   }
 }

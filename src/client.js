@@ -90,6 +90,6 @@ export class BrowserSession extends Session {
   }
 
   get metadata () {
-    return window.__restfulpy_metadata__
+    return window.__restfulpy_metadata__[this.baseUrl]
   }
 }

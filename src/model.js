@@ -67,9 +67,9 @@ export default function createModelClass (name, options, client, metadata) {
       this.__hash__ = 0
       for (let field of Object.keys(metadata.fields)) {
         // Ignoring protected items of metadata from model
-        if (metadata.fields[field].protected) {
-          continue
-        }
+        // if (metadata.fields[field].protected) {
+        //   continue
+        // }
         this[field] = metadata.fields[field].default
       }
       if (values) {
@@ -198,6 +198,13 @@ export default function createModelClass (name, options, client, metadata) {
       for (let fieldName in obj) {
         if (fieldName in this.constructor.fields) {
           this[fieldName] = obj[fieldName]
+        }
+      }
+      for (let fieldName in this.constructor.fields) {
+        if (this.constructor.fields[fieldName].protected) {
+          debugger
+          this[fieldName] = this.constructor.fields[fieldName].default
+          debugger
         }
       }
     }

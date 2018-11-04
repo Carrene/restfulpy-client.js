@@ -64,7 +64,7 @@ describe('Model', function () {
       done()
     })
   })
-  it('CRUD', function (done) {
+  fit('CRUD', function (done) {
     let c = new MockupClient()
     c.loadMetadata({'Resource': {url: 'resources'}}).then(resps => {
       const Resource = c.metadata.models.Resource;

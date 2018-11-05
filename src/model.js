@@ -66,17 +66,13 @@ export default function createModelClass (name, options, client, metadata) {
       this.__status__ = status
       this.__hash__ = 0
       for (let field of Object.keys(metadata.fields)) {
-        // Ignoring protected items of metadata from model
-        if (metadata.fields[field].protected) {
-          continue
-        }
         this[field] = metadata.fields[field].default
       }
       if (values) {
         this.update(values)
       }
       this.__server_hash__ = (status === 'loaded' || status === 'deleted')
-        ? getObjectHashCode(values) : 0
+        ? getObjectHashCode(this.toJson()) : 0
       this.changed()
       return new Proxy(this, instanceHandler)
     }
@@ -106,7 +102,7 @@ export default function createModelClass (name, options, client, metadata) {
     }
 
     changed () {
-      // // FIXME: This condition is for handling vuejs proxy
+      // FIXME: This condition is for handling vuejs proxy
       if (this.__ob__) {
         this.__ob__.dep.notify()
       }

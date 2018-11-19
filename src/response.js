@@ -1,4 +1,3 @@
-
 export default class Response {
   constructor (request, xhr) {
     this.request = request
@@ -47,7 +46,7 @@ export default class Response {
   }
 
   get error () {
-    return (this.status === 200) ? null : this.xhr.responseText
+    return (this.status === 200) ? null : this.xhr.statusText
   }
 
   static fromXhr (xhr) {

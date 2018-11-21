@@ -1,4 +1,3 @@
-
 export default class Response {
   constructor (request, xhr) {
     this.request = request
@@ -47,7 +46,19 @@ export default class Response {
   }
 
   get error () {
-    return (this.status === 200) ? null : this.xhr.responseText
+    return (this.status === 200) ? null : this.xhr.statusText
+  }
+
+  get stackTrace () {
+    if (String(this.xhr.status).match(this.request.client.errorHandlers.unhandledErrors)) {
+      if (this.xhr.getResponseHeader('ContentType') === 'application/json') {
+        return JSON.parse(this.xhr.responseText).stackTrace
+      } else if (this.xhr.getResponseHeader('ContentType') === 'text/plain') {
+        return this.xhr.responseText
+      } else {
+        return `${this.xhr.getResponseHeader('ContentType')} content type is not supported`
+      }
+    }
   }
 
   static fromXhr (xhr) {

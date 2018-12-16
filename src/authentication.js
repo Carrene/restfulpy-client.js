@@ -1,6 +1,10 @@
-
 import jwtDecode from 'jwt-decode'
-import {AbstractBaseClassError, AuthenticationRequiredError, BadCredentialsError, MethodMustOverrideError} from './exceptions'
+import {
+  AbstractBaseClassError,
+  AuthenticationRequiredError,
+  BadCredentialsError,
+  MethodMustOverrideError
+} from './exceptions'
 
 export default class AbstractAuthenticator {
   constructor (tokenRequestHeaderKey = 'Authorization', tokenLocalStorageKey = 'token', tokenResponseHeaderKey = 'X-New-JWT-Token') {
@@ -56,7 +60,9 @@ export default class AbstractAuthenticator {
     if (!this.authenticated) {
       throw new AuthenticationRequiredError()
     }
-    request.addHeader(this.tokenRequestHeaderKey, `Bearer ${this.token}`)
+    if (request.verb !== 'METADATA') {
+      request.addHeader(this.tokenRequestHeaderKey, `Bearer ${this.token}`)
+    }
   }
 
   removeAuthenticationHeaders (request) {

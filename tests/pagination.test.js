@@ -7,34 +7,60 @@ import { MockupClient } from './helpers'
 describe('Pagination', function () {
   it('First page', function (done) {
     let c = new MockupClient()
-    c.request('resources').sort('id').take(3).send().then((resp) => {
-      expect(resp.json.length).toEqual(3)
-      expect(resp.json[0]['id']).toEqual(1)
-      done()
-    })
+    c.request('resources')
+      .sort('id')
+      .take(3)
+      .send()
+      .then(resp => {
+        expect(resp.json.length).toEqual(3)
+        expect(resp.json[0]['id']).toEqual(1)
+        done()
+      })
+      .catch(done.fail)
   })
+
   it('Second page', function (done) {
     let c = new MockupClient()
-    c.request('resources').sort('id').skip(3).take(3).send().then((resp) => {
-      expect(resp.json.length).toEqual(3)
-      expect(resp.json[0]['id']).toEqual(4)
-      done()
-    })
+    c.request('resources')
+      .sort('id')
+      .skip(3)
+      .take(3)
+      .send()
+      .then(resp => {
+        expect(resp.json.length).toEqual(3)
+        expect(resp.json[0]['id']).toEqual(4)
+        done()
+      })
+      .catch(done.fail)
   })
+
   it('Third page', function (done) {
     let c = new MockupClient()
-    c.request('resources').sort('id').skip(6).take(3).send().then((resp) => {
-      expect(resp.json.length).toEqual(3)
-      expect(resp.json[0]['id']).toEqual(7)
-      done()
-    })
+    c.request('resources')
+      .sort('id')
+      .skip(6)
+      .take(3)
+      .send()
+      .then(resp => {
+        expect(resp.json.length).toEqual(3)
+        expect(resp.json[0]['id']).toEqual(7)
+        done()
+      })
+      .catch(done.fail)
   })
+
   it('Last page', function (done) {
     let c = new MockupClient()
-    c.request('resources').sort('id').skip(9).take(3).send().then((resp) => {
-      expect(resp.json.length).toEqual(1)
-      expect(resp.json[0]['id']).toEqual(10)
-      done()
-    })
+    c.request('resources')
+      .sort('id')
+      .skip(9)
+      .take(3)
+      .send()
+      .then(resp => {
+        expect(resp.json.length).toEqual(1)
+        expect(resp.json[0]['id']).toEqual(10)
+        done()
+      })
+      .catch(done.fail)
   })
 })

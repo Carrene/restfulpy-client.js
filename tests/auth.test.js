@@ -7,6 +7,7 @@ describe('Authentication', function () {
   let c = new MockupClient()
 
   it('Login', function (done) {
+    c.logout()
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {
         expect(resp.json.token).not.toBe(null)
@@ -41,7 +42,6 @@ describe('Refresh Token', function () {
               let currentToken = response.getHeader(
                 c.authenticator.tokenResponseHeaderKey
               )
-              debugger
 
               expect(currentToken).not.toBe(null)
               expect(currentToken).not.toEqual(previousToken)

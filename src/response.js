@@ -15,7 +15,7 @@ export default class Response {
   }
 
   get body () {
-    return (this.status !== 200) ? null : this.xhr.responseText
+    return this.status !== 200 ? null : this.xhr.responseText
   }
 
   get identity () {
@@ -36,27 +36,55 @@ export default class Response {
   get models () {
     if (this._models === null) {
       let jsons = [].concat(this.json)
+      // if (Array.isArray(this.request)) {
+      //   for (let request of this.request) {
+      //     let newStatus = 'loaded'
+      //     if (request.verb === request.ModelClass.__verbs__.delete) {
+      //       newStatus = 'deleted'
+      //     }
+      //     this._models = jsons.map(
+      //       json =>
+      //         new request.ModelClass(
+      //           request.ModelClass.decodeJson(json),
+      //           newStatus
+      //         )
+      //     )
+      //   }
+      // } else {
       let newStatus = 'loaded'
       if (this.request.verb === this.request.ModelClass.__verbs__.delete) {
         newStatus = 'deleted'
       }
-      this._models = jsons.map(i => new this.request.ModelClass(this.request.ModelClass.decodeJson(i), newStatus))
+      this._models = jsons.map(
+        json =>
+          new this.request.ModelClass(
+            this.request.ModelClass.decodeJson(json),
+            newStatus
+          )
+      )
+      // }
     }
     return this._models
   }
 
   get error () {
-    return (this.status === 200) ? null : this.xhr.statusText
+    return this.status === 200 ? null : this.xhr.statusText
   }
 
   get stackTrace () {
-    if (String(this.xhr.status).match(this.request.client.errorHandlers.unhandledErrors)) {
+    if (
+      String(this.xhr.status).match(
+        this.request.client.errorHandlers.unhandledErrors
+      )
+    ) {
       if (this.xhr.getResponseHeader('ContentType') === 'application/json') {
         return JSON.parse(this.xhr.responseText).stackTrace
       } else if (this.xhr.getResponseHeader('ContentType') === 'text/plain') {
         return this.xhr.responseText
       } else {
-        return `${this.xhr.getResponseHeader('ContentType')} content type is not supported`
+        return `${this.xhr.getResponseHeader(
+          'ContentType'
+        )} content type is not supported`
       }
     }
   }

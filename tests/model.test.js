@@ -49,6 +49,30 @@ describe('Model', function () {
       .catch(done.fail)
   })
 
+  it('loadMultipleWithJsonPatch', function (done) {
+    let c = new MockupClient()
+    c.loadMetadata({ Resource: { url: 'resources' } })
+      .then(() => {
+        const Resource = c.metadata.models.Resource
+        c.jsonPatchRequest('resources')
+          .addRequest(Resource.load())
+          .addRequest(Resource.get('1'))
+          .addRequest(Resource.get('2'))
+          .send()
+          .then(resps => {
+            expect(resps[0].status).toEqual(200)
+            expect(resps[0].models[0].__status__).toEqual('loaded')
+            expect(resps[0].models[0].id).toEqual(1)
+            expect(resps[0].models[0].title).toEqual('resource1')
+            expect(resps[0].models[0].constructor).toEqual(Resource)
+            expect(resps[0].models[0].resourcePath).toEqual('resources/1')
+            done()
+          })
+          .catch(done.fail)
+      })
+      .catch(done.fail)
+  })
+
   it('loadOneByAbsolutePath', function (done) {
     let c = new MockupClient()
     c.loadMetadata({ Resource: { url: 'resources' } })

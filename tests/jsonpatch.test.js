@@ -13,10 +13,9 @@ describe('JsonPatch', function () {
       .addRequest('', 'get')
       .send()
       .then(resp => {
-        expect(resp.status).toEqual(200)
-        expect(resp.json.length).toEqual(2)
-        expect(resp.json[0].length).toEqual(10)
-        expect(resp.json[1].length).toEqual(10)
+        expect(resp[0].status).toEqual(200)
+        expect(resp[0].json.length).toEqual(10)
+        expect(resp[1].json.length).toEqual(10)
         done()
       })
       .catch(done.fail)

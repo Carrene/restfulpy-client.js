@@ -1,6 +1,9 @@
 import urljoin from 'url-join'
 
-import { AuthenticationRequiredError, InvalidOperationError } from './exceptions'
+import {
+  AuthenticationRequiredError,
+  InvalidOperationError
+} from './exceptions'
 import { encodeQueryString } from './helpers'
 import doHttpRequest from './http'
 import Response from './response'
@@ -66,7 +69,7 @@ export default class Request {
   }
 
   addHeader (name, value) {
-    return this.addHeaders({[name]: value})
+    return this.addHeaders({ [name]: value })
   }
 
   addHeaders (headers) {
@@ -80,7 +83,7 @@ export default class Request {
   }
 
   addParameter (name, value) {
-    return this.addParameters({[name]: value})
+    return this.addParameters({ [name]: value })
   }
 
   addParameters (parameters) {
@@ -166,15 +169,21 @@ export default class Request {
   }
 
   send () {
-    return doHttpRequest(this.composeUrl(), {
-      payload: this.payload,
-      verb: this.verb,
-      headers: this.headers,
-      encoding: this.encoding,
-      postProcessor: this.postProcessor,
-      xhrWithCredentials: this.xhrWithCredentials,
-      errorHandlers: this.errorHandlers,
-      onResponse: this.client.onResponse.bind(this.client)
-    }, (...args) => { return this.responseFactory(...args) })
+    return doHttpRequest(
+      this.composeUrl(),
+      {
+        payload: this.payload,
+        verb: this.verb,
+        headers: this.headers,
+        encoding: this.encoding,
+        postProcessor: this.postProcessor,
+        xhrWithCredentials: this.xhrWithCredentials,
+        errorHandlers: this.errorHandlers,
+        onResponse: this.client.onResponse.bind(this.client)
+      },
+      (...args) => {
+        return this.responseFactory(...args)
+      }
+    )
   }
 }

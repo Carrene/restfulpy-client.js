@@ -19,20 +19,43 @@ export default function doHttpRequest (url, options, responseFactory) {
 
     xhr.onload = () => {
       let response = responseFactory(xhr)
-      if (response.status === 200) {
-        if (defaultOptions.onResponse) {
-          defaultOptions.onResponse(response)
-        }
-        if (defaultOptions.postProcessor) {
-          defaultOptions.postProcessor(response, resolve)
-        } else {
+
+      // This is for handling JSON Patch requests
+
+      if (Array.isArray(response)) {
+        if (response[0].status === 200) {
+          if (defaultOptions.onResponse) {
+            defaultOptions.onResponse(response[0])
+          }
           resolve(response)
+        } else if (defaultOptions.errorHandlers[response[0].status]) {
+          defaultOptions.errorHandlers[response[0].status](
+            response[0].status,
+            window.location.href
+          )
+          reject(response)
+        } else {
+          reject(response)
         }
-      } else if (defaultOptions.errorHandlers[response.status]) {
-        defaultOptions.errorHandlers[response.status](response.status, window.location.href)
-        reject(response)
       } else {
-        reject(response)
+        if (response.status === 200) {
+          if (defaultOptions.onResponse) {
+            defaultOptions.onResponse(response)
+          }
+          if (defaultOptions.postProcessor) {
+            defaultOptions.postProcessor(response, resolve)
+          } else {
+            resolve(response)
+          }
+        } else if (defaultOptions.errorHandlers[response.status]) {
+          defaultOptions.errorHandlers[response.status](
+            response.status,
+            window.location.href
+          )
+          reject(response)
+        } else {
+          reject(response)
+        }
       }
     }
     xhr.onerror = () => {

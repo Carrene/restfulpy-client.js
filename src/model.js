@@ -50,18 +50,18 @@ const DEFAULT_VERBS = {
 export default function createModelClass (name, options, client, metadata) {
   class Model {
     /*
-    * +----------------+----------------+--------+--------+---------+
-    * | state / ACTION | CHANGE         | SAVE   | RELOAD | DELETE  |
-    * +----------------+----------------+--------+--------+---------+
-    * | new            | new            | loaded | error  | error   |
-    * +----------------+----------------+--------+--------+---------+
-    * | loaded         | dirty          | error  | loaded | deleted |
-    * +----------------+----------------+--------+--------+---------+
-    * | dirty          | dirty / loaded | loaded | loaded | deleted |
-    * +----------------+----------------+--------+--------+---------+
-    * | deleted        | error          | error  | error  | error   |
-    * +----------------+----------------+--------+--------+---------+
-    */
+     * +----------------+----------------+--------+--------+---------+
+     * | state / ACTION | CHANGE         | SAVE   | RELOAD | DELETE  |
+     * +----------------+----------------+--------+--------+---------+
+     * | new            | new            | loaded | error  | error   |
+     * +----------------+----------------+--------+--------+---------+
+     * | loaded         | dirty          | error  | loaded | deleted |
+     * +----------------+----------------+--------+--------+---------+
+     * | dirty          | dirty / loaded | loaded | loaded | deleted |
+     * +----------------+----------------+--------+--------+---------+
+     * | deleted        | error          | error  | error  | error   |
+     * +----------------+----------------+--------+--------+---------+
+     */
     constructor (values, status = 'new') {
       this.__status__ = status
       this.__hash__ = 0
@@ -71,8 +71,10 @@ export default function createModelClass (name, options, client, metadata) {
       if (values) {
         this.update(values)
       }
-      this.__server_hash__ = (status === 'loaded' || status === 'deleted')
-        ? getObjectHashCode(this.toJson()) : 0
+      this.__server_hash__ =
+        status === 'loaded' || status === 'deleted'
+          ? getObjectHashCode(this.toJson())
+          : 0
       this.changed()
       return new Proxy(this, instanceHandler)
     }
@@ -110,7 +112,8 @@ export default function createModelClass (name, options, client, metadata) {
       if (this.__status__ === 'new' || this.__status__ === 'deleted') {
         return
       }
-      this.__status__ = (this.__server_hash__ === this.__hash__) ? 'loaded' : 'dirty'
+      this.__status__ =
+        this.__server_hash__ === this.__hash__ ? 'loaded' : 'dirty'
     }
 
     delete () {
@@ -121,7 +124,11 @@ export default function createModelClass (name, options, client, metadata) {
           throw new ModelStateError('Object is already deleted.')
       }
       return this.constructor.__client__
-        .requestModel(this.constructor, this.deleteURL, this.constructor.__verbs__.delete)
+        .requestModel(
+          this.constructor,
+          this.deleteURL,
+          this.constructor.__verbs__.delete
+        )
         .setPostProcessor((resp, resolve) => {
           this.updateFromResponse(resp)
           this.__status__ = 'deleted'
@@ -137,7 +144,11 @@ export default function createModelClass (name, options, client, metadata) {
           throw new ModelStateError('Object is deleted.')
       }
       return this.constructor.__client__
-        .requestModel(this.constructor, this.reloadURL, this.constructor.__verbs__.get)
+        .requestModel(
+          this.constructor,
+          this.reloadURL,
+          this.constructor.__verbs__.get
+        )
         .setPostProcessor((resp, resolve) => {
           this.updateFromResponse(resp)
           resolve(resp)
@@ -177,7 +188,9 @@ export default function createModelClass (name, options, client, metadata) {
     toJson () {
       let result = {}
       for (let fieldName in this.constructor.fields) {
-        let value = this.encodeFieldValueToJson(this.constructor.fields[fieldName])
+        let value = this.encodeFieldValueToJson(
+          this.constructor.fields[fieldName]
+        )
         if (value === undefined) {
           continue
         }
@@ -229,9 +242,10 @@ export default function createModelClass (name, options, client, metadata) {
     static get __verbs__ () {
       return Object.assign({}, DEFAULT_VERBS, options.verbs || {})
     }
-    static load (...filters) {
+    static load (filters, baseUrl) {
       return this.__client__
-        .requestModel(this, this.__url__, this.__verbs__.load).filter(...filters)
+        .requestModel(this, baseUrl || this.__url__, this.__verbs__.load)
+        .filter(filters)
     }
     static fromResponse (resp) {
       return new this(this.decodeJson(resp.json), 'loaded')
@@ -240,7 +254,10 @@ export default function createModelClass (name, options, client, metadata) {
       let result = {}
       for (let fieldName in metadata.fields) {
         if (fieldName in json) {
-          result[fieldName] = this.decodeFieldValueFromJson(metadata.fields[fieldName], json[fieldName])
+          result[fieldName] = this.decodeFieldValueFromJson(
+            metadata.fields[fieldName],
+            json[fieldName]
+          )
         }
       }
       return result
@@ -248,18 +265,17 @@ export default function createModelClass (name, options, client, metadata) {
     static decodeFieldValueFromJson (field, encodedValue) {
       return encodedValue
     }
-    static get (...keys) {
-      let resourcePath = ''
-      if (keys.join('').startsWith('/')) {
-        resourcePath = keys.join('/').substr(1)
-      } else {
-        resourcePath = `${this.__url__}/${keys.join('/')}`
-      }
-      return this.__client__.requestModel(this, resourcePath, this.__verbs__.get)
+    static get (keys, baseUrl) {
+      let resourcePath = `${baseUrl || this.__url__}/${keys}`
+      return this.__client__.requestModel(
+        this,
+        resourcePath,
+        this.__verbs__.get
+      )
     }
   }
 
   // Defining a name for our class
-  Reflect.defineProperty(Model, 'name', {value: name})
+  Reflect.defineProperty(Model, 'name', { value: name })
   return Model
 }

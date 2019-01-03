@@ -9,7 +9,7 @@ describe('Model', function () {
     c.loadMetadata({ Resource: { url: 'resources' } })
       .then(() => {
         const Resource = c.metadata.models.Resource
-        Resource.load('id', '<5')
+        Resource.load({ id: '<5' })
           .sort('id')
           .send()
           .then(resp => {
@@ -78,7 +78,7 @@ describe('Model', function () {
     c.loadMetadata({ Resource: { url: 'resources' } })
       .then(() => {
         const Resource = c.metadata.models.Resource
-        Resource.get('/resources/1')
+        Resource.get('1', 'resources')
           .send()
           .then(resp => {
             let newInstance = resp.models[0]

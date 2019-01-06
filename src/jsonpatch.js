@@ -5,9 +5,8 @@
 import Request from './request'
 import Response from './response'
 
-class FakeXhr extends window.XMLHttpRequest {
+class FakeXHR {
   constructor (index, xhr) {
-    super()
     this.xhr = xhr
     this.index = index
   }
@@ -63,7 +62,7 @@ export default class JsonPatchRequest extends Request {
     let responses = []
     for (let index in this.requests) {
       responses.push(
-        Response.fromXhr(this.requests[index], new FakeXhr(index, ...args))
+        Response.fromXhr(this.requests[index], new FakeXHR(index, ...args))
       )
     }
     return responses

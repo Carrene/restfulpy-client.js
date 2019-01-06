@@ -36,21 +36,6 @@ export default class Response {
   get models () {
     if (this._models === null) {
       let jsons = [].concat(this.json)
-      // if (Array.isArray(this.request)) {
-      //   for (let request of this.request) {
-      //     let newStatus = 'loaded'
-      //     if (request.verb === request.ModelClass.__verbs__.delete) {
-      //       newStatus = 'deleted'
-      //     }
-      //     this._models = jsons.map(
-      //       json =>
-      //         new request.ModelClass(
-      //           request.ModelClass.decodeJson(json),
-      //           newStatus
-      //         )
-      //     )
-      //   }
-      // } else {
       let newStatus = 'loaded'
       if (this.request.verb === this.request.ModelClass.__verbs__.delete) {
         newStatus = 'deleted'
@@ -62,7 +47,6 @@ export default class Response {
             newStatus
           )
       )
-      // }
     }
     return this._models
   }
@@ -89,11 +73,11 @@ export default class Response {
     }
   }
 
-  static fromXhr (xhr) {
+  static fromXhr (request, xhr) {
     if (xhr.getResponseHeader('X-Pagination-Count')) {
-      return new PagedResponse(xhr)
+      return new PagedResponse(request, xhr)
     }
-    return new Response(xhr)
+    return new Response(request, xhr)
   }
 }
 

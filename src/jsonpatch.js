@@ -63,7 +63,7 @@ export default class JsonPatchRequest extends Request {
     let responses = []
     for (let index in this.requests) {
       responses.push(
-        new Response(this.requests[index], new FakeXhr(index, ...args))
+        Response.fromXhr(this.requests[index], new FakeXhr(index, ...args))
       )
     }
     return responses

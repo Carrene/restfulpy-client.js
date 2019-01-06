@@ -165,7 +165,7 @@ export default class Request {
   }
 
   responseFactory (...args) {
-    return new Response(this, ...args)
+    return Response.fromXhr(this, ...args)
   }
 
   send () {

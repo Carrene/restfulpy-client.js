@@ -60,6 +60,7 @@ describe('Model', function () {
           .addRequest(Resource.get('2'))
           .send()
           .then(resps => {
+            expect(resps.length).toEqual(3)
             expect(resps[0].status).toEqual(200)
             expect(resps[0].models[0].__status__).toEqual('loaded')
             expect(resps[0].models[0].id).toEqual(1)

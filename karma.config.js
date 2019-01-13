@@ -6,14 +6,11 @@ module.exports = function (config) {
   const configurations = {
     basePath: '',
     frameworks: ['jasmine'],
-    files: [
-      'src/**/*.js',
-      'tests/**/*.js'
-    ],
+    files: ['src/**/*.js', 'tests/index.test.js'],
     exclude: ['dist'],
     preprocessors: {
       'src/**/*.js': ['webpack', 'sourcemap'],
-      'tests/**/*.js': ['webpack', 'sourcemap']
+      'tests/index.test.js': ['webpack', 'sourcemap']
     },
     babelPreprocessor: {
       options: {
@@ -38,7 +35,7 @@ module.exports = function (config) {
       // webpack configuration
       resolve: {
         alias: {
-          'restfulpy': path.resolve(__dirname, 'src')
+          restfulpy: path.resolve(__dirname, 'src')
         }
       },
       devtool: 'inline-source-map',
@@ -55,7 +52,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome_without_security'],
-    customLaunchers:{
+    customLaunchers: {
       Chrome_without_security: {
         base: 'Chrome',
         flags: ['--disable-web-security']

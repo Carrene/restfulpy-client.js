@@ -5,8 +5,9 @@ var src = path.resolve(__dirname, 'src')
 
 module.exports = {
   context: src,
+  mode: 'production',
   entry: {
-    'restfulpy': './index.js'
+    restfulpy: './index.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -17,7 +18,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'restfulpy': path.resolve(__dirname, 'src')
+      restfulpy: path.resolve(__dirname, 'src')
     }
   },
   module: {

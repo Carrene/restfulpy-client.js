@@ -6,23 +6,10 @@ module.exports = function (config) {
   const configurations = {
     basePath: '',
     frameworks: ['jasmine'],
-    files: ['src/**/*.js', 'tests/index.test.js'],
+    files: ['tests/index.test.js'],
     exclude: ['dist'],
     preprocessors: {
-      'src/**/*.js': ['webpack', 'sourcemap'],
       'tests/index.test.js': ['webpack', 'sourcemap']
-    },
-    babelPreprocessor: {
-      options: {
-        presets: ['es2015'],
-        sourceMap: 'inline'
-      },
-      filename: function (file) {
-        return file.originalPath.replace(/\.js$/, '.es5.js')
-      },
-      sourceFileName: function (file) {
-        return file.originalPath
-      }
     },
     client: {
       serverUrl: config.serverUrl
@@ -33,6 +20,20 @@ module.exports = function (config) {
       // webpack watches dependencies
 
       // webpack configuration
+      module: {
+        rules: [
+          // instrument only testing sources with Istanbul
+          {
+            test: /\.js$/,
+            use: {
+              loader: 'istanbul-instrumenter-loader',
+              options: { esModules: true }
+            },
+            include: path.resolve('src/'),
+            exclude: path.resolve('src/index.js')
+          }
+        ]
+      },
       resolve: {
         alias: {
           restfulpy: path.resolve(__dirname, 'src')
@@ -46,12 +47,16 @@ module.exports = function (config) {
       stats: 'errors-only'
     },
 
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage-istanbul'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome_without_security'],
+    coverageIstanbulReporter: {
+      reports: ['html', 'lcovonly', 'text-summary'],
+      dir: 'coverage/'
+    },
     customLaunchers: {
       Chrome_without_security: {
         base: 'Chrome',

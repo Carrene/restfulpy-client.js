@@ -8,6 +8,7 @@ Javascript client for [restfulpy](https://github.com/pylover/restfulpy)
 #### master
 
 [![Build Status](https://travis-ci.org/Carrene/restfulpy-client.js.svg?branch=master&service=github)](https://travis-ci.org/Carrene/restfulpy-client.js)
+[![Coverage Status](https://coveralls.io/repos/github/Carrene/restfulpy-client.js/badge.svg)](https://coveralls.io/github/Carrene/restfulpy-client.js)
 
 Install
 -------

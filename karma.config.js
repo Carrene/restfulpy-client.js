@@ -47,7 +47,7 @@ module.exports = function (config) {
       stats: 'errors-only'
     },
 
-    reporters: ['progress', 'coverage-istanbul'],
+    reporters: ['progress', 'coverage-istanbul', 'coveralls'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

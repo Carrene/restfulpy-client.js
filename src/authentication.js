@@ -7,7 +7,11 @@ import {
 } from './exceptions'
 
 export default class AbstractAuthenticator {
-  constructor (tokenRequestHeaderKey = 'Authorization', tokenLocalStorageKey = 'token', tokenResponseHeaderKey = 'X-New-JWT-Token') {
+  constructor (
+    tokenRequestHeaderKey = 'Authorization',
+    tokenLocalStorageKey = 'token',
+    tokenResponseHeaderKey = 'X-New-JWT-Token'
+  ) {
     if (new.target === AbstractAuthenticator) {
       throw new AbstractBaseClassError(this)
     }
@@ -97,6 +101,10 @@ export default class AbstractAuthenticator {
   }
 
   login (credentials) {
+    throw new MethodMustOverrideError()
+  }
+
+  logout (done) {
     throw new MethodMustOverrideError()
   }
 

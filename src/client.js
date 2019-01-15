@@ -9,13 +9,21 @@ import JsonPatchRequest from './jsonpatch'
 import Metadata from './metadata'
 
 export default class Session {
-  constructor (baseUrl, tokenLocalStorageKey = 'token', authenticator, errorHandlers) {
+  constructor (
+    baseUrl,
+    tokenLocalStorageKey = 'token',
+    authenticator,
+    errorHandlers
+  ) {
     this.baseUrl = baseUrl
     this.tokenLocalStorageKey = tokenLocalStorageKey
     this._authenticator = authenticator
-    this.errorHandlers = Object.assign({
-      unhandledErrors: /5\d{2}/
-    }, errorHandlers)
+    this.errorHandlers = Object.assign(
+      {
+        unhandledErrors: /5\d{2}/
+      },
+      errorHandlers
+    )
   }
 
   // FIXME: We have to remove this method because Authenticator is a abstract class and can't be
@@ -39,7 +47,8 @@ export default class Session {
   }
 
   request (...args) {
-    return new Request(this, ...args).setErrorHandlers(this.errorHandlers)
+    return new Request(this, ...args)
+      .setErrorHandlers(this.errorHandlers)
       .addAuthenticationHeaders(false)
   }
 
@@ -62,7 +71,7 @@ export default class Session {
   }
 
   logout (done) {
-    this.authenticator.deleteToken(done)
+    this.authenticator.logout(done)
   }
 
   loadMetadata (entities) {

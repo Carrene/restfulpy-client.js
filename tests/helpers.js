@@ -8,18 +8,27 @@ let BASE_URL = window.__karma__.config.serverUrl
 
 class MyAuthenticator extends Authenticator {
   login (credentials) {
-    return httpClient(`${BASE_URL}/sessions`, {
-      verb: 'POST',
-      payload: this.constructor.validateCredentials(credentials)
-    }, (...args) => {
-      return new Response(null, ...args)
-    }).then(resp => {
-      this.token = resp.json.token
-      return Promise.resolve(resp)
-    }).catch((resp) => {
-      this.deleteToken()
-      return Promise.reject(resp)
-    })
+    return httpClient(
+      `${BASE_URL}/sessions`,
+      {
+        verb: 'POST',
+        payload: this.constructor.validateCredentials(credentials)
+      },
+      (...args) => {
+        return new Response(null, ...args)
+      }
+    )
+      .then(resp => {
+        this.token = resp.json.token
+        return Promise.resolve(resp)
+      })
+      .catch(resp => {
+        this.deleteToken()
+        return Promise.reject(resp)
+      })
+  }
+  logout (done) {
+    this.deleteToken()
   }
 }
 
@@ -32,7 +41,9 @@ let fakeWindow = {
 const errorHandler = {
   401: (status, redirectUrl) => {
     if (status === 401) {
-      fakeWindow.location.href = `${window.location.origin}/login?redirect=${BASE_URL}/${redirectUrl}`
+      fakeWindow.location.href = `${
+        window.location.origin
+      }/login?redirect=${BASE_URL}/${redirectUrl}`
     }
   }
 }

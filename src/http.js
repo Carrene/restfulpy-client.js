@@ -30,7 +30,7 @@ export default function doHttpRequest (url, options, responseFactory) {
           resolve(response)
         } else if (defaultOptions.errorHandlers[response[0].status]) {
           defaultOptions.errorHandlers[response[0].status](
-            response[0].status,
+            response[0],
             window.location.href
           )
           reject(response)
@@ -49,7 +49,7 @@ export default function doHttpRequest (url, options, responseFactory) {
           }
         } else if (defaultOptions.errorHandlers[response.status]) {
           defaultOptions.errorHandlers[response.status](
-            response.status,
+            response,
             window.location.href
           )
           reject(response)

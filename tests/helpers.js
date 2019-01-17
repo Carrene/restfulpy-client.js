@@ -32,7 +32,11 @@ class MyAuthenticator extends Authenticator {
   }
 }
 
+class FakeAuthenticator extends Authenticator {}
+
 let authenticator = new MyAuthenticator()
+
+let fakeAuthenticator = new FakeAuthenticator()
 
 // We can not change actual window.location.href in a test runner. so we fake it!
 let fakeWindow = {
@@ -52,6 +56,13 @@ export class MockupClient extends BrowserSession {
   constructor () {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
     super(BASE_URL, 'token', authenticator, errorHandler)
+  }
+}
+
+export class FakeMockupClient extends BrowserSession {
+  constructor () {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+    super(BASE_URL, 'token', fakeAuthenticator, errorHandler)
   }
 }
 

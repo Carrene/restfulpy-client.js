@@ -13,7 +13,7 @@ export default class AbstractAuthenticator {
     tokenResponseHeaderKey = 'X-New-JWT-Token'
   ) {
     if (new.target === AbstractAuthenticator) {
-      throw new AbstractBaseClassError(this)
+      throw new AbstractBaseClassError(this.constructor)
     }
     this.tokenRequestHeaderKey = tokenRequestHeaderKey
     this.tokenLocalStorageKey = tokenLocalStorageKey

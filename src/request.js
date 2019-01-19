@@ -77,11 +77,6 @@ export default class Request {
     return this
   }
 
-  removeAuthenticationHeaders () {
-    this.client.authenticator.removeAuthenticationHeaders(this)
-    return this
-  }
-
   addParameter (name, value) {
     return this.addParameters({ [name]: value })
   }

@@ -69,10 +69,6 @@ export default class AbstractAuthenticator {
     }
   }
 
-  removeAuthenticationHeaders (request) {
-    delete request.headers[this.tokenRequestHeaderKey]
-  }
-
   deleteToken (done) {
     window.localStorage.removeItem(this.tokenLocalStorageKey)
     this.member = null

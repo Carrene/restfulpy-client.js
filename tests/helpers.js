@@ -2,7 +2,13 @@
  * Created by vahid on 7/11/17.
  */
 
-import { BrowserSession, Authenticator, httpClient, Response } from 'restfulpy'
+import {
+  BrowserSession,
+  Session,
+  Authenticator,
+  httpClient,
+  Response
+} from 'restfulpy'
 
 let BASE_URL = window.__karma__.config.serverUrl
 
@@ -28,7 +34,7 @@ class MyAuthenticator extends Authenticator {
       })
   }
   logout (done) {
-    this.deleteToken()
+    this.deleteToken(done)
   }
 }
 
@@ -59,10 +65,17 @@ export class MockupClient extends BrowserSession {
   }
 }
 
-export class FakeMockupClient extends BrowserSession {
+export class FakeAuthenticatorMockupClient extends BrowserSession {
   constructor () {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
     super(BASE_URL, 'token', fakeAuthenticator, errorHandler)
+  }
+}
+
+export class FakeMetadataMockupClient extends Session {
+  constructor () {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+    super(BASE_URL, 'token', authenticator, errorHandler)
   }
 }
 

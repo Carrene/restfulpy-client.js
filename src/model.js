@@ -171,7 +171,7 @@ export default function createModelClass (name, options, client, metadata) {
           verb = this.constructor.__verbs__.update
           resourceUrl = this.updateURL
       }
-      let data = this.prepareForSubmit(verb, resourceUrl, this.toJson())
+      let data = this.prepareForSubmit(verb, resourceUrl, this.toJson(true))
       return this.constructor.__client__
         .requestModel(this.constructor, resourceUrl, verb)
         .addParameters(data)
@@ -185,7 +185,7 @@ export default function createModelClass (name, options, client, metadata) {
       return data
     }
 
-    toJson (sendReadonlyItems = false) {
+    toJson (omitReadonly = false) {
       let result = {}
       for (let fieldName in this.constructor.fields) {
         let value = this.encodeFieldValueToJson(
@@ -193,7 +193,7 @@ export default function createModelClass (name, options, client, metadata) {
         )
         if (
           value === undefined ||
-          (!sendReadonlyItems && this.constructor.fields[fieldName].readonly)
+          (omitReadonly && this.constructor.fields[fieldName].readonly)
         ) {
           continue
         }

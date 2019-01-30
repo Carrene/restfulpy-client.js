@@ -41,7 +41,7 @@ export default class JsonPatchRequest extends Request {
       let pathMatch = resourceOrRequest.resource.match(regex)
       this.requests.push(resourceOrRequest)
       this.payload.push({
-        path: pathMatch ? pathMatch[3] || '' : resourceOrRequest.resource,
+        path: pathMatch[0] ? pathMatch[3] || '' : resourceOrRequest.resource,
         op: resourceOrRequest.verb.toLowerCase(),
         value: resourceOrRequest.payload
       })

@@ -29,6 +29,5 @@ Object.defineProperty(String.prototype, 'getHashCode', {
 export function getObjectHashCode (obj) {
   let items = Object.keys(obj).map(k => [k, (obj[k] || '').toString()])
   items.sort()
-  debugger
   return encodeQueryString(items).getHashCode()
 }

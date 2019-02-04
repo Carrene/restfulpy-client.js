@@ -5,6 +5,10 @@
 import { MockupClient, fakeWindow } from './helpers'
 
 describe('Error handling', function () {
+  afterAll(function () {
+    fakeWindow.location = new URL(window.location.href)
+  })
+
   it('401', function (done) {
     let c = new MockupClient()
     let request = c
@@ -20,8 +24,8 @@ describe('Error handling', function () {
         let newLocation = new URL(fakeWindow.location.href)
 
         expect(newLocation.pathname).toEqual('/login')
+        done()
       })
-    done()
   })
 
   it('500', function (done) {

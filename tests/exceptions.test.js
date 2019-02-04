@@ -135,3 +135,22 @@ describe('No Authenticator Object', function () {
     done()
   })
 })
+
+describe('Encoding Test', function () {
+  let c = new MockupClient()
+
+  it('Invalid encoding', function (done) {
+    let request = c.request('resources').setEncoding('InvalidEncoding')
+    request
+      .send()
+      .then(done.fail)
+      .catch(err => {
+        expect(err.message).toBe(
+          `encoding: ${request.encoding} is not supported.`
+        )
+
+        expect(err instanceof BaseException).toBeTruthy()
+        done()
+      })
+  })
+})

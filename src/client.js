@@ -46,7 +46,9 @@ export default class Session {
   }
 
   jsonPatchRequest (...args) {
-    return new JsonPatchRequest(this, ...args).addAuthenticationHeaders(false)
+    return new JsonPatchRequest(this, ...args)
+      .setErrorHandlers(this.errorHandlers)
+      .addAuthenticationHeaders(false)
   }
 
   login (...args) {

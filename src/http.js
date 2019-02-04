@@ -1,4 +1,5 @@
 import { encodeQueryString } from './helpers'
+import { BaseException } from './exceptions'
 
 export default function doHttpRequest (url, options, responseFactory) {
   let defaultOptions = {
@@ -96,7 +97,9 @@ export default function doHttpRequest (url, options, responseFactory) {
       // Do not setting the content type for multipart
       // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
     } else {
-      throw new Error(`encoding: ${defaultOptions.encoding} is not supported.`)
+      throw new BaseException(
+        `encoding: ${defaultOptions.encoding} is not supported.`
+      )
     }
     xhr.withCredentials = defaultOptions.xhrWithCredentials
     xhr.send(requestBody)

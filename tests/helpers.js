@@ -50,11 +50,9 @@ let fakeWindow = {
 }
 const errorHandler = {
   401: (response, redirectUrl) => {
-    if (response.status === 401) {
-      fakeWindow.location.href = `${
-        window.location.origin
-      }/login?redirect=${BASE_URL}/${redirectUrl}`
-    }
+    fakeWindow.location.href = `${
+      window.location.origin
+    }/login?redirect=${BASE_URL}/${redirectUrl}`
   }
 }
 

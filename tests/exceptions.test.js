@@ -106,6 +106,10 @@ describe('Authentication required', function () {
     c.logout()
 
     expect(() => {
+      return c.request('resources', 'load').addAuthenticationHeaders(true)
+    }).toThrow(new AuthenticationRequiredError())
+
+    expect(() => {
       return c.authenticator.addAuthenticationHeaders()
     }).toThrow(new AuthenticationRequiredError())
     done()
@@ -133,5 +137,24 @@ describe('No Authenticator Object', function () {
       return c.login()
     }).toThrow(new InvalidOperationError())
     done()
+  })
+})
+
+describe('Encoding Test', function () {
+  let c = new MockupClient()
+
+  it('Invalid encoding', function (done) {
+    let request = c.request('resources').setEncoding('InvalidEncoding')
+    request
+      .send()
+      .then(done.fail)
+      .catch(err => {
+        expect(err.message).toBe(
+          `encoding: ${request.encoding} is not supported.`
+        )
+
+        expect(err instanceof BaseException).toBeTruthy()
+        done()
+      })
   })
 })

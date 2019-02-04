@@ -3,7 +3,6 @@ import {
   InvalidOperationError,
   MethodMustOverrideError
 } from './exceptions'
-import Authenticator from './authentication'
 import Request from './request'
 import JsonPatchRequest from './jsonpatch'
 import Metadata from './metadata'

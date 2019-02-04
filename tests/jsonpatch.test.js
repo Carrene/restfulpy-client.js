@@ -32,7 +32,7 @@ describe('JsonPatch', function () {
       .send()
       .then(done.fail)
       .catch(err => {
-        expect(err[0].error === 'Internal server error')
+        expect(err[0].error).toBe('Internal server error')
         done()
       })
   })

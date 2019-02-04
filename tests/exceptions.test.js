@@ -106,6 +106,10 @@ describe('Authentication required', function () {
     c.logout()
 
     expect(() => {
+      return c.request('resources', 'load').addAuthenticationHeaders(true)
+    }).toThrow(new AuthenticationRequiredError())
+
+    expect(() => {
       return c.authenticator.addAuthenticationHeaders()
     }).toThrow(new AuthenticationRequiredError())
     done()

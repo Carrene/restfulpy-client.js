@@ -48,10 +48,23 @@ describe('Form', function () {
       .catch(done.fail)
   })
 
+  it('Duplicate Query String', function (done) {
+    let c = new MockupClient()
+    c.request('echo')
+      .addQueryString('item1', 'value1')
+      .addQueryString('item1', 'value2')
+      .send()
+      .then(resp => {
+        expect(resp.json).toEqual({ item1: 'value2' })
+        done()
+      })
+      .catch(done.fail)
+  })
+
   it('Query String and payload echo', function (done) {
     let c = new MockupClient()
     c.request('echo', 'post')
-      .addParameters({ item1: 'value1' })
+      .addParameter('item1', 'value1')
       .addQueryString('item2', 'value2')
       .send()
       .then(resp => {

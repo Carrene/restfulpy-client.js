@@ -57,7 +57,7 @@ describe('Authentication', function () {
       .catch(done.fail)
   })
 
-  it('Wronge token', function (done) {
+  it('Wrong token', function (done) {
     c.logout()
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {

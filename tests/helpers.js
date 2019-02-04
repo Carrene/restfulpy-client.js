@@ -72,6 +72,13 @@ export class FakeAuthenticatorMockupClient extends BrowserSession {
   }
 }
 
+export class NoAuthenticatorMockupClient extends BrowserSession {
+  constructor () {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+    super(BASE_URL)
+  }
+}
+
 export class FakeMetadataMockupClient extends Session {
   constructor () {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000

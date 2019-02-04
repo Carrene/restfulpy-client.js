@@ -5,10 +5,12 @@ import {
   MethodMustOverrideError,
   AlreadyAuthenticatedError,
   AuthenticationRequiredError,
-  BadCredentialsError
+  BadCredentialsError,
+  InvalidOperationError
 } from '../src/exceptions'
 import {
   FakeAuthenticatorMockupClient,
+  NoAuthenticatorMockupClient,
   FakeMetadataMockupClient,
   MockupClient
 } from './helpers'
@@ -119,6 +121,17 @@ describe('Base error default message', function () {
   let messageLessError = new MessageLessError()
   it('Default error message', function (done) {
     expect(messageLessError.message).toEqual('Unhandled Error.')
+    done()
+  })
+})
+
+describe('No Authenticator Object', function () {
+  let c = new NoAuthenticatorMockupClient()
+
+  it('Login with no authenticator object', function (done) {
+    expect(() => {
+      return c.login()
+    }).toThrow(new InvalidOperationError())
     done()
   })
 })

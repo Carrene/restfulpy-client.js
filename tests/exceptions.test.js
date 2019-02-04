@@ -66,8 +66,11 @@ describe('Overriding metadata methods', function () {
 
 describe('Already authenticated', function () {
   let c = new MockupClient()
-  it('Double Login', function (done) {
+  beforeEach(function () {
     c.logout()
+  })
+
+  it('Double Login', function (done) {
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(() => {
         expect(() => {
@@ -81,9 +84,11 @@ describe('Already authenticated', function () {
 
 describe('Bad Credentials', function () {
   let c = new MockupClient()
-  it('Invalid Credentials', function (done) {
+  beforeEach(function () {
     c.logout()
+  })
 
+  it('Invalid Credentials', function (done) {
     expect(() => {
       return c.login(null)
     }).toThrow(new BadCredentialsError())
@@ -93,9 +98,11 @@ describe('Bad Credentials', function () {
 
 describe('Authentication required', function () {
   let c = new MockupClient()
-  it('Getting Role without login', function (done) {
+  beforeEach(function () {
     c.logout()
+  })
 
+  it('Getting Role without login', function (done) {
     expect(() => {
       return c.authenticator.isInRole('admin')
     }).toThrow(new AuthenticationRequiredError())
@@ -103,8 +110,6 @@ describe('Authentication required', function () {
   })
 
   it('Adding authentication headers without login', function (done) {
-    c.logout()
-
     expect(() => {
       return c.request('resources', 'load').addAuthenticationHeaders(true)
     }).toThrow(new AuthenticationRequiredError())
@@ -144,7 +149,7 @@ describe('Encoding Test', function () {
   let c = new MockupClient()
 
   it('Invalid encoding', function (done) {
-    let request = c.request('resources').setEncoding('InvalidEncoding')
+    let request = c.request('echo').setEncoding('InvalidEncoding')
     request
       .send()
       .then(done.fail)

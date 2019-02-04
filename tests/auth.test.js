@@ -6,8 +6,11 @@ import { MockupClient } from './helpers'
 describe('Authentication', function () {
   let c = new MockupClient()
 
-  it('Login', function (done) {
+  beforeEach(function () {
     c.logout()
+  })
+
+  it('Login', function (done) {
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {
         expect(resp.json.token).not.toBe(null)
@@ -32,7 +35,6 @@ describe('Authentication', function () {
   })
 
   it('Restoring Token', function (done) {
-    c.logout()
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {
         c.authenticator.member = null
@@ -45,7 +47,6 @@ describe('Authentication', function () {
   })
 
   it('Empty token', function (done) {
-    c.logout()
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {
         c.authenticator.token = null
@@ -58,7 +59,6 @@ describe('Authentication', function () {
   })
 
   it('Wrong token', function (done) {
-    c.logout()
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {
         c.authenticator.token = 'wrong'
@@ -74,8 +74,11 @@ describe('Authentication', function () {
 describe('Refresh Token', function () {
   let c = new MockupClient()
 
-  it('Header: X-New-JWT-Token', function (done) {
+  beforeEach(function () {
     c.logout()
+  })
+
+  it('Header: X-New-JWT-Token', function (done) {
     c.login({ email: 'user1@example.com', password: '123456' })
       .then(resp => {
         let previousToken = resp.json.token

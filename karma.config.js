@@ -54,7 +54,7 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['Chrome_without_security'],
     coverageIstanbulReporter: {
-      reports: ['html', 'lcovonly', 'text-summary'],
+      reports: ['html', 'text-summary', 'lcov', 'lcovonly'],
       dir: 'coverage/'
     },
     customLaunchers: {

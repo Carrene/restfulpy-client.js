@@ -1,6 +1,6 @@
 
 export class BaseException extends Error {
-  constructor (message, fileName, lineNumber, defaultMessage = undefined) {
+  constructor (message, fileName, lineNumber, defaultMessage = 'Unhandled Error.') {
     if (!message && defaultMessage) {
       message = defaultMessage
     }

@@ -13,7 +13,7 @@ export default class AbstractAuthenticator {
     tokenResponseHeaderKey = 'X-New-JWT-Token'
   ) {
     if (new.target === AbstractAuthenticator) {
-      throw new AbstractBaseClassError(this)
+      throw new AbstractBaseClassError(this.constructor)
     }
     this.tokenRequestHeaderKey = tokenRequestHeaderKey
     this.tokenLocalStorageKey = tokenLocalStorageKey
@@ -67,10 +67,6 @@ export default class AbstractAuthenticator {
     if (request.verb !== 'METADATA') {
       request.addHeader(this.tokenRequestHeaderKey, `Bearer ${this.token}`)
     }
-  }
-
-  removeAuthenticationHeaders (request) {
-    delete request.headers[this.tokenRequestHeaderKey]
   }
 
   deleteToken (done) {

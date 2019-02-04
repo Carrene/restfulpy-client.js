@@ -13,16 +13,61 @@ describe('Authentication', function () {
         expect(resp.json.token).not.toBe(null)
         expect(c.authenticator.authenticated).toBeTruthy()
         expect(c.authenticator.isInRole('user')).toBeTruthy()
+        expect(c.authenticator.isInRole('admin')).toBeFalsy()
         done()
       })
       .catch(done.fail)
   })
 
   it('Logout', function (done) {
-    c.logout()
+    let callbackCheck = 0
+    function logoutCallback () {
+      callbackCheck = 1
+    }
+    c.logout(logoutCallback)
 
     expect(c.authenticator.authenticated).toBe(false)
+    expect(callbackCheck).toEqual(1)
     done()
+  })
+
+  it('Restoring Token', function (done) {
+    c.logout()
+    c.login({ email: 'user1@example.com', password: '123456' })
+      .then(resp => {
+        c.authenticator.member = null
+
+        expect(c.authenticator.member).toBeTruthy()
+        expect(c.authenticator.authenticated).toBeTruthy()
+        done()
+      })
+      .catch(done.fail)
+  })
+
+  it('Empty token', function (done) {
+    c.logout()
+    c.login({ email: 'user1@example.com', password: '123456' })
+      .then(resp => {
+        c.authenticator.token = null
+
+        expect(c.authenticator.authenticated).toBeFalsy()
+        expect(window.localStorage.getItem('token')).toBeFalsy()
+        done()
+      })
+      .catch(done.fail)
+  })
+
+  it('Wrong token', function (done) {
+    c.logout()
+    c.login({ email: 'user1@example.com', password: '123456' })
+      .then(resp => {
+        c.authenticator.token = 'wrong'
+
+        expect(c.authenticator.authenticated).toBeFalsy()
+        expect(window.localStorage.getItem('token')).toBeFalsy()
+        done()
+      })
+      .catch(done.fail)
   })
 })
 

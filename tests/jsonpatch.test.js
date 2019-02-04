@@ -20,4 +20,16 @@ describe('JsonPatch', function () {
       })
       .catch(done.fail)
   })
+
+  it('jsonpatch error', function (done) {
+    let c = new MockupClient()
+    c.jsonPatchRequest('internal_error')
+      .addRequest('', 'get')
+      .send()
+      .then(done.fail)
+      .catch(err => {
+        expect(err[0].error === 'Internal server error')
+        done()
+      })
+  })
 })

@@ -26,12 +26,6 @@ export default class Session {
     )
   }
 
-  // FIXME: We have to remove this method because Authenticator is a abstract class and can't be
-  // Instantiated. We have to force user to set the authenticator object.
-  static createAuthenticator () {
-    return new Authenticator()
-  }
-
   onResponse (response) {
     if (this.authenticator) {
       this.authenticator.checkResponse(response)
@@ -39,10 +33,6 @@ export default class Session {
   }
 
   get authenticator () {
-    /* Singleton and Lazy-Initialization of the Authenticator object */
-    if (this._authenticator === undefined) {
-      this._authenticator = this.constructor.createAuthenticator()
-    }
     return this._authenticator
   }
 

@@ -1,5 +1,4 @@
-
-export { default, BrowserSession } from './client'
+export { default as Session, BrowserSession } from './client'
 export { default as Field } from './field'
 export { default as Metadata } from './metadata'
 export { default as Request } from './request'

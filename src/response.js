@@ -95,6 +95,6 @@ export class PagedResponse extends Response {
   }
 
   get totalPages () {
-    return Math.floor(this.totalCount / this.take) + 1
+    return Math.ceil(this.totalCount / this.take)
   }
 }

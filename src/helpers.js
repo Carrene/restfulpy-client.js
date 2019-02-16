@@ -14,17 +14,16 @@ export function encodeQueryString (obj) {
   }
 }
 
+// FIXME: Add this with defineProperty
 // eslint-disable-next-line no-extend-native
-Object.defineProperty(String.prototype, 'getHashCode', {
-  value: function () {
-    let hash = 0
-    for (let i = 0; i < this.length; i++) {
-      hash = (hash << 5) - hash + this.charCodeAt(i)
-      hash = hash & hash // Convert to 32bit integer
-    }
-    return hash
+String.prototype.getHashCode = function () {
+  let hash = 0
+  for (let i = 0; i < this.length; i++) {
+    hash = (hash << 5) - hash + this.charCodeAt(i)
+    hash = hash & hash // Convert to 32bit integer
   }
-})
+  return hash
+}
 
 export function getObjectHashCode (obj) {
   let items = Object.keys(obj).map(k => [k, (obj[k] || '').toString()])

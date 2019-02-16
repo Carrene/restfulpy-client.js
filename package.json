@@ -1,6 +1,6 @@
 {
   "name": "restfulpy",
-  "version": "0.21.9",
+  "version": "0.21.10",
   "description": "A javascript client for restfulpy",
   "main": "dist/restfulpy.js",
   "module": "dist/restfulpy.js",

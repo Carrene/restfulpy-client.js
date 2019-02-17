@@ -13,7 +13,7 @@ export default class Request {
     client,
     resource = '',
     verb = 'get',
-    payload = {},
+    payload = null,
     headers = {},
     queryString = [],
     encoding = 'json',
@@ -82,7 +82,7 @@ export default class Request {
   }
 
   addParameters (parameters) {
-    Object.assign(this.payload, parameters)
+    this.payload = Object.assign({}, this.payload, parameters)
     return this
   }
 

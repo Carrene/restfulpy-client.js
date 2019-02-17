@@ -12,9 +12,14 @@ describe('JsonPatch', function () {
   /* Testing json payload in both request & response */
   it('jsonpatch', function (done) {
     let c = new MockupClient()
-    c.jsonPatchRequest('resources')
+    let jsonPatchRequest = c
+      .jsonPatchRequest('resources')
       .addRequest('', 'get')
       .addRequest('', 'get')
+
+    expect(jsonPatchRequest.payload[0].value).toBe(null)
+    expect(jsonPatchRequest.requests[0].payload).toBe(null)
+    jsonPatchRequest
       .send()
       .then(resp => {
         expect(resp[0].status).toEqual(200)

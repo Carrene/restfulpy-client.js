@@ -3,7 +3,7 @@ import { BaseException } from './exceptions'
 
 export default function doHttpRequest (url, options, responseFactory) {
   let defaultOptions = {
-    payload: {},
+    payload: null,
     verb: 'get',
     headers: {},
     encoding: 'json',
@@ -71,7 +71,10 @@ export default function doHttpRequest (url, options, responseFactory) {
     if (defaultOptions.encoding === null) {
       requestBody = null
     } else if (defaultOptions.encoding === 'json') {
-      if (Object.keys(defaultOptions.payload).length) {
+      if (
+        defaultOptions.payload &&
+        Object.keys(defaultOptions.payload).length
+      ) {
         requestBody = JSON.stringify(defaultOptions.payload)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       } else {

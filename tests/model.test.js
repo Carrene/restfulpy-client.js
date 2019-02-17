@@ -54,10 +54,15 @@ describe('Model', function () {
     c.loadMetadata({ Resource: { url: 'resources' } })
       .then(() => {
         const Resource = c.metadata.models.Resource
-        c.jsonPatchRequest('resources')
+        let jsonPatchRequest = c
+          .jsonPatchRequest('resources')
           .addRequest(Resource.load())
           .addRequest(Resource.get('1'))
           .addRequest(Resource.get('2'))
+
+        expect(jsonPatchRequest.requests[0].payload).toBe(null)
+        expect(jsonPatchRequest.payload[0].value).toBe(null)
+        jsonPatchRequest
           .send()
           .then(resps => {
             expect(resps.length).toEqual(3)

@@ -4,6 +4,7 @@
 
 import Request from './request'
 import Response from './response'
+import { InvalidOperationError } from './exceptions'
 
 class FakeXHR {
   constructor (index, xhr) {
@@ -66,5 +67,13 @@ export default class JsonPatchRequest extends Request {
       )
     }
     return responses
+  }
+
+  send () {
+    if (this.requests.length) {
+      return super.send()
+    } else {
+      throw new InvalidOperationError('JSON PATCH empty request')
+    }
   }
 }

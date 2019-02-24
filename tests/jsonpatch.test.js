@@ -3,6 +3,7 @@
  */
 
 import { MockupClient, fakeWindow } from './helpers'
+import { InvalidOperationError } from '../src/exceptions'
 
 describe('JsonPatch', function () {
   afterAll(function () {
@@ -59,5 +60,14 @@ describe('JsonPatch', function () {
         expect(newLocation.pathname).toEqual('/login')
         done()
       })
+  })
+
+  it('jsonpatch empty request', function (done) {
+    let c = new MockupClient()
+
+    expect(() => {
+      c.jsonPatchRequest('resources').send()
+    }).toThrow(new InvalidOperationError('JSON PATCH empty request'))
+    done()
   })
 })

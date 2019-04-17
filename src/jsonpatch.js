@@ -30,14 +30,19 @@ class FakeXHR {
 }
 
 export default class JsonPatchRequest extends Request {
-  constructor (client, resource = '', headers = {}, queryString = []) {
+  constructor (client, resource = '/', headers = {}, queryString = []) {
     super(client, resource, 'PATCH', [], headers, queryString, 'json')
     this.requests = []
   }
 
   addRequest (resourceOrRequest, verb, payload = null) {
     if (resourceOrRequest instanceof Request) {
-      let regex = `(${this.resource})(/(.*))?`
+      let regex
+      if (this.resource[this.resource.length - 1] === '/') {
+        regex = `(${this.resource})((.*))?`
+      } else {
+        regex = `(${this.resource})(/(.*))?`
+      }
       regex = new RegExp(regex)
       let pathMatch = resourceOrRequest.resource.match(regex)
       this.requests.push(resourceOrRequest)

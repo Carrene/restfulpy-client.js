@@ -39,7 +39,7 @@ export default class JsonPatchRequest extends Request {
     if (resourceOrRequest instanceof Request) {
       let regex
       if (this.resource[this.resource.length - 1] === '/') {
-        regex = `(${this.resource})((.*))?`
+        regex = `(${this.resource}?)((.*))?`
       } else {
         regex = `(${this.resource})(/(.*))?`
       }

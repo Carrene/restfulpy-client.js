@@ -31,6 +31,26 @@ describe('JsonPatch', function () {
       .catch(done.fail)
   })
 
+  it('jsonpatch with trailing slash', function (done) {
+    let c = new MockupClient()
+    let jsonPatchRequest = c
+      .jsonPatchRequest('resources/')
+      .addRequest('', 'get')
+      .addRequest('', 'get')
+
+    expect(jsonPatchRequest.payload[0].value).toBe(null)
+    expect(jsonPatchRequest.requests[0].payload).toBe(null)
+    jsonPatchRequest
+      .send()
+      .then(resp => {
+        expect(resp[0].status).toEqual(200)
+        expect(resp[0].json.length).toEqual(10)
+        expect(resp[1].json.length).toEqual(10)
+        done()
+      })
+      .catch(done.fail)
+  })
+
   it('jsonpatch 500', function (done) {
     let c = new MockupClient()
     c.jsonPatchRequest('internal_error')

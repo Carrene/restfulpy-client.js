@@ -31,7 +31,11 @@ const instanceHandler = {
   },
 
   ownKeys: function (target) {
-    return Object.keys(target).concat(Object.keys(target.constructor.fields))
+    return Array.from(
+      new Set(
+        Object.keys(target).concat(Object.keys(target.constructor.fields))
+      )
+    )
   },
 
   has: function (target, key) {

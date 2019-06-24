@@ -16,7 +16,7 @@ python: 3.6
 node_js:
 - lts/*
 before_install:
-- pip install restfulpy
+- pip install --pre restfulpy==3.1.0a1
 - echo 'CREATE DATABASE restfulpymockupserver' | sudo -u postgres psql
 install: npm install
 script: npm run test

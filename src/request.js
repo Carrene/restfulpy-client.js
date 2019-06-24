@@ -87,6 +87,9 @@ export default class Request {
   }
 
   addQueryString (key, value, allowDuplicatedKeys = false) {
+    if (value === null) {
+      value = '\0'
+    }
     let found = false
     if (!allowDuplicatedKeys) {
       for (let i of this.queryString) {

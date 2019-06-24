@@ -1,1 +1,1 @@
-from .simple import SimpleMockupServerLauncher
+from .simple import SimpleMockupServerSubCommand

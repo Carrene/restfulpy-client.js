@@ -15,6 +15,8 @@ npm install restfulpy
 sudo apt-get install redis-server
 ```
 
+Create a postgres database named: `restfulpymockupserver`
+
 ## Usage
 
 ```javascript

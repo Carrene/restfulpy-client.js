@@ -21,14 +21,14 @@ from restfulpy.controllers import RootController, ModelRestController, JsonPatch
 from restfulpy.orm import DeclarativeBase, OrderingMixin, PaginationMixin, FilteringMixin, Field, setup_schema, \
     DBSession, ModifiedMixin, commit
 from restfulpy.principal import JwtPrincipal, JwtRefreshToken
-from restfulpy.cli import Launcher
+import easycli
 
 
 __version__ = '0.1.1'
 
 
 here = abspath(dirname(__file__))
-db = abspath(join(tempfile.gettempdir(), 'restfulpy-mockup-server.sqlite'))
+db = 'restfulpymockupserver'
 _lookup = None
 
 
@@ -206,7 +206,7 @@ class MockupApplication(Application):
     debug: true
 
     db:
-      url: sqlite:///{db}
+      url: postgresql://postgres:postgres@localhost/{db}
 
     jwt:
       max_age: 3600
@@ -241,55 +241,56 @@ class MockupApplication(Application):
         super(MockupApplication, self).begin_request()
 
 
-class SimpleMockupServerLauncher(Launcher):
+class SimpleMockupServerSubCommand(easycli.Root):
     default_bind = '8080'
     application = None
     args = None
-
-    def __init__(self):
-        self.parser = parser = argparse.ArgumentParser(
-            prog=sys.argv[0],
-            description='Restfulpy js client mockup server'
-        )
-        parser.add_argument(
+    __help__ = 'Restfulpy js client mockup server'
+    __command__ = sys.argv[0]
+    __arguments__ = [
+        easycli.Argument(
             '-c', '--config-file',
             metavar="FILE",
             help='List of configuration files separated by space. Default: ""'
-        )
-        parser.add_argument(
+        ),
+        easycli.Argument(
             '-b', '--bind',
-            default=self.default_bind,
+            default=default_bind,
             metavar='{HOST:}PORT',
-            help=f'Bind Address. default is {self.default_bind}, A free tcp port will be choosed automatically if the '
+            help=f'Bind Address. default is {default_bind}, A free tcp port will be choosed automatically if the '
                  f'0 (zero) is given'
-        )
-
-        parser.add_argument(
+        ),
+        easycli.Argument(
             'command',
             nargs=argparse.REMAINDER,
             default=[],
             help='The command to run tests.'
-        )
+        ),
+        easycli.Argument(
+            '-v',
+            '--version',
+            action='store_true',
+            help='Show the mockup server\'s version.'
+        ),
+    ]
 
-        parser.add_argument('-v', '--version', action='store_true', help='Show the mockup server\'s version.')
-
-    def launch(self, args=None):
-        self.args = self.parser.parse_args(args if args else None)
-        if self.args.version:
+    def __call__(self, args=None):
+        if args.version:
             print(__version__)
             return
 
         self.application = MockupApplication()
-        self.application.configure(files=self.args.config_file)
-        if exists(db):
-            os.remove(db)
+        self.application.configure(filename=args.config_file)
+        #if exists(db):
+        #    os.remove(db)
         # makedirs(settings.data_directory, exist_ok=True)
         self.application.initialize_orm()
-        setup_schema()
-        # DBSession.commit()
+        DBSession.execute('TRUNCATE TABLE resource')
+        #setup_schema()
+        DBSession.commit()
         print(f'DB {DBSession.bind}')
         self.application.insert_mockup()
-        host, port = self.args.bind.split(':') if ':' in self.args.bind else ('localhost', self.args.bind)
+        host, port = args.bind.split(':') if ':' in args.bind else ('localhost', args.bind)
         httpd = make_server(host, int(port), self.application)
 
         url = 'http://%s:%d' % httpd.server_address
@@ -298,11 +299,11 @@ class SimpleMockupServerLauncher(Launcher):
         try:
             server_thread.start()
 
-            if not self.args.command:
+            if not args.command:
                 server_thread.join()
                 exitstatus = 0
             else:
-                test_runner_command = ' '.join(self.args.command).replace('{url}', url)
+                test_runner_command = ' '.join(args.command).replace('{url}', url)
                 time.sleep(1)
                 result = run(test_runner_command, shell=True)
                 exitstatus = result.returncode
@@ -318,5 +319,5 @@ class SimpleMockupServerLauncher(Launcher):
 
 
 if __name__ == '__main__':
-    SimpleMockupServerLauncher()()
+    SimpleMockupServerSubCommand().main()
 

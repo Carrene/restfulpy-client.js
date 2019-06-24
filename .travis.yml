@@ -6,14 +6,18 @@ branches:
   - master
   - develop
   - "/^v([1-9]\\d*!)?(0|[1-9]\\d*)(\\.(0|[1-9]\\d*))*((a|b|rc)(0|[1-9]\\d*))?(\\.post(0|[1-9]\\d*))?(\\.dev(0|[1-9]\\d*))?$/"
+addons:
+  postgresql: 9.5
 services:
 - redis-server
+- postgresql
 language: python
 python: 3.6
 node_js:
 - lts/*
 before_install:
 - pip install restfulpy
+- echo 'CREATE DATABASE restfulpymockupserver' | sudo -u postgres psql
 install: npm install
 script: npm run test
 deploy:

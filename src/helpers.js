@@ -26,7 +26,7 @@ String.prototype.getHashCode = function () {
 }
 
 export function getObjectHashCode (obj) {
-  let items = Object.keys(obj).map(k => [k, (obj[k] || '').toString()])
+  let items = Object.keys(obj).map(k => [k, JSON.stringify(obj[k])])
   items.sort()
   return encodeQueryString(items).getHashCode()
 }
